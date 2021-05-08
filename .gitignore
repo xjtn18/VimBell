@@ -1,0 +1,7 @@
+*.swp
+*~
+*.stackdump
+objs/
+portable/
+*.asd
+tlc.py
