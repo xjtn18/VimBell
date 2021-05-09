@@ -7,6 +7,7 @@ ThreadClock* Program::tClock = nullptr;
 
 WindowWrapper Program::windowWrapper = WindowWrapper(500, 500); // create the window
 Menu* Program::currentMenu = &mainMenu;
+std::shared_ptr<Rack> Program::currentRack = nullptr;
 
 
 //
@@ -71,7 +72,7 @@ void Program::cleanup(){
 
 	// call sub-cleanups
 	Button::cleanup();
-	Rack::cleanup();
+	currentRack.reset();
 }
 
 
@@ -84,7 +85,7 @@ void Program::eventLoop(){
 	sf::RenderWindow* window = Program::windowWrapper.getWindow();
 	//int winw = Program::windowWrapper.getWindowWidth();
 	//int winh = Program::windowWrapper.getWindowHeight();
-	window->setFramerateLimit(120);
+	window->setFramerateLimit(60);
 	window->setVerticalSyncEnabled(true);
 
 
@@ -109,6 +110,15 @@ void Program::eventLoop(){
 				if (event.key.code == sf::Keyboard::Escape){
 					Program::stop();
 				}
+				else if (event.key.code == sf::Keyboard::J){
+					Program::currentMenu->selectMove(jb::UP);
+				}
+				else if (event.key.code == sf::Keyboard::K){
+					Program::currentMenu->selectMove(jb::DOWN);
+				}
+				else if (event.key.code == sf::Keyboard::Enter){
+					currentMenu->activateSelection();
+				}
 				
 			// mouse input
 			} else if (event.type == sf::Event::MouseButtonPressed){
@@ -119,8 +129,8 @@ void Program::eventLoop(){
 			}
 
 			if (window->hasFocus()){
-				sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
-				Program::currentMenu->checkHover(mousePos.x, mousePos.y);
+				//sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+				//Program::currentMenu->checkHover(mousePos.x, mousePos.y);
 			}
 
 
@@ -143,9 +153,8 @@ void Program::eventLoop(){
 //
 void Program::init(char* execPath){
 	jb::rootPath = jb::rtrim(execPath, strlen(execPath), '/'); // does not work, returns only relative path
-	Rack::currentRack = std::shared_ptr<Rack>(new Rack);
-	Rack::currentRack->add_alarm();
-	Program::tClock = new ThreadClock(Rack::currentRack);
+	currentRack = std::shared_ptr<Rack>(new Rack);
+	Program::tClock = new ThreadClock(currentRack);
 	Program::eventLoop();
 }
 

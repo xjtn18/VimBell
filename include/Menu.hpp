@@ -1,9 +1,21 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+
 #include <Button.hpp>
 #include <Debug.hpp>
+#include <jb.hpp>
+
 #include <vector>
 #include <initializer_list>
+
+
+namespace {
+	void clamp(int& value, const int& low, const int& high){
+		// clamps the value to the bounds given
+		if (value < low) value = low;
+		else if (value >= high) value = high - 1;
+	}
+}
 
 
 class Menu : public sf::Drawable {
@@ -15,12 +27,13 @@ class Menu : public sf::Drawable {
 	// 		l: init list of Button objects
 	//
 	std::vector<Button> buttons;
+	int selectIndex;
 
 public:
 
 	Menu(){}
 
-	Menu(int padding, int _x, int _y, std::initializer_list<Button> l) : buttons(l) {
+	Menu(int padding, int _x, int _y, std::initializer_list<Button> l) : buttons(l), selectIndex(0) {
 
 		int bY = _y; // button y placement
 		for (int i = 0; i < buttons.size(); ++i){ // set each button location
@@ -30,6 +43,7 @@ public:
 				bY += button.getHeight()/2 + buttons[i+1].getHeight()/2 + padding; // update for next button placement
 			}
 		}
+		buttons[0].select(); // set initial selection when menu loads
 	}
 
 
@@ -59,7 +73,18 @@ public:
 			button.checkHover(mouseX, mouseY);
 		}
 	}
+	
+	
+	void selectMove(jb::Direction MOVE){
+		buttons[selectIndex].deselect(); // de-select current button
+		selectIndex += MOVE;
+		clamp(selectIndex, 0, buttons.size());
+		buttons[selectIndex].select(); // select new button
+	}
 
+	void activateSelection(){
+		buttons[selectIndex].activate();
+	}
 
 };
 

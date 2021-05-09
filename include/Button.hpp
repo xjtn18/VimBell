@@ -124,6 +124,7 @@ public:
 	}
 
 
+
 	void hoverScaleButton(float scaleType){
 		animate = true;
 		int i;
@@ -134,6 +135,35 @@ public:
 		}
 		animStamp = Button::hoverScaleAmount - i;
 		animate = false;
+	}
+
+
+	void select(){
+		Button::hoverSound->play();
+		box.setFillColor(hoverColor);
+
+		if (animate){
+			animate = false;
+			anim->join(); // wait for shrink to stop
+			delete anim;
+		}
+		//anim = new std::thread(&Button::hoverScaleButton, this, GROW);
+	}
+
+
+	void deselect(){
+		box.setFillColor(idleColor);
+		
+		if (animate){
+			animate = false;
+			anim->join(); // wait for grow to stop
+			delete anim;
+		}
+		//anim = new std::thread(&Button::hoverScaleButton, this, SHRINK); // starts right when its created
+	}
+
+	void activate(){
+		this->onPress();
 	}
 
 

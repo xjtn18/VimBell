@@ -44,6 +44,10 @@ namespace jb {
 	} Time;
 
 
+	enum Direction {
+		UP = 1,
+		DOWN = -1
+	};
 
 	extern const char* rootPath;
 	const Time current_time();

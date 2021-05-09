@@ -24,6 +24,7 @@ public:
 	static WindowWrapper windowWrapper;
 	static Menu mainMenu, optionsMenu;
 	static Menu* currentMenu;
+	static std::shared_ptr<Rack> currentRack;
 
 
 	static void init(char* execPath);
