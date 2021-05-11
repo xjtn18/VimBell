@@ -13,6 +13,16 @@
 ### 5/7/21
 	- Switched GUI framework to SFML. wxWidgets was hurting my soul.
 
+### 5/9/21
+	- Added up and down interface movement using J and K key input.
+
+### 5/10/21
+	- Added an update function in menu, and store relevant drawing information as memebers instead of using them only in the Menu constructor.
+	- Can now duplicate list elements by activating them. Creates new element directly below and shifts the selector to the new element.
+
+
+### TODO:
+	- Figure out why alarm playback stops when adding a new alarm.
 
 
 ## Structural Concepts:

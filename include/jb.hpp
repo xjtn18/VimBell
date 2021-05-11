@@ -44,9 +44,9 @@ namespace jb {
 	} Time;
 
 
-	enum Direction {
-		UP = 1,
-		DOWN = -1
+	enum Direc {
+		UP = -1,
+		DOWN = 1
 	};
 
 	extern const char* rootPath;

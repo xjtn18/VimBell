@@ -2,49 +2,27 @@
 #include <string.h>
 
 
-bool Program::running = true;
-ThreadClock* Program::tClock = nullptr;
-
-WindowWrapper Program::windowWrapper = WindowWrapper(500, 500); // create the window
-Menu* Program::currentMenu = &mainMenu;
-std::shared_ptr<Rack> Program::currentRack = nullptr;
+bool Program::running 								= true;
+ThreadClock* Program::tClock 						= nullptr;
+WindowWrapper Program::windowWrapper 			= WindowWrapper(500, 500); // create the window
+Menu* Program::currentMenu 						= &mainMenu;
+std::shared_ptr<Rack> Program::currentRack 	= nullptr;
 
 
 //
 // Menus
 //
-Menu Program::mainMenu = Menu(1, Program::windowWrapper.getWindowWidth()/2, Program::windowWrapper.getWindowHeight()/2, {
-	Button(300, 60, "start", [](){
-			dlog("start pressed");
-	}),
+Menu Program::mainMenu = Menu(1, Program::windowWrapper.getWindowWidth()/2, Program::windowWrapper.getWindowHeight()/2, \
+{
+	Button(300, 60, "start", \
+		[](){
+			currentRack->add_alarm();
+			Program::mainMenu.duplicateButton();
+		})
 
-	Button(300, 60, "options", [](){
-			Program::changeMenu(&(Program::optionsMenu));
-	}),
-
-	Button(300, 60, "exit", [](){
-			Program::stop();
-	})
 });
 
 
-Menu Program::optionsMenu = Menu(1, Program::windowWrapper.getWindowWidth()/2, Program::windowWrapper.getWindowHeight()/2, {
-	Button(300, 60, "option 1", [](){
-			dlog("option 1");
-	}),
-
-	Button(300, 60, "option 2", [](){
-			dlog("option 2");
-	}),
-
-	Button(300, 60, "option 3", [](){
-			dlog("option 3");
-	}),
-
-	Button(300, 60, "<", [](){
-			Program::changeMenu(&(Program::mainMenu));
-	})
-});
 
 
 
@@ -111,10 +89,12 @@ void Program::eventLoop(){
 					Program::stop();
 				}
 				else if (event.key.code == sf::Keyboard::J){
-					Program::currentMenu->selectMove(jb::UP);
+					// move selection downwards
+					Program::currentMenu->selectMove(jb::DOWN);
 				}
 				else if (event.key.code == sf::Keyboard::K){
-					Program::currentMenu->selectMove(jb::DOWN);
+					// move selection upwards
+					Program::currentMenu->selectMove(jb::UP);
 				}
 				else if (event.key.code == sf::Keyboard::Enter){
 					currentMenu->activateSelection();

@@ -19,7 +19,7 @@ class Button : public sf::Drawable {
 	sf::Color idleColor = sf::Color(231, 146, 71, 255);
 	sf::Color hoverColor = sf::Color(132, 231, 47, 255);
 	sf::Text bText;
-	std::function<void(void)> onPress;
+	std::function<void(void)> procedure;
 
 	bool isHovered = false;
 	static std::shared_ptr<aud::Sound> pressSound;
@@ -36,7 +36,7 @@ class Button : public sf::Drawable {
 
 public:
 
-	Button(int _w, int _h, const std::string _text, std::function<void(void)> _onPress) : w(_w), h(_h), onPress(_onPress){
+	Button(int _w, int _h, const std::string _text, std::function<void(void)> _procedure) : w(_w), h(_h), procedure(_procedure){
 		box = sf::RectangleShape(sf::Vector2f(w,h));
 		box.setFillColor(idleColor);
 		box.setOutlineThickness(1);
@@ -87,7 +87,7 @@ public:
 	void checkPress(int mouseX, int mouseY){
 		if (zone.contains(mouseX, mouseY)){ // this button was pressed
 			Button::pressSound->play();
-			this->onPress();
+			this->procedure();
 		}
 	}
 
@@ -163,7 +163,11 @@ public:
 	}
 
 	void activate(){
-		this->onPress();
+		this->procedure();
+	}
+
+	std::function<void(void)> getProcedure(){
+		return this->procedure;
 	}
 
 
@@ -171,6 +175,8 @@ public:
 		Button::pressSound.reset();
 		Button::hoverSound.reset();
 	}
+
+
 
 };
 

@@ -21,7 +21,7 @@ void ThreadClock::callback(){
 			rack->query_active_alarms(localTime);
 			minuteLoopRef = localTime.minute;
 		}
-		sf::sleep(sf::milliseconds(500));
+		sf::sleep(sf::milliseconds(250));
 	}
 }
 
