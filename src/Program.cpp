@@ -2,75 +2,50 @@
 #include <string.h>
 
 
-bool Program::running 								= true;
-ThreadClock* Program::tClock 						= nullptr;
-WindowWrapper Program::windowWrapper 			= WindowWrapper(500, 500); // create the window
-Menu* Program::currentMenu 						= &mainMenu;
-std::shared_ptr<Rack> Program::currentRack 	= nullptr;
+bool Program::running 				= true;
+Window Program::window 				= Window(500, 500); // create the window
+const unsigned int WIN_WIDTH		= Program::window.get_width();
+const unsigned int WIN_HEIGHT		= Program::window.get_height();
 
 
-//
-// Menus
-//
-Menu Program::mainMenu = Menu(1, Program::windowWrapper.getWindowWidth()/2, Program::windowWrapper.getWindowHeight()/2, \
-{
-	Button(300, 60, "start", \
-		[](){
-			currentRack->add_alarm();
-			Program::mainMenu.duplicateButton();
-		})
-
-});
+std::shared_ptr<Rack> Program::rack 	= nullptr;
+Menu* Program::currentMenu 				= nullptr;
 
 
 
 
+void Program::end(){
+	/*
+	Stop the program
+	*/
 
-//
-// Change what menu is displayed
-// 
-void Program::changeMenu(Menu* newMenu){
-	Program::currentMenu = newMenu;
-}
-
-
-//
-// Stop the program
-// 
-void Program::stop(){
 	sf::sleep(sf::milliseconds(200));
 	Program::cleanup();
-	Program::windowWrapper.getWindow()->close();
+	Program::window.get_window()->close(); // close window
 }
 
 
 void Program::cleanup(){
-	Program::tClock->stop();
-	delete tClock;
+	// free all remaining program heap memory and device objects (audio etc)
 
-	// call sub-cleanups
-	Button::cleanup();
-	currentRack.reset();
+	Sound::cleanup();
+	Alarm::cleanup();
+	rack.reset(); 			// delete current rack
+	delete currentMenu; 	// delete current menu
 }
 
 
 
-//
-// Main program loop
-// 
-void Program::eventLoop(){
+void Program::event_loop(){
+	/*
+	Main program loop
+	*/
 
-	sf::RenderWindow* window = Program::windowWrapper.getWindow();
-	//int winw = Program::windowWrapper.getWindowWidth();
-	//int winh = Program::windowWrapper.getWindowHeight();
-	window->setFramerateLimit(60);
+	sf::RenderWindow* window = Program::window.get_window();
+	window->setFramerateLimit(120);
 	window->setVerticalSyncEnabled(true);
 
 
-	//aud::Sound music_MainMenu("res/music_MainMenu.wav", 20, true);
-	//music_MainMenu.play();
-
-	
 	//sf::Clock clock;
 	// run the program as long as the window is open
 	while (window->isOpen()) {
@@ -80,45 +55,44 @@ void Program::eventLoop(){
 		while (window->pollEvent(event)) {
 			// "close requested" event: we close the window
 			if (event.type == sf::Event::Closed){
-				Program::stop();
+				end(); return;
 
 			// keyboard input
 			} else if (event.type == sf::Event::KeyPressed){
 
 				if (event.key.code == sf::Keyboard::Escape){
-					Program::stop();
+					end(); return;
 				}
 				else if (event.key.code == sf::Keyboard::J){
 					// move selection downwards
-					Program::currentMenu->selectMove(jb::DOWN);
+					rack->select_move(jb::DOWN);
+					currentMenu->update();
 				}
 				else if (event.key.code == sf::Keyboard::K){
 					// move selection upwards
-					Program::currentMenu->selectMove(jb::UP);
+					rack->select_move(jb::UP);
+					currentMenu->update();
 				}
 				else if (event.key.code == sf::Keyboard::Enter){
-					currentMenu->activateSelection();
+					rack->duplicate_alarm();
+					currentMenu->update();
 				}
-				
-			// mouse input
-			} else if (event.type == sf::Event::MouseButtonPressed){
-
-				if (event.mouseButton.button == sf::Mouse::Button::Left){
-					Program::currentMenu->checkPress(event.mouseButton.x, event.mouseButton.y);
+				else if (event.key.code == sf::Keyboard::O){
+					rack->toggle_selection();
+					currentMenu->update();
+				}
+				else if (event.key.code == sf::Keyboard::Space){
+					rack->quiet();
 				}
 			}
-
-			if (window->hasFocus()){
-				//sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
-				//Program::currentMenu->checkHover(mousePos.x, mousePos.y);
-			}
-
+			
 
 			//float dt = clock.restart().asSeconds();
 
 			window->clear(sf::Color(228,240,238,255)); // clear and set bg color
 
-			window->draw(*(Program::currentMenu));
+			window->draw(*(currentMenu));
+
 			window->display();
 
 		}
@@ -128,14 +102,25 @@ void Program::eventLoop(){
 
 
 
-//
-// Start the program
-//
 void Program::init(char* execPath){
+	/*
+	Start the program
+	*/
+
+	// set root path
 	jb::rootPath = jb::rtrim(execPath, strlen(execPath), '/'); // does not work, returns only relative path
-	currentRack = std::shared_ptr<Rack>(new Rack);
-	Program::tClock = new ThreadClock(currentRack);
-	Program::eventLoop();
+
+	// create Rack (will load from file in future)
+	rack = std::shared_ptr<Rack>(new Rack);
+
+	// setup any static members
+	Button::SETUP();
+
+	// create current Menu
+	currentMenu = new Menu(WIN_WIDTH, WIN_HEIGHT, 1, WIN_WIDTH/2, WIN_HEIGHT/3, rack);
+
+	// run main program event loop
+	Program::event_loop();
 }
 
 

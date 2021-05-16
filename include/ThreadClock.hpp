@@ -1,7 +1,8 @@
 #pragma once
 #include <jb.hpp>
-#include <Rack.hpp>
 #include <thread>
+
+class Rack;
 
 class ThreadClock {
 public:

@@ -29,7 +29,7 @@ const char* jb::rtrim(const char* s, size_t len, const char target){
 }
 
 
-const char* jb::getResource(const char* filename){
+const char* jb::get_resource(const char* filename){
 	char* pth = new char[100];
 	std::strcpy(pth, jb::rootPath);
 	std::strcat(pth, "/res/");
@@ -37,6 +37,12 @@ const char* jb::getResource(const char* filename){
 	return pth;
 }
 
+
+void jb::clamp(int& value, int low, int high){
+	// clamps the value to the bounds given
+	if (value < low) value = low;
+	else if (value >= high) value = high - 1;
+}
 
 
 

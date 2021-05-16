@@ -1,33 +1,39 @@
 #pragma once
 #include <SFML/Audio.hpp>
+#include <jb.hpp>
 
 
 namespace aud {
 	
-	class Sound {
+	class Sound; // FD
+	typedef std::unique_ptr<Sound> UP_Sound;
 
-		sf::SoundBuffer buf;
+
+	class Sound {
+		sf::SoundBuffer buffer;
 		sf::Sound sound;
 
 	public:
+		static UP_Sound press_sound;
+		static UP_Sound err_sound;
+		static UP_Sound create_sound;
 
-		Sound(){}
-		Sound(const char* filename, float vol = 100.0f, bool loop = false){
-			buf = sf::SoundBuffer();
-			buf.loadFromFile(filename);
-			sound = sf::Sound(buf);
-			sound.setVolume(vol);
-			sound.setLoop(loop);
-		}
+		Sound() { };
+		Sound(const char* filename, float vol = 100.0f, bool loop = false);
+		Sound(float vol = 100.0f, bool loop = false);
+		Sound(const Sound& from);
+		Sound& operator =(const Sound& from);
+		static void cleanup();
+		~Sound();
 
-		~Sound(){
-		}
-
-
-		void play(){
-			sound.play();
-		}
+		void set_sound(std::string sound_name);
+		void play();
+		void stop();
+		bool is_playing() const;
 
 	};
+
+
 };
+
 

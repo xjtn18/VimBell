@@ -17,7 +17,11 @@ EXEC 		:= jBell
 # C compiler
 CC			:= g++
 # compilation flags
-CFLAGS	:= -std=c++17 -Wc++17-extensions -Wall -I$(INCDIR) -I/Users/Jacob/dev/libs/sfml/include
+CFLAGS	:= -std=c++17 -Wc++17-extensions -Wall \
+			-Wno-unused-variable \
+			-Wno-unused-private-field \
+			-Wno-reorder-ctor \
+			-I$(INCDIR) -I/Users/Jacob/dev/libs/sfml/include
 # linking flags (libraries)
 SFML-LIBPATH	:= /Users/Jacob/dev/libs/sfml/lib 
 LFLAGS			:= -L$(SFML-LIBPATH) -rpath $(SFML-LIBPATH) -lsfml-audio -lsfml-window -lsfml-graphics -lsfml-audio -lsfml-system
@@ -27,6 +31,8 @@ LFLAGS-RLS			:= -L$(SFML-LIBPATH) -rpath $(SFML-LIBPATH) -lsfml-audio -lsfml-win
 OBJS 		:= $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(wildcard $(SRCDIR)/*.cpp))
 HEADERS 	:= $(wildcard $(INCDIR)/*.hpp)
 
+build:
+	@ make $(EXEC) -j7
 
 $(EXEC): $(OBJS)
 	@echo Linking dev build ...
@@ -39,9 +45,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(HEADERS) | $(OBJDIR)
 	@$(CC) $< -c $(CFLAGS) -o $@
 
 run:
-	@ make run2 -j7
-
-run2: $(EXEC)
+	@ make build
 	@ ./$(EXEC)
 
 release: $(OBJS)
@@ -61,5 +65,5 @@ clean:
 $(OBJDIR):
 	mkdir -p $@
 
-.PHONY: run clean portable release
+.PHONY: build run portable release clean
 

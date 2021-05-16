@@ -41,6 +41,17 @@ namespace jb {
 			os << "Time(" << time.hour << "h, " << time.minute << "m)";
 			return os;
 		}
+
+		operator std::string () const {
+			std::string str;
+			str += std::to_string(hour) + ":";
+			if (minute < 10){
+				str += "0"; // add extra front zero
+			}
+			str += std::to_string(minute);
+			return str;
+		}
+
 	} Time;
 
 
@@ -52,7 +63,8 @@ namespace jb {
 	extern const char* rootPath;
 	const Time current_time();
 	const char* rtrim(const char* s, size_t len, const char target);
-	const char* getResource(const char* filename);
+	const char* get_resource(const char* filename);
+	void clamp(int& value, int low, int high);
 
 }
 

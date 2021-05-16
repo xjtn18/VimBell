@@ -2,14 +2,13 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
-#include <WindowWrapper.hpp>
+#include <Window.hpp>
 #include <Debug.hpp>
 #include <Sound.hpp>
 #include <Button.hpp>
 #include <Menu.hpp>
 #include <Image.hpp>
 #include <Rack.hpp>
-#include <ThreadClock.hpp>
 #include <cmath>
 
 
@@ -21,20 +20,16 @@ class Program {
 public:
 	// main window
 	static bool running;
-	static WindowWrapper windowWrapper;
-	static Menu mainMenu, optionsMenu;
+	static Window window;
 	static Menu* currentMenu;
-	static std::shared_ptr<Rack> currentRack;
+	static std::shared_ptr<Rack> rack;
 
 
 	static void init(char* execPath);
-	static void stop();
-	static void eventLoop();
-	static void changeMenu(Menu* newMenu);
+	static void event_loop();
 	static void cleanup();
+	static void end();
 
-protected:
-	 static ThreadClock* tClock;
 };
 
 

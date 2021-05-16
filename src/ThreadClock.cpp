@@ -1,8 +1,10 @@
 #include <ThreadClock.hpp>
 
+#include <Rack.hpp>
+
 
 ThreadClock::ThreadClock(std::shared_ptr<Rack> _rack)
-	: thr(std::thread(&ThreadClock::callback, this)), rack(_rack)
+	: thr(std::thread(&ThreadClock::callback, this)), stopped(false), rack(_rack)
 { }
 
 

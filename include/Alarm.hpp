@@ -1,14 +1,18 @@
 #pragma once
 #include <jb.hpp>
 #include <Sound.hpp>
+using namespace aud;
 
 
 class Alarm {
 
 public:
-	Alarm(jb::Time initTarget, std::string initMsg = "", bool initActive = true);
-
+	Alarm();
+	Alarm(jb::Time initTarget, std::string initMsg = "default", bool initActive = false);
+	Alarm(const Alarm& other);
+	static void cleanup();
 	~Alarm();
+
 
 	inline const jb::Time& get_target() const {
 		return this->target;
@@ -22,15 +26,21 @@ public:
 		return this->msg;
 	}
 
-	//inline void SetTriggerSound(){
-
 	void query(jb::Time t);
 	void trigger();
+	void silence();
+	void toggle();
+
 
 private:
-	jb::Time target;
-	std::string msg;
-	bool active;
-	aud::Sound snd;
+	jb::Time 		target;
+	bool 				active;
+	std::string 	msg;
+	std::string 	sound_name;
 
+	// statics
+	static Sound* 	global_alarm_speaker;
 };
+
+
+
