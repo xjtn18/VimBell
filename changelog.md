@@ -28,6 +28,9 @@
 	- Fixed bug with alarms not copying over when pushing them into vectors/arrays by implementing copy constructors.
 	- Fixed uninitialized 'stopped' bool in ThreadClock that was causing the clock to not run on some program starts.
 	- Added various sounds to certain user actions.
+	- Changed string representation of Time objects to a 12 hour clock.
+	- Changed event loop to switch statement instead of if-else.
+	- Can now use Backspace to delete an alarm from the rack.
 
 
 ### TODO:

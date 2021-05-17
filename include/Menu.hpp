@@ -44,7 +44,7 @@ public:
 			std::string info;
 
 			if (alarms[i].is_active()){
-				info = (std::string) alarms[i].get_target() + "  O  " + alarms[i].get_msg();
+				info = (std::string) alarms[i].get_target() + "     " + alarms[i].get_msg();
 			} else {
 				info = (std::string) alarms[i].get_target() + "  X  " + alarms[i].get_msg();
 			}

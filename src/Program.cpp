@@ -59,30 +59,39 @@ void Program::event_loop(){
 
 			// keyboard input
 			} else if (event.type == sf::Event::KeyPressed){
+				switch (event.key.code){
 
-				if (event.key.code == sf::Keyboard::Escape){
-					end(); return;
-				}
-				else if (event.key.code == sf::Keyboard::J){
-					// move selection downwards
-					rack->select_move(jb::DOWN);
-					currentMenu->update();
-				}
-				else if (event.key.code == sf::Keyboard::K){
-					// move selection upwards
-					rack->select_move(jb::UP);
-					currentMenu->update();
-				}
-				else if (event.key.code == sf::Keyboard::Enter){
-					rack->duplicate_alarm();
-					currentMenu->update();
-				}
-				else if (event.key.code == sf::Keyboard::O){
-					rack->toggle_selection();
-					currentMenu->update();
-				}
-				else if (event.key.code == sf::Keyboard::Space){
-					rack->quiet();
+					case sf::Keyboard::Escape:
+						end(); return;
+
+					case sf::Keyboard::J:
+						rack->select_move(jb::DOWN);
+						currentMenu->update();
+						break;
+
+					case sf::Keyboard::K:
+						rack->select_move(jb::UP);
+						currentMenu->update();
+						break;
+
+					case sf::Keyboard::Enter:
+						rack->duplicate_alarm();
+						currentMenu->update();
+						break;
+
+					case sf::Keyboard::Backspace:
+						rack->remove_alarm();
+						currentMenu->update();
+						break;
+
+					case sf::Keyboard::O:
+						rack->toggle_selection();
+						currentMenu->update();
+						break;
+
+					case sf::Keyboard::Space:
+						rack->quiet();
+						break;
 				}
 			}
 			

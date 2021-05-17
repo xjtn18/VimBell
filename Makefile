@@ -21,6 +21,7 @@ CFLAGS	:= -std=c++17 -Wc++17-extensions -Wall \
 			-Wno-unused-variable \
 			-Wno-unused-private-field \
 			-Wno-reorder-ctor \
+			-Wno-switch \
 			-I$(INCDIR) -I/Users/Jacob/dev/libs/sfml/include
 # linking flags (libraries)
 SFML-LIBPATH	:= /Users/Jacob/dev/libs/sfml/lib 

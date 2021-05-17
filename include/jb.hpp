@@ -42,13 +42,15 @@ namespace jb {
 			return os;
 		}
 
-		operator std::string () const {
+		operator std::string() const {
 			std::string str;
-			str += std::to_string(hour) + ":";
+			int hour_nonmilitary = (hour % 12 == 0) ? 12 : hour % 12;
+			str += std::to_string(hour_nonmilitary) + ":";
 			if (minute < 10){
 				str += "0"; // add extra front zero
 			}
 			str += std::to_string(minute);
+			str += (hour % 12 == hour) ? "am" : "pm";
 			return str;
 		}
 

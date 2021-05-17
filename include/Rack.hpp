@@ -15,6 +15,7 @@ public:
 	void insert_alarm();
 	void toggle_selection();
 	void duplicate_alarm();
+	void remove_alarm();
 	void insert_alarm(Alarm newAlarm);
 	void quiet();
 	const int& get_select_index();

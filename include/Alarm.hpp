@@ -28,9 +28,11 @@ public:
 
 	void query(jb::Time t);
 	void trigger();
-	void silence();
 	void toggle();
+	void set_target(jb::Time new_target);
 
+
+	static void silence();
 
 private:
 	jb::Time 		target;

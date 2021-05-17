@@ -40,8 +40,10 @@ const char* jb::get_resource(const char* filename){
 
 void jb::clamp(int& value, int low, int high){
 	// clamps the value to the bounds given
-	if (value < low) value = low;
-	else if (value >= high) value = high - 1;
+	if (value < low)
+		value = low;
+	else if (value >= high)
+		value = (high - 1 >= low) ? high - 1 : high;
 }
 
 

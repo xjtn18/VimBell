@@ -57,3 +57,8 @@ void Alarm::toggle(){
 }
 
 
+void Alarm::set_target(jb::Time new_target){
+	target = new_target;
+}
+
+
