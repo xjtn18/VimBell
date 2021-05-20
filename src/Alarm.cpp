@@ -1,9 +1,7 @@
 #include <Alarm.hpp>
 
-//
-// static methods and state
-//
 
+/// statics
 Sound* Alarm::global_alarm_speaker = new Sound(100.0f, true);
 
 void Alarm::cleanup(){

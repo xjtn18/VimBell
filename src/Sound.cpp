@@ -4,10 +4,11 @@ using namespace aud;
 
 
 // statics
-auto Sound::press_sound 	= UP_Sound(new Sound("res/sounds/click.wav"));
-auto Sound::err_sound 		= UP_Sound(new Sound("res/sounds/error.wav", 60.0f));
+auto Sound::press_sound 	= UP_Sound(new Sound("res/sounds/click.wav", 40.0f));
+auto Sound::err_sound 		= UP_Sound(new Sound("res/sounds/error.wav"));
 auto Sound::create_sound 	= UP_Sound(new Sound("res/sounds/create.wav"));
-auto Sound::move_sound 		= UP_Sound(new Sound("res/sounds/move.wav", 50.0f));
+auto Sound::move_sound 		= UP_Sound(new Sound("res/sounds/move.wav"));
+auto Sound::remove_sound 	= UP_Sound(new Sound("res/sounds/remove.wav"));
 
 
 
@@ -66,6 +67,7 @@ void Sound::cleanup(){
 	Sound::err_sound.reset();
 	Sound::create_sound.reset();
 	Sound::move_sound.reset();
+	Sound::remove_sound.reset();
 }
 
 

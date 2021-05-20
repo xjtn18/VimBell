@@ -3,7 +3,7 @@
 
 ### 5/3/21
 	- Fixed seg fault after adding an alarm by making the current rack a global variable. Member variables are in class scope and were not accessible by the clock thread.
-	- Made sure to explicitly call delete on the global Rack to properly delete and audio devices open in the alarms. Globals do not fall out of scope and so are never being destructed, automatically atleast.
+	- Made sure to explicitly call delete on the global Rack to properly delete any audio devices open in the alarms. Globals do not fall out of scope and so are never being destructed, automatically atleast.
 	- Changed name of 'MainApp/App' to 'Program'.
 
 ### 5/4/21
@@ -17,14 +17,14 @@
 	- Added up and down interface movement using J and K key input.
 
 ### 5/10/21
-	- Added an update function in menu, and store relevant drawing information as memebers instead of using them only in the Menu constructor.
+	- Added an update function in menu, and store relevant drawing information as members instead of using them only in the Menu constructor.
 	- Can now duplicate list elements by activating them. Creates new element directly below and shifts the selector to the new element.
 
 ### 5/16/21
 	- UI now updates whenever it detects user input; clears all buttons, recreates them based on current state of the alarm rack.
 	- Made all alarm sounds route through one sound object; alarms will not trigger sound if an alarm is currently playing.
 	- User can silence current alarm by pressing space.
-	- Use can toggle activeness.
+	- User can toggle activeness of an alarm.
 	- Fixed bug with alarms not copying over when pushing them into vectors/arrays by implementing copy constructors.
 	- Fixed uninitialized 'stopped' bool in ThreadClock that was causing the clock to not run on some program starts.
 	- Added various sounds to certain user actions.
@@ -32,9 +32,12 @@
 	- Changed event loop to switch statement instead of if-else.
 	- Can now use Backspace to delete an alarm from the rack.
 
+### 5/19/21
+	- Successfully displaying blinking type cursor.
+	- Added black-magic TimerKiller class that can end a 'sleeping' task (destroys the cursor immediately, no wait)
 
 ### TODO:
-
+	- the setup for creating new sound objects is extremely tedious; rework it so the sounds are created when they are needed.
 
 
 ### Syntax Formatting

@@ -14,7 +14,7 @@ namespace aud {
 		sf::Sound sound;
 
 	public:
-		static UP_Sound press_sound, err_sound, create_sound, move_sound;
+		static UP_Sound press_sound, err_sound, create_sound, move_sound, remove_sound;
 
 		Sound() { };
 		Sound(const char* filename, float vol = 100.0f, bool loop = false);

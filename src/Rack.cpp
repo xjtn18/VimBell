@@ -20,7 +20,7 @@ Rack::~Rack()
 void Rack::add_alarm(){
 	Sound::create_sound->play();
 	jb::Time target = jb::current_time() + 1;
-	alarms.emplace_back(Alarm(target, "Time for work!", false));
+	alarms.emplace_back(Alarm(target, "WAKE UP", false));
 }
 
 
@@ -66,12 +66,13 @@ void Rack::duplicate_alarm(){
 		select_index += jb::DOWN; // move selector to the new alarm (dont call 'select_move' to avoid triggering sound)
 		jb::clamp(select_index, 0, alarms.size());
 	}
-	std::cout << "There are now " << alarms.size() << " alarm[s] set.\n";
+	//std::cout << "There are now " << alarms.size() << " alarm[s] set.\n";
 }
 
 
 void Rack::remove_alarm(){
 	if (alarms.size() > 0){
+		Sound::remove_sound->play();
 		alarms.erase(alarms.begin() + select_index); // remove alarm from list
 		if (select_index == alarms.size()){ 			// transition selector correctly
 			// if the selector index is out of bounds, decrement it.

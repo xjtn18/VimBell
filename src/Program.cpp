@@ -3,7 +3,7 @@
 
 
 bool Program::running 				= true;
-Window Program::window 				= Window(500, 500); // create the window
+Window Program::window 				= Window(500, 750); // create the window
 const unsigned int WIN_WIDTH		= Program::window.get_width();
 const unsigned int WIN_HEIGHT		= Program::window.get_height();
 
@@ -45,24 +45,29 @@ void Program::event_loop(){
 	window->setFramerateLimit(120);
 	window->setVerticalSyncEnabled(true);
 
+	TextField my_text_field("", WIN_WIDTH/2, 50, 300, 50);
 
 	//sf::Clock clock;
 	// run the program as long as the window is open
 	while (window->isOpen()) {
+
+		window->clear(sf::Color(228,240,238,255)); // clear and set bg color
 
 		// check all the windows events that were triggered since the last iteration of the loop
 		sf::Event event;
 		while (window->pollEvent(event)) {
 			// "close requested" event: we close the window
 			if (event.type == sf::Event::Closed){
-				end(); return;
+				end();
+				return;
 
 			// keyboard input
 			} else if (event.type == sf::Event::KeyPressed){
 				switch (event.key.code){
 
 					case sf::Keyboard::Escape:
-						end(); return;
+						end();
+						return;
 
 					case sf::Keyboard::J:
 						rack->select_move(jb::DOWN);
@@ -92,19 +97,25 @@ void Program::event_loop(){
 					case sf::Keyboard::Space:
 						rack->quiet();
 						break;
+
+					case sf::Keyboard::A:
+						my_text_field.write();
+						break;
 				}
 			}
 			
 
 			//float dt = clock.restart().asSeconds();
 
-			window->clear(sf::Color(228,240,238,255)); // clear and set bg color
 
-			window->draw(*(currentMenu));
 
-			window->display();
 
 		}
+
+		window->draw(*(currentMenu));
+		window->draw(my_text_field);
+
+		window->display();
 	}
 }
 
