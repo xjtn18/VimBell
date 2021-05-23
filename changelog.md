@@ -36,6 +36,16 @@
 	- Successfully displaying blinking type cursor.
 	- Added black-magic TimerKiller class that can end a 'sleeping' task (destroys the cursor immediately, no wait)
 
+### 5/23/21
+	- Changed cursor blink implemenation to use delta-time and a lerp counter (standard practice, much cleaner and safer than using thread sleeps)
+	- Removed 'Program' class which was nothing but a glorified namespace.
+	- Added 2 main program modes TEXT and ALARM that correlate to seperate keybindings.
+	- User can now type text into the main text field, pressing Enter then moves inserts an alarm into the rack with the text field contents as the alarm message + switches mode to 'ALARM'.
+	- General refactoring
+
+
+
+
 ### TODO:
 	- the setup for creating new sound objects is extremely tedious; rework it so the sounds are created when they are needed.
 

@@ -7,6 +7,11 @@
 
 namespace jb {
 
+	typedef struct Transform {
+		int x,y,w,h;
+	} Transform;
+
+
 	typedef struct Time {
 		int hour;
 		int minute;

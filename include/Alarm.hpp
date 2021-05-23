@@ -26,11 +26,20 @@ public:
 		return this->msg;
 	}
 
+	inline void toggle(){
+		active = !active;
+	}
+
+	inline void set_target(jb::Time new_target){
+		target = new_target;
+	}
+
+	inline void set_message(std::string _msg){
+		msg = _msg;
+	}
+
 	void query(jb::Time t);
 	void trigger();
-	void toggle();
-	void set_target(jb::Time new_target);
-
 
 	static void silence();
 

@@ -1,7 +1,6 @@
 #include <Rack.hpp>
 
 
-
 Rack::Rack() 
 	: select_index(0)
 { 
@@ -17,10 +16,9 @@ Rack::~Rack()
 }
 
 
-void Rack::add_alarm(){
-	Sound::create_sound->play();
+void Rack::add_alarm(std::string message){
 	jb::Time target = jb::current_time() + 1;
-	alarms.emplace_back(Alarm(target, "WAKE UP", false));
+	insert_alarm(Alarm(target, message, false));
 }
 
 
@@ -49,24 +47,22 @@ void Rack::select_move(jb::Direc direction){
 
 
 void Rack::toggle_selection(){
-	alarms[select_index].toggle();
-	Sound::press_sound->play();
+	if (alarms.size() > 0){
+		alarms[select_index].toggle();
+		Sound::press_sound->play();
+	}
 }
 
 
 void Rack::duplicate_alarm(){
-	Sound::create_sound->play();
 	if (alarms.size() == 0){
-		add_alarm();
+		add_alarm("placeholder");
 	} else {
 		Alarm& curr = alarms[select_index]; // currently selected alarm
 		Alarm dup = Alarm(curr);
 		dup.set_target(curr.get_target() + 1);
-		insert_alarm(dup); // insert a copy of the current alarm
-		select_index += jb::DOWN; // move selector to the new alarm (dont call 'select_move' to avoid triggering sound)
-		jb::clamp(select_index, 0, alarms.size());
+		insert_alarm(dup);
 	}
-	//std::cout << "There are now " << alarms.size() << " alarm[s] set.\n";
 }
 
 
@@ -84,18 +80,16 @@ void Rack::remove_alarm(){
 
 
 void Rack::insert_alarm(Alarm newAlarm){
-	alarms.insert(alarms.begin() + select_index + 1, newAlarm);
+	Sound::create_sound->play();
+	if (alarms.size() != 0){
+		alarms.insert(alarms.begin() + select_index + 1, newAlarm);
+	} else {
+		alarms.push_back(newAlarm);
+	}
+	select_index += 1;
+	jb::clamp(select_index, 0, alarms.size());
 }
 
-
-const std::vector<Alarm>& Rack::get_alarms() const {
-	return alarms;
-}
-
-
-const int& Rack::get_select_index(){
-	return select_index;
-}
 
 
 void Rack::quiet(){

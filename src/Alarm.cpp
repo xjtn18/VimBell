@@ -50,13 +50,5 @@ void Alarm::silence(){
 }
 
 
-void Alarm::toggle(){
-	active = !active;
-}
-
-
-void Alarm::set_target(jb::Time new_target){
-	target = new_target;
-}
 
 

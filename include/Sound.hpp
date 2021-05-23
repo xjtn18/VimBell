@@ -6,7 +6,7 @@
 namespace aud {
 	
 	class Sound; // FD
-	typedef std::unique_ptr<Sound> UP_Sound;
+	#define UPS(x) std::unique_ptr<Sound>(new Sound(x))
 
 
 	class Sound {
@@ -14,7 +14,7 @@ namespace aud {
 		sf::Sound sound;
 
 	public:
-		static UP_Sound press_sound, err_sound, create_sound, move_sound, remove_sound;
+		static std::unique_ptr<Sound> press_sound, err_sound, create_sound, move_sound, remove_sound;
 
 		Sound() { };
 		Sound(const char* filename, float vol = 100.0f, bool loop = false);

@@ -3,68 +3,58 @@
 #include <SFML/Graphics.hpp>
 
 
-#include <condition_variable>
-#include <mutex>
-#include <future>
-#include <chrono>
-
-using namespace std::literals::chrono_literals;
-
-struct TimerKiller {
-	// returns false if killed:
-	template<class R, class P>
-	bool wait_for( std::chrono::duration<R,P> const& time ) {
-		std::unique_lock<std::mutex> lock(m);
-		return !cv.wait_for(lock, time, [&]{return terminate;});
-	}
-
-	void kill() {
-		std::unique_lock<std::mutex> lock(m);
-		terminate=true;
-		cv.notify_all();
-	}
-
-private:
-	std::condition_variable cv;
-	std::mutex m;
-	bool terminate = false;
-};
-
-
-
-
-
-
 class TextCursor : public sf::Drawable {
 public:
-	TextCursor(int _x, int _y, int _w, int _h);
+	TextCursor();
+	TextCursor(jb::Transform tf);
 	~TextCursor();
+	inline int get_width() const;
+	void set_xy(const int new_x, const int new_y);
+	void update(float delta_time);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	void translate(const int new_x, const int new_y);
+	void reset_blink_state();
+	void move(int dir);
 
 private:
-	int x, y, w, h;
+	jb::Transform tf;
 	sf::RectangleShape box; // the visual of the text cursor
-	std::thread thr;
-	std::atomic<bool> show, stopped;
-	std::chrono::milliseconds hang_ms;
-	std::future<void> task;
-	TimerKiller task_killer;
+	std::atomic<bool> show;
+	float blink_lerp, blink_target, blink_rate;
+	
 };
+
 
 
 
 class TextField : public sf::Drawable {
 public:
-	TextField(const char* init_content, int x, int y, int w, int h);
+	TextField(){};
+	TextField(const char* init_content, jb::Transform tf, bool _active);
+	~TextField();
+	void write(const char character);
+	void delete_char();
+	void update(float delta_time);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-	void write();
+	void draw_buffer(sf::RenderTarget& target) const;
+	void set_active(bool value);
+	void clear_buffer();
+
+	inline std::string get_buffer() const {
+		return (std::string) buffer;
+	}
+
 
 
 private:
-	char* content;
-	int x, y, w, h;
-	sf::RectangleShape box; // the visual of the text field
+	jb::Transform tf;
+	char* buffer;
+	std::vector<sf::Text> tvec;
+	int buffer_index, bufmax;
+	sf::RectangleShape box; // the text box itself
 	TextCursor cursor;
+	static sf::Font font;
+	bool active;
 };
 
 

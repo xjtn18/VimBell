@@ -9,17 +9,21 @@ public:
 
 	Rack();
 	~Rack();
-	void add_alarm();
+	void add_alarm(std::string message);
 	void query_active_alarms(const jb::Time t);
 	void select_move(jb::Direc direction);
-	void insert_alarm();
 	void toggle_selection();
 	void duplicate_alarm();
 	void remove_alarm();
 	void insert_alarm(Alarm newAlarm);
 	void quiet();
-	const int& get_select_index();
-	const std::vector<Alarm>& get_alarms() const;
+
+	inline const int& get_select_index(){
+		return select_index;
+	}
+	inline const std::vector<Alarm>& get_alarms() const {
+		return alarms;
+	}
 
 	inline int get_size() const {
 		return alarms.size();
