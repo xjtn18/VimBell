@@ -41,8 +41,8 @@
 	- Removed 'Program' class which was nothing but a glorified namespace.
 	- Added 2 main program modes TEXT and ALARM that correlate to seperate keybindings.
 	- User can now type text into the main text field, pressing Enter then moves inserts an alarm into the rack with the text field contents as the alarm message + switches mode to 'ALARM'.
-	- General refactoring
-
+	- General refactoring.
+	- Restructured how sounds are loaded and played. Sounds are loaded at program start into a hashmap and are played by a Speaker (previously called Sound) using '.play("sound_name.wav")'.
 
 
 

@@ -1,13 +1,13 @@
 #pragma once
 #include <jb.hpp>
-#include <Sound.hpp>
+#include <Speaker.hpp>
 using namespace aud;
 
 
 class Alarm {
 
 public:
-	Alarm();
+	Alarm(){};
 	Alarm(jb::Time initTarget, std::string initMsg = "default", bool initActive = false);
 	Alarm(const Alarm& other);
 	static void cleanup();
@@ -43,6 +43,7 @@ public:
 
 	static void silence();
 
+
 private:
 	jb::Time 		target;
 	bool 				active;
@@ -50,7 +51,7 @@ private:
 	std::string 	sound_name;
 
 	// statics
-	static Sound* 	global_alarm_speaker;
+	static Speaker *alarm_speaker;
 };
 
 

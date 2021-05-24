@@ -17,6 +17,7 @@ public:
 	void remove_alarm();
 	void insert_alarm(Alarm newAlarm);
 	void quiet();
+	static void cleanup();
 
 	inline const int& get_select_index(){
 		return select_index;
@@ -33,9 +34,10 @@ public:
 private:
 	int select_index;
 	std::vector<Alarm> alarms;
+	static Speaker *rack_speaker;
 
 protected:
-	 ThreadClock* clock;
+	 ThreadClock *clock;
 
 };
 

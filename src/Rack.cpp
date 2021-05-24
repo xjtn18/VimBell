@@ -1,5 +1,7 @@
 #include <Rack.hpp>
 
+Speaker *Rack::rack_speaker = new Speaker(100.0f, false);
+
 
 Rack::Rack() 
 	: select_index(0)
@@ -36,9 +38,9 @@ void Rack::select_move(jb::Direc direction){
 
 	if (alarms.size() > 0){
 		if (_tmp != select_index){
-			Sound::move_sound->play();
+			rack_speaker->play("move.wav");
 		} else { // tried to move past boundary
-			Sound::err_sound->play();
+			rack_speaker->play("error.wav");
 		}
 	} else {
 		//Sound::empty_move_sound->play();
@@ -49,14 +51,14 @@ void Rack::select_move(jb::Direc direction){
 void Rack::toggle_selection(){
 	if (alarms.size() > 0){
 		alarms[select_index].toggle();
-		Sound::press_sound->play();
+		rack_speaker->play("click.wav");
 	}
 }
 
 
 void Rack::duplicate_alarm(){
 	if (alarms.size() == 0){
-		add_alarm("placeholder");
+		add_alarm("---");
 	} else {
 		Alarm& curr = alarms[select_index]; // currently selected alarm
 		Alarm dup = Alarm(curr);
@@ -68,7 +70,7 @@ void Rack::duplicate_alarm(){
 
 void Rack::remove_alarm(){
 	if (alarms.size() > 0){
-		Sound::remove_sound->play();
+		rack_speaker->play("remove.wav");
 		alarms.erase(alarms.begin() + select_index); // remove alarm from list
 		if (select_index == alarms.size()){ 			// transition selector correctly
 			// if the selector index is out of bounds, decrement it.
@@ -80,7 +82,7 @@ void Rack::remove_alarm(){
 
 
 void Rack::insert_alarm(Alarm newAlarm){
-	Sound::create_sound->play();
+	rack_speaker->play("create.wav");
 	if (alarms.size() != 0){
 		alarms.insert(alarms.begin() + select_index + 1, newAlarm);
 	} else {
@@ -94,12 +96,12 @@ void Rack::insert_alarm(Alarm newAlarm){
 
 void Rack::quiet(){
 	Alarm::silence();
-	// Below is where we could remove any info about previously triggered alarms
-	/*
-	for (Alarm& a : alarms){
-		a.hide_something();
-	}
-	*/
 }
+
+void Rack::cleanup(){
+	delete rack_speaker;
+}
+
+
 
 

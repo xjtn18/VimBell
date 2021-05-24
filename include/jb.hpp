@@ -2,7 +2,7 @@
 #include <ctime>
 #include <string>
 #include <Debug.hpp>
-#include <Sound.hpp>
+#include <Speaker.hpp>
 
 
 namespace jb {

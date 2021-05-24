@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-#include <Button.hpp>
+#include <AlarmCell.hpp>
 #include <Debug.hpp>
 #include <Rack.hpp>
 #include <jb.hpp>
@@ -15,7 +15,7 @@ class Menu : public sf::Drawable {
 	//
 	// A vertical arrangment of buttons.
 	//
-	std::vector<Button> buttons;		// vector of menu elements
+	std::vector<AlarmCell> buttons;		// vector of menu elements
 	int w, h, x, y, padding;					// x,y location of menu; padding distance between menu elements
 	std::shared_ptr<Rack> rack_state;
 
@@ -28,7 +28,7 @@ public:
 		// @params:
 		// 	padding: amount of space in pixels between each button
 		// 	x and y: position of the menu
-		// 	l: init list of Button objects
+		// 	l: init list of AlarmCell objects
 	{
 		update();
 	}
@@ -44,13 +44,13 @@ public:
 			std::string info;
 
 			if (alarms[i].is_active()){
-				info = (std::string) alarms[i].get_target() + "     " + alarms[i].get_msg();
+				info = (std::string) alarms[i].get_target() + "\t \t" + alarms[i].get_msg();
 			} else {
-				info = (std::string) alarms[i].get_target() + "  X  " + alarms[i].get_msg();
+				info = (std::string) alarms[i].get_target() + "\tX\t" + alarms[i].get_msg();
 			}
-			Button button(w, 60, info, [](){dlog("hi");});
+			AlarmCell button(w, 60, info);
 
-			button.setXY(x, _y); // all buttons have the same x coordinate
+			button.set_xy(x, _y); // all buttons have the same x coordinate
 			if (i == rack_state->get_select_index()){
 				button.select();
 			}
@@ -61,31 +61,18 @@ public:
 
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const {
-		for (const Button& button : buttons){ // draw each button
+		for (const AlarmCell& button : buttons){ // draw each button
 			target.draw(button);
 		}
 	}
 
 
 	void set_button_color(sf::Color c){
-		for (Button& button : buttons){
+		for (AlarmCell& button : buttons){
 			button.set_color(c);
 		}
 	}
 
-
-	void check_press(int mouseX, int mouseY){
-		for (Button& button : buttons){
-			button.check_press(mouseX, mouseY);
-		}
-	}
-
-
-	void check_hover(int mouseX, int mouseY){
-		for (Button& button : buttons){
-			button.check_hover(mouseX, mouseY);
-		}
-	}
 	
 };
 

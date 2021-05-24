@@ -2,20 +2,16 @@
 
 
 /// statics
-Sound* Alarm::global_alarm_speaker = new Sound(100.0f, true);
+Speaker *Alarm::alarm_speaker = new Speaker(100.0f, true);
 
 void Alarm::cleanup(){
-	delete global_alarm_speaker;
+	delete alarm_speaker;
 }
 
 
 
-
-Alarm::Alarm()
-{ }
-
 Alarm::Alarm(jb::Time initTarget, std::string initMsg, bool initActive)
-	: target(initTarget), msg(initMsg), active(initActive), sound_name(jb::get_resource("sounds/tone1.wav"))
+	: target(initTarget), msg(initMsg), active(initActive), sound_name("tone1.wav")
 { 
 }
 
@@ -38,15 +34,14 @@ void Alarm::trigger(){
 	std::cout << this->msg << std::endl;
 
 	// sound the alarm if speaker is free
-	if (! global_alarm_speaker->is_playing()){
-		global_alarm_speaker->set_sound(sound_name);
-		global_alarm_speaker->play();
+	if (! alarm_speaker->is_playing()){
+		alarm_speaker->play(sound_name);
 	}
 }
 
 
 void Alarm::silence(){
-	global_alarm_speaker->stop();
+	alarm_speaker->stop();
 }
 
 
