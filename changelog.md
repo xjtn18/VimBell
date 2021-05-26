@@ -44,10 +44,18 @@
 	- General refactoring.
 	- Restructured how sounds are loaded and played. Sounds are loaded at program start into a hashmap and are played by a Speaker (previously called Sound) using '.play("sound_name.wav")'.
 
+### 5/25/21
+	- Added a 'duplicate increment' variable in Rack tha determines the time distance between dups.
+	- Added barebones logical interface for increasing/decreasing the duplicate time distance IRT.
+	- Alarms can no longer be 'duplicated' (created) in an empty rack; user should first write a message and commit it to the rack.
+	- Added auto transitions between alarm and text mode (ex. when all alarms are deleted).
+	- Rack menu now unhighlights the currently selected alarm when disengaging.
+	- Changed text spacing in alarms to be left justified rather than centered, for readabilty.
+
 
 
 ### TODO:
-	- the setup for creating new sound objects is extremely tedious; rework it so the sounds are created when they are needed.
+	- Implement method for saving and loading alarm racks from file.
 
 
 ### Syntax Formatting

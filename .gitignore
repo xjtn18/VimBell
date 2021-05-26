@@ -4,4 +4,5 @@
 objs/
 portable/
 *.asd
-tlc.py
+.DS_Store
+jBell

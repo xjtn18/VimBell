@@ -9,7 +9,7 @@
 #include <TextField.hpp>
 #include <Image.hpp>
 #include <Rack.hpp>
-
+// he's done
 
 
 #define PI 3.14159265
@@ -22,14 +22,13 @@ enum Mode {
 
 
 bool running 							= true;
+Mode mode 								= TEXT; // initial mode is text mode
 Window main_window 					= Window(500, 750); // create the window
 const unsigned int WIN_WIDTH		= main_window.get_width();
 const unsigned int WIN_HEIGHT		= main_window.get_height();
-
-std::shared_ptr<Rack> rack 	= nullptr;
-Menu* currentMenu 				= nullptr;
-Mode mode 							= TEXT; // initial mode is text mode
-TextField main_tbox("", {(int)WIN_WIDTH/2, 50, 400, 50}, true);
+auto main_tbox 						= TextField("", {(int)WIN_WIDTH/2, 50, 400, 50}, true);
+std::shared_ptr<Rack> rack 		= nullptr;
+Menu* current_menu 					= nullptr;
 
 
 
@@ -42,7 +41,7 @@ void full_cleanup(){
 	aud::cleanup();
 
 	rack.reset(); 			// delete current rack
-	delete currentMenu; 	// delete current menu
+	delete current_menu; 	// delete current menu
 }
 
 
@@ -56,6 +55,24 @@ void end(){
 	main_window.get_window()->close(); // close window
 }
 
+
+void handle_universal_input(sf::Event& event){
+	if (event.type == sf::Event::KeyPressed){
+		switch (event.key.code){
+			case sf::Keyboard::Space:
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)){
+					rack->quiet();
+				}
+				break;
+
+			case sf::Keyboard::Escape:
+				end();
+				running = false;
+				return;
+
+		}
+	}
+}
 
 
 void handle_alarm_mode(sf::Event& event){
@@ -76,6 +93,11 @@ void handle_alarm_mode(sf::Event& event){
 
 			case sf::Keyboard::Backspace:
 				rack->remove_alarm();
+				if (rack->size() == 0){
+					main_tbox.engage(true);
+					current_menu->engage(false);
+					mode = TEXT;
+				}
 				break;
 
 			case sf::Keyboard::O:
@@ -83,17 +105,23 @@ void handle_alarm_mode(sf::Event& event){
 				break;
 
 			case sf::Keyboard::Space:
-				rack->quiet();
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)){
+					rack->quiet();
+				}
 				break;
 
-			case sf::Keyboard::Escape:
-				end();
-				running = false;
-				return;
+			case sf::Keyboard::W:
+				rack->adjust_dup_increment(5);
+				break;
+
+			case sf::Keyboard::S:
+				rack->adjust_dup_increment(-5);
+				break;
 		}
 
 		if (event.key.code == sf::Keyboard::Tab){
-			main_tbox.set_active(true);
+			main_tbox.engage(true);
+			current_menu->engage(false);
 			mode = TEXT;
 		}
 	}
@@ -109,23 +137,28 @@ void handle_text_mode(sf::Event& event){
 
 	// for special key events
 	} else if (event.type == sf::Event::KeyPressed){
-		if (event.key.code == sf::Keyboard::Tab){
-			main_tbox.set_active(false);
-			mode = ALARM;
 
-		} else if (event.key.code == sf::Keyboard::Backspace){
-			main_tbox.delete_char();
+		switch (event.key.code){
+			case sf::Keyboard::Tab:
+				if (rack->size() != 0){
+					main_tbox.engage(false);
+					current_menu->engage(true);
+					mode = ALARM;
+				} // else error sound?
+				break;
 
-		} else if (event.key.code == sf::Keyboard::Return){
-			rack->add_alarm(main_tbox.get_buffer());
-			main_tbox.clear_buffer();
-			main_tbox.set_active(false);
-			mode = ALARM;
+			case sf::Keyboard::Backspace:
+				main_tbox.delete_char();
+				break;
 
-		} else if (event.key.code == sf::Keyboard::Escape){
-			end();
-			running = false;
-			return;
+			case sf::Keyboard::Return:
+				rack->add_alarm(main_tbox.get_buffer());
+				main_tbox.clear_buffer();
+				main_tbox.engage(false);
+				current_menu->engage(true);
+				mode = ALARM;
+				break;
+
 		}
 	}
 }
@@ -156,13 +189,15 @@ void event_loop(){
 				return;
 			}
 
+			handle_universal_input(event); // handle universal commands regardless of whats engaged.
+			if (!running) return;
+
 			if (mode == ALARM){ // ALARM MODE
 				handle_alarm_mode(event);
 
 			} else if (mode == TEXT){ // TEXT MODE
 				handle_text_mode(event);
 			}
-			if (!running) return;
 		}
 		// all inputs polled for this frame
 
@@ -171,10 +206,10 @@ void event_loop(){
 
 		// update program objects
 		main_tbox.update(dt);
-		currentMenu->update(); // @TODO: Try to optimize (only call when needed), since it is hefty operation.
+		current_menu->update(); // TODO: Try to optimize (only call when needed), since it is hefty operation.
 
 		// draw object to frame
-		window->draw(*(currentMenu));
+		window->draw(*(current_menu));
 		window->draw(main_tbox);
 
 		window->display(); // display final frame
@@ -198,11 +233,12 @@ int main(int argc, char* argv[]){
 	rack = std::shared_ptr<Rack>(new Rack);
 
 	// setup any static members
-	AlarmCell::SETUP();
+	AlarmCell::setup();
+	TextField::setup();
 	aud::load_all();
 
 	// create current Menu
-	currentMenu = new Menu(WIN_WIDTH, WIN_HEIGHT, 1, WIN_WIDTH/2, WIN_HEIGHT/3, rack);
+	current_menu = new Menu(WIN_WIDTH, WIN_HEIGHT, 1, WIN_WIDTH/2, WIN_HEIGHT/3, rack);
 
 	// run main program event loop
 	event_loop();

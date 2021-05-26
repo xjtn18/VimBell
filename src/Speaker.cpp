@@ -14,7 +14,7 @@ void aud::cleanup(){
 void aud::load_all(){
 	// add new sounds here when they are added to resources dir
 	std::string sound_names[] = 
-		{"error.wav",
+		{ 	"error.wav",
 			"create.wav", 
 			"move.wav", 
 			"remove.wav",

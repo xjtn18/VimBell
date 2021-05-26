@@ -8,7 +8,7 @@ class Alarm {
 
 public:
 	Alarm(){};
-	Alarm(jb::Time initTarget, std::string initMsg = "default", bool initActive = false);
+	Alarm(jb::Time initTarget, std::string initMsg = "default", bool initActive = true);
 	Alarm(const Alarm& other);
 	static void cleanup();
 	~Alarm();

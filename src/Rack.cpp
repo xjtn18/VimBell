@@ -1,10 +1,11 @@
 #include <Rack.hpp>
 
-Speaker *Rack::rack_speaker = new Speaker(100.0f, false);
+Speaker *Rack::rack_speaker 			= new Speaker(100.0f, false);
+const int Rack::max_dup_increment 	= 120;
 
 
 Rack::Rack() 
-	: select_index(0)
+	: select_index(0), dup_increment(5)
 { 
 	clock = new ThreadClock(std::shared_ptr<Rack>(this)); // run clock checking thread
 }
@@ -20,7 +21,7 @@ Rack::~Rack()
 
 void Rack::add_alarm(std::string message){
 	jb::Time target = jb::current_time() + 1;
-	insert_alarm(Alarm(target, message, false));
+	insert_alarm(Alarm(target, message));
 }
 
 
@@ -58,11 +59,11 @@ void Rack::toggle_selection(){
 
 void Rack::duplicate_alarm(){
 	if (alarms.size() == 0){
-		add_alarm("---");
+		add_alarm("---"); // THIS SHOULD NEVER HAPPEN!
 	} else {
 		Alarm& curr = alarms[select_index]; // currently selected alarm
 		Alarm dup = Alarm(curr);
-		dup.set_target(curr.get_target() + 1);
+		dup.set_target(curr.get_target() + dup_increment);
 		insert_alarm(dup);
 	}
 }
@@ -100,6 +101,16 @@ void Rack::quiet(){
 
 void Rack::cleanup(){
 	delete rack_speaker;
+}
+
+
+void Rack::set_dup_increment(int value){
+	dup_increment = value;
+}
+
+void Rack::adjust_dup_increment(int value){
+	dup_increment += value;
+	jb::clamp(dup_increment, 5, max_dup_increment);
 }
 
 

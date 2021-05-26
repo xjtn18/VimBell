@@ -1,29 +1,7 @@
 #pragma once
 #include <jb.hpp>
 #include <SFML/Graphics.hpp>
-
-
-class TextCursor : public sf::Drawable {
-public:
-	TextCursor();
-	TextCursor(jb::Transform tf);
-	~TextCursor();
-	inline int get_width() const;
-	void set_xy(const int new_x, const int new_y);
-	void update(float delta_time);
-	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-	void translate(const int new_x, const int new_y);
-	void reset_blink_state();
-	void move(int dir);
-
-private:
-	jb::Transform tf;
-	sf::RectangleShape box; // the visual of the text cursor
-	std::atomic<bool> show;
-	float blink_lerp, blink_target, blink_rate;
-	
-};
-
+#include <TextCursor.hpp>
 
 
 
@@ -32,13 +10,15 @@ public:
 	TextField(){};
 	TextField(const char* init_content, jb::Transform tf, bool _active);
 	~TextField();
+
+	static void setup();
+	void engage(bool value);
 	void write(const char character);
 	void delete_char();
-	void update(float delta_time);
-	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-	void draw_buffer(sf::RenderTarget& target) const;
-	void set_active(bool value);
 	void clear_buffer();
+	void update(float delta_time);
+	void draw_buffer(sf::RenderTarget& target) const;
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	inline std::string get_buffer() const {
 		return (std::string) buffer;
@@ -54,7 +34,7 @@ private:
 	sf::RectangleShape box; // the text box itself
 	TextCursor cursor;
 	static sf::Font font;
-	bool active;
+	bool engaged;
 };
 
 

@@ -5,6 +5,7 @@
 # Description: Flexible C makefile for ranging project file structures.
 ##########################################################################
 
+
 #----------------------------------------------------------------#
 # name of dir that stores source files
 SRCDIR	:= src
@@ -33,35 +34,35 @@ OBJS 		:= $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(wildcard $(SRCDIR)/*.cpp)
 HEADERS 	:= $(wildcard $(INCDIR)/*.hpp)
 
 build:
-	@ make $(EXEC) -j7
+	 @ make $(EXEC) -j7
 
 $(EXEC): $(OBJS)
-	@echo Linking dev build ...
-	@$(CC) $^ $(LFLAGS) -o $@
-	@echo Done.
-	@printf "\n"
+	@ echo Linking dev build ...
+	@ $(CC) $^ $(LFLAGS) -o $@
+	@ echo Done.
+	@ printf "\n"
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(HEADERS) | $(OBJDIR)
-	@echo Compiling $< ...
-	@$(CC) $< -c $(CFLAGS) -o $@
+	@ echo Compiling $< ...
+	@ $(CC) $< -c $(CFLAGS) -o $@
 
 run:
-	@ make build
-	@ ./$(EXEC)
+	 @ make build
+	 @ ./$(EXEC)
 
 release: $(OBJS)
-	@echo Linking release build ...
-	@$(CC) $^ $(LFLAGS-RLS) -o $(EXEC)
-	@echo Done.
-	@printf "\n"
+	@ echo Linking release build ...
+	@ $(CC) $^ $(LFLAGS-RLS) -o $(EXEC)
+	@ echo Done.
+	@ printf "\n"
 
 portable: release
-	@ mkdir -p $@
-	@ cp $(EXEC) $@
-	@ cp -R res $@
+	 @ mkdir -p $@
+	 @ cp $(EXEC) $@
+	 @ cp -R res $@
 
 clean:
-	@ rm -rf $(EXEC) $(OBJDIR)
+	 @ rm -rf $(EXEC) $(OBJDIR)
 
 $(OBJDIR):
 	mkdir -p $@

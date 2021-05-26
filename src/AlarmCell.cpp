@@ -3,7 +3,7 @@
 sf::Font AlarmCell::font;
 
 
-void AlarmCell::SETUP(){
+void AlarmCell::setup(){
 	AlarmCell::font.loadFromFile("res/fonts/incon.ttf");
 }
 
@@ -20,7 +20,8 @@ AlarmCell::AlarmCell(int _w, int _h, const std::string _text)
 	bText = sf::Text(text, AlarmCell::font, (unsigned int) (h/2));
 	bText.setFillColor(sf::Color::Black); // set font color
 	sf::FloatRect textBounds = bText.getLocalBounds();
-	bText.setOrigin((int)(textBounds.width/2), (int)(h/2)-10);
+	//bText.setOrigin((int)(textBounds.width/2), (int)(h/2)-10);
+	bText.setOrigin(0, (int)(h/2)-10);
 }
 
 
@@ -54,7 +55,7 @@ void AlarmCell::set_xy(int _x, int _y) {
 	y = _y;
 	zone = sf::Rect<int>(x-w/2,y-h/2,w,h);
 	box.setPosition(x, y);
-	bText.setPosition(x, y);
+	bText.setPosition(x-w/2 + 25, y);
 };
 
 

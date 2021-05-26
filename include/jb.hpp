@@ -55,7 +55,7 @@ namespace jb {
 				str += "0"; // add extra front zero
 			}
 			str += std::to_string(minute);
-			str += (hour % 12 == hour) ? "am" : "pm";
+			str += (hour % 12 == hour) ? " am" : " pm";
 			return str;
 		}
 

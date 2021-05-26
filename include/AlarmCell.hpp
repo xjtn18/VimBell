@@ -22,7 +22,7 @@ class AlarmCell: public sf::Drawable {
 
 
 public:
-	static void SETUP();
+	static void setup();
 	AlarmCell(int _w, int _h, const std::string _text);
 	AlarmCell(const AlarmCell& other); // copy constructor
 	AlarmCell& operator =(const AlarmCell& other); // assignment operator
