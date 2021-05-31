@@ -1,8 +1,9 @@
 *.swp
 *~
 *.stackdump
-objs/
-portable/
 *.asd
 .DS_Store
 jBell
+objs/
+portable/
+*.rack
