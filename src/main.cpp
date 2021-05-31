@@ -9,33 +9,103 @@
 #include <TextField.hpp>
 #include <Image.hpp>
 #include <Rack.hpp>
-// he's done
+
+#include <cajun/json/reader.h>
+#include <cajun/json/writer.h>
+#include <cajun/json/elements.h>
+#include <fstream>
 
 
 #define PI 3.14159265
 
+
 enum Mode {
 	TEXT = 0,
-	ALARM
+	RACK
 };
 
 
+namespace prog {
+	bool running 							= true;
+	bool universal_triggered 			= false;
+	Mode mode 								= TEXT; // initial mode is text mode
+	Window main_window 					= Window(750, 750); // create the window
+	const int WIN_WIDTH					= main_window.get_width();
+	const int WIN_HEIGHT					= main_window.get_height();
+	auto main_tbox 						= TextField("", {(int)WIN_WIDTH/2, 75, WIN_WIDTH - 100, 50}, true);
+	std::shared_ptr<Rack> rack 		= nullptr;
+	Menu* current_menu 					= nullptr;
+}
 
-bool running 							= true;
-Mode mode 								= TEXT; // initial mode is text mode
-Window main_window 					= Window(500, 750); // create the window
-const unsigned int WIN_WIDTH		= main_window.get_width();
-const unsigned int WIN_HEIGHT		= main_window.get_height();
-auto main_tbox 						= TextField("", {(int)WIN_WIDTH/2, 50, 400, 50}, true);
-std::shared_ptr<Rack> rack 		= nullptr;
-Menu* current_menu 					= nullptr;
+using namespace prog;
+
+
+void load_rack(){
+	using namespace json;
+	rack = std::shared_ptr<Rack>(new Rack);
+
+	std::fstream fs;
+	fs.open("R1.rack", std::fstream::in); // TODO: give racks a name, and save it to a file
+																// with that same name.
+   Object objDocument;
+   //const Object& objRoot = objDocument;
+	Reader::Read(objDocument, fs);
+	fs.close();
+
+	const Array& arrayAlarms = objDocument["Workday"];
+   Array::const_iterator it(arrayAlarms.Begin()), itEnd(arrayAlarms.End());
+   for (; it != itEnd; ++it){ // for each Alarm
+		const Object& objAlarm = *it;
+
+		// get the alarm target time
+		const Number& hour = objAlarm["TargetHour"];
+		const Number& minute = objAlarm["TargetMinute"];
+		jb::Time t = {(int) hour.Value(), (int) minute.Value()};
+
+		// get the alarm message
+		const String& objMessage = objAlarm["Message"];
+		std::string msg = objMessage.Value();
+
+		// get the active state
+		const Boolean& objActive = objAlarm["Active"];
+		bool active = objActive.Value();
+		rack->insert_alarm(Alarm(t, msg, active));
+		// TODO: we probably dont want the select index to be at the end when loading a rack at start
+	}
+
+}
+
+
+void save_rack(){
+	using namespace json;
+
+   Array arrayAlarms;
+	std::vector<Alarm> alarms = rack->get_alarms();
+
+	for (auto& a : alarms){
+		Object objAPA;
+		objAPA["Message"] = String(a.get_msg());
+		objAPA["TargetHour"] = Number(a.get_target().hour);
+		objAPA["TargetMinute"] = Number(a.get_target().minute);
+		objAPA["Active"] = Boolean(a.is_active());
+		arrayAlarms.Insert(objAPA);
+	}
+
+   Object objDocument;
+   objDocument["Workday"] = arrayAlarms;
+
+	std::fstream fs;
+	fs.open("R1.rack", std::fstream::out); // TODO: give racks a name, and save it to a file
+																// with that same name.
+	Writer::Write(objDocument, fs);
+	fs.close();
+}
 
 
 
-// TODO: try calling cleanup AFTER the main event loop is returned from (in int main);
-void full_cleanup(){
-	// free all remaining program heap memory and device objects (audio etc)
-
+// TODO: try calling cleanup AFTER the main event loop is returned from (in int main)
+void program_cleanup(){
+	// free all remaining program heap memory and audio buffers
 	Alarm::cleanup();
 	Rack::cleanup();
 	aud::cleanup();
@@ -50,9 +120,18 @@ void end(){
 	// Clean heap memory and close the program window
 	//
 
-	sf::sleep(sf::milliseconds(100));
-	full_cleanup();
+	//std::my_thread::sleep_for(std::chrono::milliseconds(100));
+	save_rack();
+	program_cleanup();
 	main_window.get_window()->close(); // close window
+}
+
+
+void switch_mode(Mode _mode){
+	bool value = (_mode == TEXT) ? true : false;
+	main_tbox.engage(value);
+	current_menu->engage(!value);
+	mode = _mode;
 }
 
 
@@ -61,7 +140,8 @@ void handle_universal_input(sf::Event& event){
 		switch (event.key.code){
 			case sf::Keyboard::Space:
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)){
-					rack->quiet();
+					Alarm::silence();
+					universal_triggered = true;
 				}
 				break;
 
@@ -94,20 +174,12 @@ void handle_alarm_mode(sf::Event& event){
 			case sf::Keyboard::Backspace:
 				rack->remove_alarm();
 				if (rack->size() == 0){
-					main_tbox.engage(true);
-					current_menu->engage(false);
-					mode = TEXT;
+					switch_mode(TEXT);
 				}
 				break;
 
 			case sf::Keyboard::O:
 				rack->toggle_selection();
-				break;
-
-			case sf::Keyboard::Space:
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)){
-					rack->quiet();
-				}
 				break;
 
 			case sf::Keyboard::W:
@@ -120,12 +192,11 @@ void handle_alarm_mode(sf::Event& event){
 		}
 
 		if (event.key.code == sf::Keyboard::Tab){
-			main_tbox.engage(true);
-			current_menu->engage(false);
-			mode = TEXT;
+			switch_mode(TEXT);
 		}
 	}
 }
+
 
 
 void handle_text_mode(sf::Event& event){
@@ -141,9 +212,7 @@ void handle_text_mode(sf::Event& event){
 		switch (event.key.code){
 			case sf::Keyboard::Tab:
 				if (rack->size() != 0){
-					main_tbox.engage(false);
-					current_menu->engage(true);
-					mode = ALARM;
+					switch_mode(RACK);
 				} // else error sound?
 				break;
 
@@ -154,9 +223,7 @@ void handle_text_mode(sf::Event& event){
 			case sf::Keyboard::Return:
 				rack->add_alarm(main_tbox.get_buffer());
 				main_tbox.clear_buffer();
-				main_tbox.engage(false);
-				current_menu->engage(true);
-				mode = ALARM;
+				switch_mode(RACK);
 				break;
 
 		}
@@ -165,7 +232,7 @@ void handle_text_mode(sf::Event& event){
 
 
 
-void event_loop(){
+void mainloop(){
 	//
 	// Main program loop
 	//
@@ -178,21 +245,23 @@ void event_loop(){
 	sf::Clock clock;
 
 	while (running && window->isOpen()) {
-		window->clear(sf::Color(228,240,238,255)); // clear and set bg color
+		window->clear(sf::Color(5,5,5,5)); // clear last frame and set bg color
 
 		sf::Event event;
+		universal_triggered = false;
 		while (window->pollEvent(event)) {
 			
-			// USER CLICKED WINDOW CLOSE
+			// User clicked the windows close button
 			if (event.type == sf::Event::Closed){
 				end();
 				return;
 			}
 
 			handle_universal_input(event); // handle universal commands regardless of whats engaged.
-			if (!running) return;
+			if (!running) return; 			// we could have ended the program
+			if (universal_triggered) continue;
 
-			if (mode == ALARM){ // ALARM MODE
+			if (mode == RACK){ // RACK MODE
 				handle_alarm_mode(event);
 
 			} else if (mode == TEXT){ // TEXT MODE
@@ -208,7 +277,7 @@ void event_loop(){
 		main_tbox.update(dt);
 		current_menu->update(); // TODO: Try to optimize (only call when needed), since it is hefty operation.
 
-		// draw object to frame
+		// draw objects to frame
 		window->draw(*(current_menu));
 		window->draw(main_tbox);
 
@@ -229,19 +298,17 @@ int main(int argc, char* argv[]){
 	// set root path
 	jb::rootPath = jb::rtrim(exec_path, strlen(exec_path), '/'); // does not work, returns only relative path
 
-	// create Rack (will load from file in future)
-	rack = std::shared_ptr<Rack>(new Rack);
 
 	// setup any static members
 	AlarmCell::setup();
 	TextField::setup();
-	aud::load_all();
+	aud::load_all(); // load all the UI sounds
 
-	// create current Menu
-	current_menu = new Menu(WIN_WIDTH, WIN_HEIGHT, 1, WIN_WIDTH/2, WIN_HEIGHT/3, rack);
+	load_rack();
+	current_menu = new Menu({WIN_WIDTH/2, 200, WIN_WIDTH, WIN_HEIGHT}, 1, rack);
 
-	// run main program event loop
-	event_loop();
+	// run main program loop
+	mainloop();
 
 	return 0;
 }

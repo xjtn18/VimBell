@@ -1,6 +1,8 @@
 #include <AlarmCell.hpp>
 
 sf::Font AlarmCell::font;
+sf::Color AlarmCell::idleColor = sf::Color(80, 80, 80, 255);
+sf::Color AlarmCell::hoverColor = sf::Color(132, 231, 47, 255);
 
 
 void AlarmCell::setup(){

@@ -15,13 +15,13 @@ TextField::TextField(const char* init_buffer, jb::Transform _tf, bool _engaged)
 		cursor(TextCursor({tf.x - tf.w/2 + 24, tf.y, 18, tf.h-10})), engaged(_engaged)
 {
 	buffer_index 	= 0;
-	bufmax 			= 20;
+	bufmax 			= 34;
 	buffer 			= (char*) calloc(bufmax, sizeof(char));
 
 	strcpy(buffer, init_buffer);
 	box.setOrigin(tf.w/2, tf.h/2);
 	box.setPosition(tf.x, tf.y);
-	box.setFillColor(sf::Color(231, 146, 71, 255));
+	box.setFillColor(sf::Color(255, 101, 74));
 
 
 	int cw = cursor.get_width();
@@ -60,8 +60,6 @@ void TextField::delete_char(){
 		cursor.move(-1);
 	}
 }
-
-
 
 
 void TextField::engage(bool value){

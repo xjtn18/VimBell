@@ -7,17 +7,15 @@
 #include <thread>
 
 
-
 class AlarmCell: public sf::Drawable {
 	int x,y,w,h;
 	sf::Rect<int> zone; // the interactable zone of the button
 	sf::RectangleShape box; // the visual of the button
-	sf::Color idleColor = sf::Color(231, 146, 71, 255);
-	sf::Color hoverColor = sf::Color(132, 231, 47, 255);
 	sf::Text bText;
 	sf::String text;
 
 	bool is_hovered = false;
+	static sf::Color idleColor, hoverColor;
 	static sf::Font font;
 
 

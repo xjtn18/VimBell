@@ -17,7 +17,6 @@ Rack();
 	void adjust_dup_increment(int value);
 	void remove_alarm();
 	void insert_alarm(Alarm newAlarm);
-	void quiet();
 	static void cleanup();
 
 	inline const int& get_select_index(){

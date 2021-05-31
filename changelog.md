@@ -52,10 +52,17 @@
 	- Rack menu now unhighlights the currently selected alarm when disengaging.
 	- Changed text spacing in alarms to be left justified rather than centered, for readabilty.
 
+### 5/30/21
+	- Changed the color scheme to a darker style.
+	- Added basic save and load functionality (see below)
+	- Incorporated CAJUN: an opensoure JSON library. Program now saves the state of the current rack on exit to a JSON file called "R1.rack" for the time being. That file is then read on program start and the rack is recreated identically.
+	- Added boolean to prevent 'text' and 'alarm' mode handling from processing events that occured in the global input handler.
+
 
 
 ### TODO:
-	- Implement method for saving and loading alarm racks from file.
+	- Have a way to edit alarm messages after they've been created.
+	- Sort the rack based on target time IRT.
 
 
 ### Syntax Formatting

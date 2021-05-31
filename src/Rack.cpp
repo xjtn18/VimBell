@@ -1,7 +1,7 @@
 #include <Rack.hpp>
 
 Speaker *Rack::rack_speaker 			= new Speaker(100.0f, false);
-const int Rack::max_dup_increment 	= 120;
+const int Rack::max_dup_increment 	= 121; // exclusive
 
 
 Rack::Rack() 
@@ -93,11 +93,6 @@ void Rack::insert_alarm(Alarm newAlarm){
 	jb::clamp(select_index, 0, alarms.size());
 }
 
-
-
-void Rack::quiet(){
-	Alarm::silence();
-}
 
 void Rack::cleanup(){
 	delete rack_speaker;

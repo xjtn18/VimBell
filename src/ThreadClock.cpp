@@ -1,6 +1,7 @@
 #include <ThreadClock.hpp>
 #include <Rack.hpp>
 
+
 ThreadClock::ThreadClock(std::shared_ptr<Rack> _rack)
 	: thr(std::thread(&ThreadClock::callback, this)), stopped(false), rack(_rack)
 { }
@@ -21,7 +22,7 @@ void ThreadClock::callback(){
 			rack->query_active_alarms(localTime);
 			minuteLoopRef = localTime.minute;
 		}
-		sf::sleep(sf::milliseconds(250));
+		std::this_thread::sleep_for(std::chrono::milliseconds(250));
 	}
 }
 
