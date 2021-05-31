@@ -49,7 +49,12 @@ void load_rack(){
 																// with that same name.
    Object objDocument;
    //const Object& objRoot = objDocument;
-	Reader::Read(objDocument, fs);
+	try {
+		Reader::Read(objDocument, fs);
+	} catch (Reader::ScanException& e){
+		fs.close();
+		return; // nothing to load
+	}
 	fs.close();
 
 	const Array& arrayAlarms = objDocument["Workday"];
