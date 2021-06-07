@@ -4,6 +4,8 @@
 #include <Debug.hpp>
 #include <Speaker.hpp>
 
+#define PI 3.14159265
+
 
 namespace jb {
 
@@ -71,7 +73,7 @@ namespace jb {
 	const Time current_time();
 	const char* rtrim(const char* s, size_t len, const char target);
 	const char* get_resource(const char* filename);
-	void clamp(int& value, int low, int high);
+	bool clamp(int& value, int low, int high);
 
 }
 

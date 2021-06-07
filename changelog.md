@@ -58,11 +58,24 @@
 	- Incorporated CAJUN: an opensoure JSON library. Program now saves the state of the current rack on exit to a JSON file called "R1.rack" for the time being. That file is then read on program start and the rack is recreated identically.
 	- Added boolean to prevent 'text' and 'alarm' mode handling from processing events that occured in the global input handler.
 
+### 5/31/21
+	- Can now edit an alarms message by pressing 'e' in alarm mode.
+
+### 6/5/21
+	- Made character aligning with text fields much more intuitive and adaptive.
+	- Added a placeholder digital clock interface to the left of the main text field.
+	- Some UI design changes.
+	- Wrote square-sine function that adjusts alpha of the cursor, rather than having a discrete blink.
+
 
 
 ### TODO:
-	- Have a way to edit alarm messages after they've been created.
 	- Sort the rack based on target time IRT.
+	- Make main digital clock editable.
+	- Display current duplicate increment to user.
+	- Add more custom alarm tones.
+	- Add typing sounds when writing in main text field.
+	- Draw pretty analog clock in the background.
 
 
 ### Syntax Formatting
@@ -70,13 +83,7 @@
 	- Function names: 			"function_name"
 	- SFML function names:		"functionName"
 	- Variable/Object names:	"object_name"
-	- Globals:						"GLOBAL"
+	- Globals:			        "GLOBAL"
 
-
-## Structure:
-	- Make all user input interact directly with the state (model) of the program. Then have the UI update every frame based on the current state of that model.  (?)
-	- To avoid circular dependency issues between parent and child relationships that use each other, forward declare the class in the header file and then include the classes header in the SOURCE file. (probably bad design if needed)
-	- Store "global" objects as static members of the class that is its type. (must be pointers)
-	- When creating global device objects (like sf::Sounds), store them as unique/shared pointers on heap so they can be explicity deleted (reset()) at program end. This removes any error messages about devices not being closed when we exit.
 
 

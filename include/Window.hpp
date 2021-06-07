@@ -18,8 +18,8 @@ public:
 		delete window;
 	}
 
-	inline sf::RenderWindow* get_window(){
-		return window;
+	inline sf::RenderWindow& get_window(){
+		return *window;
 	}
 
 	inline int get_width(){

@@ -7,7 +7,7 @@ std::unordered_map<std::string, sf::SoundBuffer> aud::sound_map;
 
 
 void aud::cleanup(){
-	sound_map.clear();
+	sound_map.clear(); // delete all the sound buffers we loaded
 }
 
 
@@ -20,7 +20,7 @@ void aud::load_all(){
 			"remove.wav",
 			"click.wav",
 			"tone1.wav"
-		};
+		}; // @TODO: search the res/sounds dir and grab the names that way.
 
 	sf::SoundBuffer sbuf; 
 	for (int i = 0; i < sizeof(sound_names)/sizeof(sound_names[0]); ++i){
@@ -28,6 +28,7 @@ void aud::load_all(){
 		sound_map[sound_names[i]] = sbuf;
 	}
 }
+
 
 
 Speaker::Speaker(const char* filename, float vol, bool loop){
@@ -72,7 +73,5 @@ void Speaker::stop(){
 bool Speaker::is_playing() const {
 	return sound.getStatus() == sf::SoundSource::Playing;
 }
-
-
 
 

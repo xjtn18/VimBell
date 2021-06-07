@@ -6,7 +6,7 @@ sf::Color AlarmCell::hoverColor = sf::Color(132, 231, 47, 255);
 
 
 void AlarmCell::setup(){
-	AlarmCell::font.loadFromFile("res/fonts/incon.ttf");
+   AlarmCell::font.loadFromFile("res/fonts/incon.ttf");
 }
 
 
@@ -15,15 +15,12 @@ AlarmCell::AlarmCell(int _w, int _h, const std::string _text)
 {
 	box = sf::RectangleShape(sf::Vector2f(w,h));
 	box.setFillColor(idleColor);
-	box.setOutlineThickness(1);
-	box.setOutlineColor(sf::Color::Black);
-	box.setOrigin(w/2, h/2);
+	//box.setOrigin(w/2, h/2);
 
-	bText = sf::Text(text, AlarmCell::font, (unsigned int) (h/2));
+	bText = sf::Text(text, AlarmCell::font, (unsigned int) (h/1.85));
 	bText.setFillColor(sf::Color::Black); // set font color
 	sf::FloatRect textBounds = bText.getLocalBounds();
-	//bText.setOrigin((int)(textBounds.width/2), (int)(h/2)-10);
-	bText.setOrigin(0, (int)(h/2)-10);
+	bText.setOrigin(0, (int)(h/2)-5);
 }
 
 
@@ -56,8 +53,8 @@ void AlarmCell::set_xy(int _x, int _y) {
 	x = _x;
 	y = _y;
 	zone = sf::Rect<int>(x-w/2,y-h/2,w,h);
-	box.setPosition(x, y);
-	bText.setPosition(x-w/2 + 25, y);
+	box.setPosition(x-w/2, y);
+	bText.setPosition(x-w/2 + 25, y+h/1.8);
 };
 
 

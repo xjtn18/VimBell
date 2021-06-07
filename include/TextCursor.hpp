@@ -22,7 +22,6 @@ public:
 private:
 	jb::Transform tf;
 	sf::RectangleShape box; // the visual of the text cursor
-	std::atomic<bool> show;
 	float blink_lerp, blink_target, blink_rate;
 	
 };

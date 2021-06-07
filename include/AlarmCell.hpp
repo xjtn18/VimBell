@@ -26,13 +26,14 @@ public:
 	AlarmCell& operator =(const AlarmCell& other); // assignment operator
 	static void cleanup();
 	void set_xy(int _x, int _y);
-	int get_width() const;
-	int get_height() const;
 	void set_color(sf::Color c);
-	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	int get_height() const;
+	int get_width() const;
+
 	void select();
 	void deselect();
 	void activate();
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 };
 

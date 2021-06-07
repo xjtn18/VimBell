@@ -17,6 +17,8 @@ Rack();
 	void adjust_dup_increment(int value);
 	void remove_alarm();
 	void insert_alarm(Alarm newAlarm);
+	std::string get_selection_message();
+	void edit_selection(std::string);
 	static void cleanup();
 
 	inline const int& get_select_index(){
@@ -26,8 +28,12 @@ Rack();
 		return alarms;
 	}
 
-	inline int size() const {
+	inline size_t size() const {
 		return alarms.size();
+	}
+
+	inline std::string get_name() const {
+		return name;
 	}
 
 
@@ -36,6 +42,7 @@ private:
 	static const int max_dup_increment;
 	std::vector<Alarm> alarms;
 	static Speaker *rack_speaker;
+	std::string name;
 
 protected:
 	 ThreadClock *clock;

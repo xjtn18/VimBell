@@ -1,13 +1,14 @@
 #include <Rack.hpp>
 
-Speaker *Rack::rack_speaker 			= new Speaker(100.0f, false);
-const int Rack::max_dup_increment 	= 121; // exclusive
+Speaker *Rack::rack_speaker			 = new Speaker(100.0f, false);
+const int Rack::max_dup_increment	 = 121; // exclusive bounding
 
 
-Rack::Rack() 
+Rack::Rack()
 	: select_index(0), dup_increment(5)
 { 
-	clock = new ThreadClock(std::shared_ptr<Rack>(this)); // run clock checking thread
+	clock = new ThreadClock(std::shared_ptr<Rack>(this)); // run clock thread
+	name = "R1";
 }
 
 
@@ -19,7 +20,13 @@ Rack::~Rack()
 }
 
 
+void Rack::cleanup(){
+	delete rack_speaker;
+}
+
+
 void Rack::add_alarm(std::string message){
+
 	jb::Time target = jb::current_time() + 1;
 	insert_alarm(Alarm(target, message));
 }
@@ -33,18 +40,15 @@ void Rack::query_active_alarms(const jb::Time t){
 
 
 void Rack::select_move(jb::Direc direction){
-	int _tmp = select_index;
 	select_index += direction;
-	jb::clamp(select_index, 0, alarms.size());
+	bool clamped = jb::clamp(select_index, 0, alarms.size());
 
 	if (alarms.size() > 0){
-		if (_tmp != select_index){
-			rack_speaker->play("move.wav");
+		if (!clamped){
+			//rack_speaker->play("move.wav");
 		} else { // tried to move past boundary
 			rack_speaker->play("error.wav");
 		}
-	} else {
-		//Sound::empty_move_sound->play();
 	}
 }
 
@@ -94,10 +98,6 @@ void Rack::insert_alarm(Alarm newAlarm){
 }
 
 
-void Rack::cleanup(){
-	delete rack_speaker;
-}
-
 
 void Rack::set_dup_increment(int value){
 	dup_increment = value;
@@ -107,6 +107,15 @@ void Rack::adjust_dup_increment(int value){
 	dup_increment += value;
 	jb::clamp(dup_increment, 5, max_dup_increment);
 }
+
+std::string Rack::get_selection_message(){
+	return alarms[select_index].get_msg();
+}
+
+void Rack::edit_selection(std::string new_message){
+	alarms[select_index].set_message(new_message);
+}
+
 
 
 

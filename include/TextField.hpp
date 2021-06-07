@@ -1,6 +1,7 @@
 #pragma once
 #include <jb.hpp>
 #include <SFML/Graphics.hpp>
+#include <Line.hpp>
 #include <TextCursor.hpp>
 
 
@@ -16,23 +17,21 @@ public:
 	void write(const char character);
 	void delete_char();
 	void clear_buffer();
-	void update(float delta_time);
+	void fill(std::string content);
+	std::string get_buffer() const;
 	void draw_buffer(sf::RenderTarget& target) const;
+	void update(float delta_time);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
-	inline std::string get_buffer() const {
-		return (std::string) buffer;
-	}
 
 
 
 private:
 	jb::Transform tf;
-	char* buffer;
-	std::vector<sf::Text> tvec;
-	int buffer_index, bufmax;
+	int bufmax;
 	sf::RectangleShape box; // the text box itself
 	TextCursor cursor;
+	Line line;
 	static sf::Font font;
 	bool engaged;
 };

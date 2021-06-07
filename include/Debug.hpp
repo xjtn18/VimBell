@@ -15,6 +15,7 @@
 #include <sstream>
 
 #define kDEBUG 1 // set this to 0 if you dont want to see any of your dlogs
+#define p1(x) std::cout << x << std::endl;
 
 
 ////////////////////////////////////////

@@ -5,14 +5,15 @@ TextCursor::TextCursor(jb::Transform _tf)
 	:  tf(_tf), box(sf::RectangleShape(sf::Vector2f(tf.w, tf.h)))
 {
 	blink_lerp 		= 0.0f;
-	blink_target 	= 10.0f;
-	blink_rate 		= 20.0;
-	show 				= true;
+	blink_target 	= 255.0f;
+	blink_rate 		= 0.05f;
 	box.setOrigin(tf.w/2, tf.h/2);
 	box.setPosition(tf.x, tf.y);
-	box.setFillColor(sf::Color::Black);
+	box.setFillColor(sf::Color(50,50,50));
+}
 
 
+TextCursor::~TextCursor(){
 }
 
 
@@ -26,29 +27,22 @@ void TextCursor::translate(const int new_x, const int new_y){
 
 void TextCursor::reset_blink_state(){
 	blink_lerp = 0.0f;
-	if (!show){ // hidden
-		show = true;
-		blink_rate -= 10.0f;
-	}
 }
 
 
-void TextCursor::update(float delta_time){
-	blink_lerp += blink_rate * delta_time; // increment the blink_lerp by the blink_rate as a function -
-													// of the frame delta time (framerate consistent).
-	if (blink_lerp >= blink_target){
-		blink_lerp = 0.0f; // reset blink_lerp to it stays within a simple range
-		show = !show; // switch state of cursor (for blinking effect).
-		if (show){ // slightly extend duration of the 'show' state of the blink.
-			blink_rate -= 10.0f;
-		} else {
-			blink_rate += 10.0f;
-		}
-	}
+void TextCursor::update(float dt){
+	float inc = blink_rate * dt;
+	blink_lerp += inc;
+	if (blink_lerp >= blink_target) blink_lerp = 0;
+
+	float x = 180/PI * blink_lerp;
+	auto blink_func = [=] (float x) -> float { return pow(-pow(sin(x - 0.6f), 28) + 1, 80); };
+	
+	sf::Color color = box.getFillColor();
+	color.a = blink_target * blink_func(x);
+	box.setFillColor(color);
 }
 
-TextCursor::~TextCursor(){
-}
 
 
 void TextCursor::move(int dir){
@@ -58,9 +52,7 @@ void TextCursor::move(int dir){
 
 
 void TextCursor::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-	if (show){
-		target.draw(box); // draw the button box
-	}
+	target.draw(box); // draw the button box
 }
 
 
