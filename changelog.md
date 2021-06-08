@@ -67,15 +67,19 @@
 	- Some UI design changes.
 	- Wrote square-sine function that adjusts alpha of the cursor, rather than having a discrete blink.
 
+### 6/8/21
+	- Added ask_yes_no function to temporarily ask if user wants to save current rack on exit.
+
 
 
 ### TODO:
-	- Sort the rack based on target time IRT.
+	- Sort the rack based on target time.
 	- Make main digital clock editable.
 	- Display current duplicate increment to user.
 	- Add more custom alarm tones.
 	- Add typing sounds when writing in main text field.
 	- Draw pretty analog clock in the background.
+	- Make ask_yes_no a dialog box rather than a shell input.
 
 
 ### Syntax Formatting

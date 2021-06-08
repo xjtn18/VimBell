@@ -13,7 +13,7 @@ namespace aud {
 
 
 	class Speaker {
-		sf::SoundBuffer buffer;
+		//sf::SoundBuffer buffer;
 		sf::Sound sound;
 
 	public:

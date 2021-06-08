@@ -35,11 +35,12 @@ void load_rack(std::shared_ptr<Rack>& rack){
 		const Boolean& objActive = objAlarm["Active"];
 		bool active = objActive.Value();
 
-		rack->insert_alarm(Alarm(t, msg, active));
-		// TODO: we probably dont want the select index to be at the end when loading a rack at start
+		rack->insert_alarm(Alarm(t, msg, active), false);
 	}
 
+	rack->set_select(0);
 }
+
 
 
 void save_rack(const std::shared_ptr<Rack>& rack){

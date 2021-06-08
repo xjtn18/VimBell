@@ -1,7 +1,13 @@
 #include <Rack.hpp>
 
 Speaker *Rack::rack_speaker			 = new Speaker(100.0f, false);
-const int Rack::max_dup_increment	 = 121; // exclusive bounding
+const int Rack::max_dup_increment	 = 121; // upper bound, exclusive
+
+void Rack::cleanup(){
+	delete rack_speaker;
+}
+
+
 
 
 Rack::Rack()
@@ -20,11 +26,6 @@ Rack::~Rack()
 }
 
 
-void Rack::cleanup(){
-	delete rack_speaker;
-}
-
-
 void Rack::add_alarm(std::string message){
 
 	jb::Time target = jb::current_time() + 1;
@@ -37,6 +38,7 @@ void Rack::query_active_alarms(const jb::Time t){
 		a.query(t);
 	}
 }
+
 
 
 void Rack::select_move(jb::Direc direction){
@@ -86,8 +88,8 @@ void Rack::remove_alarm(){
 }
 
 
-void Rack::insert_alarm(Alarm newAlarm){
-	rack_speaker->play("create.wav");
+void Rack::insert_alarm(Alarm newAlarm, bool audible){
+	if (audible) rack_speaker->play("create.wav");
 	if (alarms.size() != 0){
 		alarms.insert(alarms.begin() + select_index + 1, newAlarm);
 	} else {
@@ -96,7 +98,6 @@ void Rack::insert_alarm(Alarm newAlarm){
 	select_index += 1;
 	jb::clamp(select_index, 0, alarms.size());
 }
-
 
 
 void Rack::set_dup_increment(int value){
@@ -115,7 +116,6 @@ std::string Rack::get_selection_message(){
 void Rack::edit_selection(std::string new_message){
 	alarms[select_index].set_message(new_message);
 }
-
 
 
 

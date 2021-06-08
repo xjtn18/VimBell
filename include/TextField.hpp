@@ -8,15 +8,17 @@
 
 class TextField : public sf::Drawable {
 public:
+	static void setup();
+	static void cleanup();
+
 	TextField(){};
 	TextField(const char* init_content, jb::Transform tf, bool _active);
 	~TextField();
 
-	static void setup();
 	void engage(bool value);
 	void write(const char character);
 	void delete_char();
-	void clear_buffer();
+	void clear_buffer(bool audible = false);
 	void fill(std::string content);
 	std::string get_buffer() const;
 	void draw_buffer(sf::RenderTarget& target) const;
@@ -27,12 +29,14 @@ public:
 
 
 private:
+	static sf::Font font;
+	static aud::Speaker* field_speaker;
+
 	jb::Transform tf;
 	int bufmax;
 	sf::RectangleShape box; // the text box itself
 	TextCursor cursor;
 	Line line;
-	static sf::Font font;
 	bool engaged;
 };
 

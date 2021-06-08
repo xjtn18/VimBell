@@ -32,8 +32,8 @@ void aud::load_all(){
 
 
 Speaker::Speaker(const char* filename, float vol, bool loop){
-	buffer.loadFromFile(filename);
-	sound.setBuffer(buffer);
+	//buffer.loadFromFile(filename);
+	//sound.setBuffer(buffer);
 	sound.setVolume(vol);
 	sound.setLoop(loop);
 }
@@ -44,13 +44,13 @@ Speaker::Speaker(float vol, bool loop){
 }
 
 Speaker::Speaker(const Speaker& from)
-	: buffer(from.buffer)
+//	: buffer(from.buffer)
 { }
 
 Speaker& Speaker::operator=(const Speaker& from){
 	if (this != &from){
-		buffer = from.buffer; // creates a COPY of the sound buffer
-		sound.setBuffer(buffer); // do not use from.buffer, use our copy
+		//buffer = from.buffer; // creates a COPY of the sound buffer
+		//sound.setBuffer(buffer); // do not use from.buffer, use our copy
 		sound.setVolume(from.sound.getVolume());
 		sound.setLoop(from.sound.getLoop());
 	}
@@ -62,7 +62,10 @@ Speaker::~Speaker(){
 
 
 void Speaker::play(std::string sound_name){
-	sound.setBuffer(sound_map[sound_name]);
+	if (std_not_in(sound_name, sound_map)){
+		std::cout << "Error: Unable to find sound named '" << sound_name << "' in sound map." << std::endl;
+	}
+	sound.setBuffer(sound_map.at(sound_name));
 	sound.play();
 }
 

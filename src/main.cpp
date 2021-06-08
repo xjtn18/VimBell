@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <cmath>
+#include <functional>
 
 #include <Window.hpp>
 #include <Debug.hpp>
@@ -63,8 +64,10 @@ std::ostream& operator<<(std::ostream& os, const sf::FloatRect& rect){
 
 void program_cleanup(){
 	// free all remaining program heap memory and audio buffers
+	//std::this_thread::sleep_for(std::chrono::milliseconds(2000)); @NOTE for testing purposes
 	Alarm::cleanup();
 	Rack::cleanup();
+	TextField::cleanup();
 	aud::cleanup();
 
 	rack.reset();			// delete current rack
@@ -72,12 +75,29 @@ void program_cleanup(){
 }
 
 
+void ask_yes_no(std::string question, std::function<void(void)> yes_callback){
+	std::string answer;
+	while (true){
+		std::cout << question << std::endl;
+		std::cin >> answer;
+		if (answer == "yes"){
+			yes_callback();
+			return;
+		} else if (answer == "no"){
+			return;
+		} else {
+			std::cout << "reply \"yes\" or \"no\"." << std::endl;
+		}
+	}
+}
+
+
 void quit(){
 	//
 	// Clean heap memory and close the program window
 	//
-
-	save_rack(rack);
+	auto save = [&](){save_rack(rack);};
+	ask_yes_no("Would you like to save the " + rack->get_name() + " alarm rack?", save);
 	program_cleanup();
 	main_window.get_window().close(); // close window
 }
@@ -100,14 +120,20 @@ void handle_universal_input(sf::Event& event){
 
 	} else if (event.type == sf::Event::KeyPressed){
 		switch (event.key.code){
+
 		case sf::Keyboard::Space:
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)){
 				Alarm::silence();
 				univ_triggered = true;
 			}
 			break;
+
 		case sf::Keyboard::Escape:
-			running = false;
+			if (!editing){
+				running = false;
+				univ_triggered = true;
+			}
+			break;
 		}
 	}
 }
@@ -115,14 +141,22 @@ void handle_universal_input(sf::Event& event){
 
 void handle_rack_mode(sf::Event& event){
 	if (event.type == sf::Event::KeyPressed){
-
 		switch (event.key.code){
+
 		case sf::Keyboard::J:
-			rack->select_move(jb::DOWN);
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)){
+				rack->set_select(rack->size()-1);
+			} else {
+				rack->select_move(jb::DOWN);
+			}
 			break;
 
 		case sf::Keyboard::K:
-			rack->select_move(jb::UP);
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)){
+				rack->set_select(0);
+			} else {
+				rack->select_move(jb::UP);
+			}
 			break;
 
 		case sf::Keyboard::Enter:
@@ -172,8 +206,8 @@ void handle_text_mode(sf::Event& event){
 
 		// for special key events
 	} else if (event.type == sf::Event::KeyPressed){
-
 		switch (event.key.code){
+
 		case sf::Keyboard::Tab:
 			if (!editing && rack->size() != 0){
 				switch_mode(RACK);
@@ -182,7 +216,7 @@ void handle_text_mode(sf::Event& event){
 
 		case sf::Keyboard::Backspace:
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)){
-				main_tbox.clear_buffer();
+				main_tbox.clear_buffer(true);
 			} else {
 				main_tbox.delete_char();
 			}
@@ -191,7 +225,6 @@ void handle_text_mode(sf::Event& event){
 		case sf::Keyboard::Return:
 			if (editing == false){
 				rack->add_alarm(main_tbox.get_buffer());
-				//rack_view->anim_create();
 			} else {
 				rack->edit_selection(main_tbox.get_buffer());
 				editing = false;
@@ -199,6 +232,11 @@ void handle_text_mode(sf::Event& event){
 			main_tbox.clear_buffer();
 			switch_mode(RACK);
 			break;
+
+		case sf::Keyboard::Escape:
+			editing = false;
+			main_tbox.clear_buffer();
+			switch_mode(RACK);
 		}
 	}
 }
@@ -263,18 +301,19 @@ void mainloop(){
 		sf::Event event;
 		univ_triggered = false;
 		mode_switched = false;
+
 		while (window.pollEvent(event)) {
+			// TODO: make an 'input manager' class that better handles these context changes.
 
 			handle_universal_input(event); // handle universal commands regardless of whats engaged.
 			if (univ_triggered) continue; // NOTE: Must be done this way, with a global boolean.
 			if (mode == RACK){
 				handle_rack_mode(event);
-			} else if (!mode_switched && mode == TEXT){
+			} else if (mode == TEXT && !mode_switched){
 				handle_text_mode(event);
 			}
 		}
 		// all inputs polled for this frame
-
 
 		update_UI_entities( clock.restart().asSeconds() );
 		draw_frame(window);

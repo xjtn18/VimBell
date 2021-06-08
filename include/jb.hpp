@@ -5,16 +5,18 @@
 #include <Speaker.hpp>
 
 #define PI 3.14159265
+#define std_is_in(x,y)   y.find(x) != y.end()
+#define std_not_in(x,y)  y.find(x) == y.end()
 
 
 namespace jb {
 
-	typedef struct Transform {
+	struct Transform {
 		int x,y,w,h;
-	} Transform;
+	};
 
 
-	typedef struct Time {
+	struct Time {
 		int hour;
 		int minute;
 
@@ -61,7 +63,7 @@ namespace jb {
 			return str;
 		}
 
-	} Time;
+	};
 
 
 	enum Direc {

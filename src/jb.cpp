@@ -18,7 +18,6 @@ const char* jb::rtrim(const char* s, size_t len, const char target){
 	for (; i >= 0; i--){
 		if (s[i] == target){ break; }
 	}
-
 	if (i < 0){ // tail is entire path
 		return s;
 	}
