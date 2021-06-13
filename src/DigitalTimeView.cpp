@@ -7,24 +7,22 @@ sf::Font DigitalTimeView::font;
 
 DigitalTimeView::DigitalTimeView(jb::Transform _tf)
 	: tf(_tf),
-	  line(Line("", 50, _tf, 0, 30)),
+	  line(Line("12:30", 50, _tf, 0, 30, sf::Color::White)),
 	  lerp(0),
 	  lerp_target(5)
 {
    DigitalTimeView::font.loadFromFile("res/fonts/incon.ttf");
 
-	sf::Color digit_color = sf::Color::White;
-	int y = tf.y;
-	int wid = 25;
-	for (int i = 0; i < 5; ++i){
-		if (i != 2){
-			line.insert_char('7');
-		} else {
-			line.insert_char(':');
-		}
-		line.line.back().setFillColor(digit_color); // set font color
-	}
+}
 
+DigitalTimeView& DigitalTimeView::operator =(const DigitalTimeView& from){
+	if (&from != this){
+		tf = from.tf;
+		lerp = from.lerp;
+		lerp_target = from.lerp_target;
+		line = from.line;
+	}
+	return *this;
 }
 
 
@@ -44,8 +42,8 @@ void DigitalTimeView::update(float dt){
 
 }
 
+
 void DigitalTimeView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-	for (auto& c : line.line){
-		target.draw(c);
-	}
+	target.draw(line);
 }
+

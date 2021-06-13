@@ -62,7 +62,7 @@ Speaker::~Speaker(){
 
 
 void Speaker::play(std::string sound_name){
-	if (std_not_in(sound_name, sound_map)){
+	if (not_in(sound_name, sound_map)){
 		std::cout << "Error: Unable to find sound named '" << sound_name << "' in sound map." << std::endl;
 	}
 	sound.setBuffer(sound_map.at(sound_name));

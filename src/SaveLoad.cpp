@@ -3,7 +3,7 @@ using namespace json;
 
 
 void load_rack(std::shared_ptr<Rack>& rack){
-	rack = std::shared_ptr<Rack>(new Rack);
+	rack = std::shared_ptr<Rack>(new Rack("R1"));
 
 	std::fstream fs;
 	fs.open("R1.rack", std::fstream::in);

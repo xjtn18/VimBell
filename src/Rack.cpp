@@ -10,11 +10,12 @@ void Rack::cleanup(){
 
 
 
-Rack::Rack()
-	: select_index(0), dup_increment(5)
+Rack::Rack(std::string _name)
+	: name(_name),
+	  select_index(0),
+	  dup_increment(5)
 { 
 	clock = new ThreadClock(std::shared_ptr<Rack>(this)); // run clock thread
-	name = "R1";
 }
 
 

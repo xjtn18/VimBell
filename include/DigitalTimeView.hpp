@@ -12,7 +12,13 @@ struct DigitalTimeView : public sf::Drawable {
 	sf::Text semicolon;
 	float lerp, lerp_target;
 
+
+	DigitalTimeView(){}
 	DigitalTimeView(jb::Transform _tf);
+	DigitalTimeView(const DigitalTimeView& other) = default;
+	DigitalTimeView& operator =(const DigitalTimeView& from);
+
+
 	void update(float dt);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };

@@ -8,7 +8,7 @@ class Rack {
 public:
 	static void cleanup();
 
-	Rack();
+	Rack(std::string _name);
 	~Rack();
 	void add_alarm(std::string message);
 	void query_active_alarms(const jb::Time t);

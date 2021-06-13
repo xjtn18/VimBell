@@ -20,7 +20,7 @@ TextField::TextField(const char* init_buffer, jb::Transform _tf, bool _engaged)
 	: tf(_tf),
 	  box(sf::RectangleShape(sf::Vector2f(tf.w, tf.h))),
 	  cursor(TextCursor({tf.x + 24, tf.y, 19, tf.h-10})),
-	  line(Line(init_buffer, cursor.get_width()*2, _tf, 24, cursor.get_width())),
+	  line(Line(init_buffer, cursor.get_width()*2, _tf, 24, cursor.get_width(), sf::Color(50,50,50))),
 	  engaged(_engaged)
 {
 	bufmax = tf.w / cursor.get_width() - 2;

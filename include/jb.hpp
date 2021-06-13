@@ -5,8 +5,9 @@
 #include <Speaker.hpp>
 
 #define PI 3.14159265
-#define std_is_in(x,y)   y.find(x) != y.end()
-#define std_not_in(x,y)  y.find(x) == y.end()
+#define is_in(x,y)   y.find(x) != y.end()
+#define not_in(x,y)  y.find(x) == y.end()
+#define DEV true
 
 
 namespace jb {

@@ -5,18 +5,18 @@
 #include <Debug.hpp>
 #include <Rack.hpp>
 #include <jb.hpp>
+#include <Entity.hpp>
 
 #include <vector>
 #include <initializer_list>
 
 
 
-class Menu : public sf::Drawable {
+class Menu : public Entity {
 	//
 	// A vertical arrangment of buttons.
 	//
 	std::vector<AlarmCell> buttons;		// vector of menu elements
-	jb::Transform tf;
 	int padding;					// x,y location of menu; padding distance between menu elements
 	std::shared_ptr<Rack> rack_state;
 	bool engaged;
@@ -26,7 +26,7 @@ public:
 	Menu(){}
 
 	Menu(jb::Transform _tf, int _padding, std::shared_ptr<Rack> _rack_state, bool _engaged = false)
-		: tf(_tf), padding(_padding), rack_state(_rack_state), engaged(_engaged)
+		: Entity(_tf), padding(_padding), rack_state(_rack_state), engaged(_engaged)
 	{ }
 	
 

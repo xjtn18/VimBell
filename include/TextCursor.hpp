@@ -5,7 +5,7 @@
 
 class TextCursor : public sf::Drawable {
 public:
-	TextCursor();
+	TextCursor(){}
 	TextCursor(jb::Transform tf);
 	~TextCursor();
 

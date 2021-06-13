@@ -1,5 +1,7 @@
 #pragma once
 #include <SFML/Window.hpp>
+#include <Debug.hpp>
+
 
 class Window {
 	
@@ -8,6 +10,7 @@ class Window {
 	sf::RenderWindow* window;
 
 public:
+	Window(){}
 	Window(int _width, int _height) : width(_width), height(_height){
 		sf::ContextSettings settings;
 		settings.antialiasingLevel = 16;
