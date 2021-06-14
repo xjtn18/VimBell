@@ -37,6 +37,15 @@ const char* jb::get_resource(const char* filename){
 }
 
 
+const char* jb::get_image(const char* filename){
+	char* pth = new char[100];
+	std::strcpy(pth, jb::rootPath);
+	std::strcat(pth, "/res/images/");
+	std::strcat(pth, filename);
+	return pth;
+}
+
+
 bool jb::clamp(int& value, int low, int high){
 	// clamps the value to the bounds given, returns true if value was constrained, false otherwise.
 	if (value < low){

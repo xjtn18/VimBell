@@ -144,6 +144,14 @@ void InputManager::handle_text_mode(sf::Event& event){
 			switch_mode(RACK);
 			break;
 
+		case sf::Keyboard::Left:
+			p->main_tbox.shift_cursor(jb::UP);
+			break;
+
+		case sf::Keyboard::Right:
+			p->main_tbox.shift_cursor(jb::DOWN);
+			break;
+
 		case sf::Keyboard::Escape:
 			p->editing = false;
 			p->main_tbox.clear_buffer();

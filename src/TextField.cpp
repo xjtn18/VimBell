@@ -37,7 +37,7 @@ TextField::~TextField(){
 
 void TextField::write(const char character){
 	// write a char to the text field
-	if (line.index < bufmax){
+	if (line.line.size() < bufmax){
 		line.insert_char(character);
 		cursor.move(1);
 	}
@@ -51,6 +51,15 @@ void TextField::delete_char(){
 		cursor.move(-1);
 	} else {
 		field_speaker->play("error.wav");
+		cursor.reset_blink_state();
+	}
+}
+
+
+void TextField::shift_cursor(jb::Direc direction){
+	line.index += direction;
+	if (!jb::clamp(line.index, 0, line.line.size()+1)){
+		cursor.move(direction);
 		cursor.reset_blink_state();
 	}
 }
@@ -75,7 +84,7 @@ void TextField::clear_buffer(bool audible){
 
 std::string TextField::get_buffer() const {
 	std::string result;
-	for (int i = 0; i < line.index; ++i){
+	for (int i = 0; i < line.line.size(); ++i){
 		result += line.line[i].getString();
 	}
 	return result;

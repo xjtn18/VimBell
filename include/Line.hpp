@@ -19,7 +19,9 @@ public:
 	void insert_char(char c);
 	void remove_char();
 	void clear();
+	void clear_all();
 	void set(const char* content);
+	void update();
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
 

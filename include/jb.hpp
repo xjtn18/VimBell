@@ -77,6 +77,7 @@ namespace jb {
 	const char* rtrim(const char* s, size_t len, const char target);
 	const char* get_resource(const char* filename);
 	bool clamp(int& value, int low, int high);
+	const char* get_image(const char* filename);
 
 }
 

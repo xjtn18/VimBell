@@ -18,14 +18,13 @@ public:
 	void engage(bool value);
 	void write(const char character);
 	void delete_char();
+	void shift_cursor(jb::Direc direction);
 	void clear_buffer(bool audible = false);
 	void fill(std::string content);
 	std::string get_buffer() const;
 	void draw_buffer(sf::RenderTarget& target) const;
 	void update(float delta_time);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-
-
 
 
 private:

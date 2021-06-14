@@ -5,7 +5,19 @@
 Program::Program()
 	: IM(this)
 {
-	// window setup
+	// setup any static members
+	AlarmCell::setup();
+	TextField::setup();
+	aud::load_all(); // load all the UI sounds
+
+	sf::ContextSettings settings;
+	settings.antialiasingLevel = 16;
+	window_ptr = new sf::RenderWindow(sf::VideoMode(750, 750), "jBell", sf::Style::Titlebar | sf::Style::Close, settings);
+
+	// Set the Icon
+   sf::Image icon;
+   icon.loadFromFile(jb::get_image("clock-ico.png"));
+   window_ptr->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
 	// UI entities
 	main_tbox = TextField("", {225, 75, 500, 50}, true);
@@ -24,6 +36,11 @@ Program::Program()
 	bezel_top = sf::RectangleShape({(float)WINW-padding*2, 30});
 	bezel_bottom = sf::RectangleShape({(float)WINW-padding*2, 30});
 	setup_bezels();
+
+	v = VStack(WINW/2, 0, 0, {
+			sector_top,
+			rack_view
+		});
 }
 
 
@@ -70,6 +87,7 @@ void Program::cleanup(){
 
 	rack.reset();			// delete current rack
 	delete rack_view;
+	delete window_ptr;
 }
 
 
@@ -81,8 +99,8 @@ void Program::quit(){
 	//
 	auto save = [&](){save_rack(rack);};
 	if (!DEV) ask_yes_no("Would you like to save the current rack (" + rack->get_name() + ")?", save);
+	window_ptr->close(); // close window
 	cleanup();
-	main_window.get_window().close(); // close window
 }
 
 
@@ -126,14 +144,10 @@ void Program::mainloop(){
 	// Main program loop
 	//
 
-	sf::RenderWindow& window = main_window.get_window();
+	sf::RenderWindow& window = *(window_ptr);
 	window.setFramerateLimit(120);
 	//window.setVerticalSyncEnabled(true);
 
-	VStack v(WINW/2, 0, 0, {
-			sector_top,
-			rack_view
-		});
 
 	sf::Clock clock;
 
