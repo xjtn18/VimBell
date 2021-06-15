@@ -21,7 +21,12 @@ public:
 	void clear();
 	void clear_all();
 	void set(const char* content);
-	void update();
+	void reset_lerp();
+	void update(float dt);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
+private:
+	void repos_text();
+	float lerp;
 };
 

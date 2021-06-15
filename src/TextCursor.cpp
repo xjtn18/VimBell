@@ -36,7 +36,7 @@ void TextCursor::update(float dt){
 	if (blink_lerp >= blink_target) blink_lerp = 0;
 
 	float x = 180/PI * blink_lerp;
-	auto blink_func = [=] (float x) -> float { return pow(-pow(sin(x - 0.6f), 28) + 1, 80); };
+	auto blink_func = [=] (float x) -> float { return pow(-pow(sin(x - 0.6f), 18) + 1, 60); };
 	
 	sf::Color color = box.getFillColor();
 	color.a = blink_target * blink_func(x);

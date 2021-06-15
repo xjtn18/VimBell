@@ -7,6 +7,7 @@ Line::Line(const char* initial, int _fontsize, jb::Transform _tf, int _margin, i
 	  index(0),
 	  tf(_tf),
 	  margin(_margin),
+	  lerp(0),
 	  fontcolor(_fontcolor)
 {
 	font.loadFromFile("res/fonts/incon.ttf");
@@ -47,7 +48,7 @@ void Line::insert_char(char c){
 
 	line.insert(line.begin() + index, txt);
 	index++;
-	update();
+	repos_text();
 }
 
 
@@ -55,13 +56,13 @@ void Line::remove_char(){
 	// shift all later text backward
    line.erase(line.begin() + index-1);
    index--;
-	update();
+	repos_text();
 }
 
 void Line::clear(){
 	line.erase(line.begin(), line.begin() + index);
 	index = 0;
-	update();
+	repos_text();
 }
 
 void Line::clear_all(){
@@ -78,7 +79,7 @@ void Line::set(const char* content){
 }
 
 
-void Line::update(){
+void Line::repos_text(){
 	for (int i = 0; i < line.size(); ++i){
 		int offset = i * spacing;
 		line[i].setPosition((int)(tf.x + margin + offset), (int)(tf.y));
@@ -86,9 +87,42 @@ void Line::update(){
 }
 
 
-void Line::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+void Line::reset_lerp(){
+	lerp = 0;
+}
+
+
+void Line::update(float dt){
+	// set text colors
 	for (int i = 0; i < line.size(); ++i){
-		target.draw(line[i]);
+		if (i != index){
+			line[i].setFillColor(sf::Color(50, 50, 50));
+		} else {
+			line[index].setFillColor(sf::Color(255, 101, 74));
+
+			float rate = 0.05;
+			int rtarget = 255;
+			int gtarget = 101;
+			int btarget = 74;
+			float inc = rate * dt;
+			lerp += inc;
+			if (lerp >= 360) lerp = 0;
+			float x = 180/PI * lerp;
+			auto blink_func = [=] (float x) -> float { return pow(-pow(sin(x - 0.6f), 18) + 1, 80); };
+			sf::Color last = line[index].getFillColor();
+			last.r = (rtarget - 50) * blink_func(x) + 50;
+			last.g = (gtarget - 50) * blink_func(x) + 50;
+			last.b = (btarget - 50) * blink_func(x) + 50;
+			line[index].setFillColor(last);
+		}
+	}
+
+}
+
+
+void Line::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	for (auto& c : line){
+		target.draw(c);
 	}
 }
 

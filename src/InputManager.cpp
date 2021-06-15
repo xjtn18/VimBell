@@ -140,7 +140,7 @@ void InputManager::handle_text_mode(sf::Event& event){
 				p->rack->edit_selection(p->main_tbox.get_buffer());
 				p->editing = false;
 			}
-			p->main_tbox.clear_buffer();
+			p->main_tbox.clear_all();
 			switch_mode(RACK);
 			break;
 
@@ -154,7 +154,7 @@ void InputManager::handle_text_mode(sf::Event& event){
 
 		case sf::Keyboard::Escape:
 			p->editing = false;
-			p->main_tbox.clear_buffer();
+			p->main_tbox.clear_all();
 			switch_mode(RACK);
 		}
 	}

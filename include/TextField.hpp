@@ -21,9 +21,9 @@ public:
 	void shift_cursor(jb::Direc direction);
 	void clear_buffer(bool audible = false);
 	void fill(std::string content);
+	void clear_all();
 	std::string get_buffer() const;
-	void draw_buffer(sf::RenderTarget& target) const;
-	void update(float delta_time);
+	void update(float dt);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 

@@ -69,6 +69,10 @@
 
 ### 6/8/21
 	- Added ask_yes_no function to temporarily ask if user wants to save current rack on exit.
+	
+### 6/15/21:
+	- cursor movement and text insertion for text fields.
+	- Color inversion for characters underneath the cursor; matches the blink animation.
 
 
 

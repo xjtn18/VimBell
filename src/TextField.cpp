@@ -40,6 +40,7 @@ void TextField::write(const char character){
 	if (line.line.size() < bufmax){
 		line.insert_char(character);
 		cursor.move(1);
+		line.reset_lerp();
 	}
 }
 
@@ -53,21 +54,24 @@ void TextField::delete_char(){
 		field_speaker->play("error.wav");
 		cursor.reset_blink_state();
 	}
+	line.reset_lerp();
 }
 
 
 void TextField::shift_cursor(jb::Direc direction){
 	line.index += direction;
 	if (!jb::clamp(line.index, 0, line.line.size()+1)){
-		cursor.move(direction);
-		cursor.reset_blink_state();
+	   cursor.move(direction);
+	   cursor.reset_blink_state();
+		line.reset_lerp();
 	}
 }
 
 
 void TextField::engage(bool value){
 	if (value){
-		cursor.reset_blink_state();
+	   cursor.reset_blink_state();
+		line.reset_lerp();
 	}
 	engaged = value;
 }
@@ -75,11 +79,21 @@ void TextField::engage(bool value){
 
 void TextField::clear_buffer(bool audible){
 	if (audible && line.index == 0){
-		field_speaker->play("error.wav");
+	  field_speaker->play("error.wav");
 	}
 	cursor.move(-line.index); // move cursor to front of field
+	line.reset_lerp();
 	line.clear();
 }
+
+
+void TextField::clear_all(){
+	cursor.move(-line.index); // move cursor to front of field
+	line.reset_lerp();
+	line.clear_all();
+}
+
+
 
 
 std::string TextField::get_buffer() const {
@@ -91,16 +105,11 @@ std::string TextField::get_buffer() const {
 }
 
 
-void TextField::update(float delta_time){
-	cursor.update(delta_time);
+void TextField::update(float dt){
+	cursor.update(dt);
+	line.update(dt);
 }
 
-
-void TextField::draw_buffer(sf::RenderTarget& target) const {
-	for (auto& c : line.line){
-		target.draw(c);
-	}
-}
 
 
 void TextField::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -108,14 +117,15 @@ void TextField::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	if (engaged){
 		target.draw(cursor);
 	}
-	draw_buffer(target);
+	target.draw(line);
 }
 
 
 void TextField::fill(std::string content){
-	clear_buffer();
+	line.clear_all();
 	line.set(content.c_str());
 	cursor.move(line.index); // move cursor to end of the field
+	line.reset_lerp();
 }
 
 
