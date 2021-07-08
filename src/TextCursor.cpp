@@ -4,7 +4,6 @@
 TextCursor::TextCursor(jb::Transform _tf)
 	:  tf(_tf), box(sf::RectangleShape(sf::Vector2f(tf.w, tf.h)))
 {
-	blink_lerp 		= 0.0f;
 	blink_target 	= 255.0f;
 	blink_rate 		= 0.05f;
 	box.setOrigin(tf.w/2, tf.h/2);
@@ -25,21 +24,11 @@ void TextCursor::translate(const int new_x, const int new_y){
 }
 
 
-void TextCursor::reset_blink_state(){
-	blink_lerp = 0.0f;
-}
 
-
-void TextCursor::update(float dt){
-	float inc = blink_rate * dt;
-	blink_lerp += inc;
-	if (blink_lerp >= blink_target) blink_lerp = 0;
-
-	float x = 180/PI * blink_lerp;
-	auto blink_func = [=] (float x) -> float { return pow(-pow(sin(x - 0.6f), 18) + 1, 60); };
-	
+void TextCursor::update(float dt, float lerp){
+	float x = 180/PI * lerp;
 	sf::Color color = box.getFillColor();
-	color.a = blink_target * blink_func(x);
+	color.a = blink_target * lerpf(x);
 	box.setFillColor(color);
 }
 
@@ -47,7 +36,13 @@ void TextCursor::update(float dt){
 
 void TextCursor::move(int dir){
 	translate(dir * tf.w, 0);
-	reset_blink_state();
+}
+
+
+void TextCursor::set_pos(int index, jb::Transform plane_ref){
+	tf.x = plane_ref.x + tf.w * index;
+	tf.y = plane_ref.y;
+	box.setPosition(tf.x, tf.y);
 }
 
 

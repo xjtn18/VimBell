@@ -9,7 +9,6 @@ void Rack::cleanup(){
 
 
 
-
 Rack::Rack(std::string _name)
 	: name(_name),
 	  select_index(0),
@@ -70,7 +69,7 @@ void Rack::duplicate_alarm(){
 	} else {
 		Alarm& curr = alarms[select_index]; // currently selected alarm
 		Alarm dup = Alarm(curr);
-		dup.set_target(curr.get_target() + dup_increment);
+		dup.target = curr.target + dup_increment;
 		insert_alarm(dup);
 	}
 }
@@ -101,23 +100,17 @@ void Rack::insert_alarm(Alarm newAlarm, bool audible){
 }
 
 
-void Rack::set_dup_increment(int value){
-	dup_increment = value;
-}
-
 void Rack::adjust_dup_increment(int value){
 	dup_increment += value;
 	jb::clamp(dup_increment, 5, max_dup_increment);
 }
 
 std::string Rack::get_selection_message(){
-	return alarms[select_index].get_msg();
+	return alarms[select_index].msg;
 }
 
 void Rack::edit_selection(std::string new_message){
-	alarms[select_index].set_message(new_message);
+	alarms[select_index].msg = new_message;
 }
-
-
 
 

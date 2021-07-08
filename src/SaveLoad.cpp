@@ -45,23 +45,22 @@ void load_rack(std::shared_ptr<Rack>& rack){
 
 void save_rack(const std::shared_ptr<Rack>& rack){
    Array arrayAlarms;
-	std::vector<Alarm> alarms = rack->get_alarms();
+	std::vector<Alarm> alarms = rack->alarms;
 
 	for (auto& a : alarms){
 		Object objAlarm;
-		objAlarm["Message"] = String(a.get_msg());
-		objAlarm["TargetHour"] = Number(a.get_target().hour);
-		objAlarm["TargetMinute"] = Number(a.get_target().minute);
-		objAlarm["Active"] = Boolean(a.is_active());
+		objAlarm["Message"] = String(a.msg);
+		objAlarm["TargetHour"] = Number(a.target.hour);
+		objAlarm["TargetMinute"] = Number(a.target.minute);
+		objAlarm["Active"] = Boolean(a.active);
 		arrayAlarms.Insert(objAlarm);
 	}
 
-	std::string rack_name = rack->get_name();
 
    Object objDocument;
-   objDocument[rack_name] = arrayAlarms;
+   objDocument[rack->name] = arrayAlarms;
 	std::fstream fs;
-	fs.open(rack_name + ".rack", std::fstream::out);
+	fs.open(rack->name + ".rack", std::fstream::out);
 	Writer::Write(objDocument, fs);
 	fs.close();
 }

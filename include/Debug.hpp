@@ -32,12 +32,13 @@ void buffer(T input){
 
 // this template prints anything (singular value)
 template <typename T>
-void dlog(T x, bool nl = true, unsigned int sleeptime = 0){
+bool dlog(T x, bool nl = true, unsigned int sleeptime = 0){
 	if (!kDEBUG)
-		return;
+		return false;
 	std::cout << x;
 	if (nl)
 		std::cout << "\n";
+	return true;
 	//usleep(sleeptime * 100000);
 }
 

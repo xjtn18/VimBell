@@ -24,8 +24,8 @@ struct BorderedRect : public Entity {
 	}
 
 
-	void update(){
-		std::cout << "bordered_rect update" << std::endl;
+	void update(float dt){
+		rect.setPosition(tf.x, tf.y);
 	}
 
 

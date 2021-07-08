@@ -12,6 +12,7 @@ void ThreadClock::stop(){
 	thr.join();
 }
 
+
 void ThreadClock::callback(){
 	jb::Time localTime;
 	int minuteLoopRef = -1;

@@ -2,13 +2,6 @@
 
 
 
-std::ostream& operator<<(std::ostream& os, const sf::FloatRect& rect){
-	os << rect.left << ", " << rect.top << ", " << rect.width << ", " << rect.height << std::endl;
-	return os;
-}
-
-
-
 int main(int argc, char* argv[]){
 	// Start the program
 

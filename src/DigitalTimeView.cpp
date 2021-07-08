@@ -1,18 +1,13 @@
 #include <DigitalTimeView.hpp>
 
 
-sf::Font DigitalTimeView::font;
-
-
 
 DigitalTimeView::DigitalTimeView(jb::Transform _tf)
-	: tf(_tf),
+	: Entity(_tf),
 	  line(Line("12:30", 50, _tf, 0, 30, sf::Color::White)),
 	  lerp(0),
 	  lerp_target(5)
 {
-   DigitalTimeView::font.loadFromFile("res/fonts/incon.ttf");
-
 }
 
 DigitalTimeView& DigitalTimeView::operator =(const DigitalTimeView& from){

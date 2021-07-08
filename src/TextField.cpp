@@ -1,14 +1,10 @@
 #include <TextField.hpp>
 
 
-auto TextField::field_speaker = new aud::Speaker(100.0f, false);
-sf::Font TextField::font;
+auto blink_func = [] (float x) -> float { return pow(-pow(sin(x - 0.6f), 18) + 1, 80); };
 
-void TextField::setup(){
-	if (!TextField::font.loadFromFile("res/fonts/incon.ttf")){
-		dlog("could not load font");
-	}
-}
+
+auto TextField::field_speaker = new aud::Speaker(100.0f, false);
 
 
 void TextField::cleanup(){
@@ -17,21 +13,29 @@ void TextField::cleanup(){
 
 
 TextField::TextField(const char* init_buffer, jb::Transform _tf, bool _engaged)
-	: tf(_tf),
+	: Entity(_tf),
 	  box(sf::RectangleShape(sf::Vector2f(tf.w, tf.h))),
 	  cursor(TextCursor({tf.x + 24, tf.y, 19, tf.h-10})),
 	  line(Line(init_buffer, cursor.get_width()*2, _tf, 24, cursor.get_width(), sf::Color(50,50,50))),
 	  engaged(_engaged)
 {
+#define CURSOR_HOME {tf.x + 24, tf.y, tf.w, tf.h}
 	bufmax = tf.w / cursor.get_width() - 2;
 	box.setOrigin(0, tf.h/2);
 	box.setPosition(tf.x, tf.y);
 	box.setFillColor(sf::Color(255, 101, 74));
 
+	cursor.lerpf = blink_func;
+	line.lerpf = blink_func;
 }
 
 
 TextField::~TextField(){
+}
+
+
+void TextField::reset(){
+	lerp = 0;
 }
 
 
@@ -40,8 +44,8 @@ void TextField::write(const char character){
 	if (line.line.size() < bufmax){
 		line.insert_char(character);
 		cursor.move(1);
-		line.reset_lerp();
 	}
+	reset();
 }
 
 
@@ -52,45 +56,58 @@ void TextField::delete_char(){
 		cursor.move(-1);
 	} else {
 		field_speaker->play("error.wav");
-		cursor.reset_blink_state();
 	}
-	line.reset_lerp();
+	reset();
 }
 
 
 void TextField::shift_cursor(jb::Direc direction){
-	line.index += direction;
-	if (!jb::clamp(line.index, 0, line.line.size()+1)){
-	   cursor.move(direction);
-	   cursor.reset_blink_state();
-		line.reset_lerp();
+	switch(direction){
+	case jb::TOP:
+		cursor.set_pos(0, CURSOR_HOME);
+		line.index = 0;
+		break;
+
+	case jb::BOTTOM:
+		if (line.line.size() > 0){
+			cursor.set_pos(line.line.size(), CURSOR_HOME);
+			line.index = line.line.size();
+		}
+		break;
+
+   default: // remaining directions
+	   line.index += direction;
+		if (!jb::clamp(line.index, 0, line.line.size()+1)){
+			cursor.move(direction);
+		}
 	}
+	reset();
 }
 
 
 void TextField::engage(bool value){
-	if (value){
-	   cursor.reset_blink_state();
-		line.reset_lerp();
-	}
 	engaged = value;
+	if (value){
+		reset();
+	}
+	line.engage(value);
 }
 
 
-void TextField::clear_buffer(bool audible){
+void TextField::clear_back(bool audible){
 	if (audible && line.index == 0){
 	  field_speaker->play("error.wav");
 	}
-	cursor.move(-line.index); // move cursor to front of field
-	line.reset_lerp();
-	line.clear();
+	cursor.set_pos(0, CURSOR_HOME);
+	line.clear_back();
+	reset();
 }
 
 
 void TextField::clear_all(){
-	cursor.move(-line.index); // move cursor to front of field
-	line.reset_lerp();
+	cursor.set_pos(0, CURSOR_HOME);
 	line.clear_all();
+	reset();
 }
 
 
@@ -106,10 +123,14 @@ std::string TextField::get_buffer() const {
 
 
 void TextField::update(float dt){
-	cursor.update(dt);
-	line.update(dt);
+	if (engaged){
+		float inc = 0.05 * dt;
+		lerp += inc;
+		if (lerp > 360) lerp = 0;
+		cursor.update(dt, lerp);
+		line.update(dt, lerp);
+	}
 }
-
 
 
 void TextField::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -122,10 +143,9 @@ void TextField::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
 
 void TextField::fill(std::string content){
-	line.clear_all();
 	line.set(content.c_str());
-	cursor.move(line.index); // move cursor to end of the field
-	line.reset_lerp();
+	cursor.set_pos(line.index, CURSOR_HOME);
+	reset();
 }
 
 

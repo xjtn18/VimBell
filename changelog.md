@@ -74,6 +74,11 @@
 	- cursor movement and text insertion for text fields.
 	- Color inversion for characters underneath the cursor; matches the blink animation.
 
+### 7/5/21:
+	- made quit dialog interaction through UI rather than terminal.
+	- refresh optimization of alarm rack display.
+	- general refactor
+
 
 
 ### TODO:
@@ -83,7 +88,8 @@
 	- Add more custom alarm tones.
 	- Add typing sounds when writing in main text field.
 	- Draw pretty analog clock in the background.
-	- Make ask_yes_no a dialog box rather than a shell input.
+	- Allocate entities on the stack and create a draw_list of pointers to each.
+	- Have events handled by the entity itself; engaged entities handle current input.
 
 
 ### Syntax Formatting

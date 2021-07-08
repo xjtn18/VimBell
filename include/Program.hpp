@@ -11,46 +11,44 @@
 #include <BorderedRect.hpp>
 #include <Debug.hpp>
 #include <SaveLoad.hpp>
-#include <VStack.hpp>
-#include <InputManager.hpp>
+#include <Stack.hpp>
+#include <Input.hpp>
 
 
 
 struct Program {
-	bool running							= true,
-		  univ_triggered					= false,
-		  editing							= false,
-		  mode_switched					= false;
+	bool running = true,
+		saving = false,
+		univ_triggered	= false,
+		editing = false,
+		mode_switched = false;
 
 	// window setup
-	const int WINW = 750;
-	const int WINH = 750;
 	sf::RenderWindow *window_ptr;
 
 	// UI entities
-	TextField main_tbox;
-	DigitalTimeView main_digitime;
+	TextField *main_tbox;
+	DigitalTimeView *main_digitime;
 	Menu *rack_view;
+	VStack *v;
+	sf::Text fps;
 
 	// program state
+	std::vector<Entity*> draw_list;
 	std::shared_ptr<Rack> rack;
 	Mode mode;
-	InputManager IM;
 
 	// sectors
 	int padding;
-	BorderedRect* sector_top;
-	sf::RectangleShape bezel_top, bezel_bottom;
-	VStack v;
+	BorderedRect *sector_top, *bezel_top, *bezel_bottom;
 
 	Program();
-	void ask_yes_no(std::string question, std::function<void(void)> yes_callback);
-	bool ask_yes_no(std::string question);
+	void prepare_quit(bool _saving);
 	void quit();
-	void setup_bezels();
 	void update_frame(float dt);
 	void draw_frame(sf::RenderWindow& window);
 	void mainloop();
 	void cleanup();
+	void test_input();
 };
 

@@ -3,11 +3,10 @@
 #include <jb.hpp>
 #include <Line.hpp>
 #include <math.h>
+#include <Entity.hpp>
 
 
-struct DigitalTimeView : public sf::Drawable {
-	static sf::Font font;
-	jb::Transform tf;
+struct DigitalTimeView : public Entity {
 	Line line;
 	sf::Text semicolon;
 	float lerp, lerp_target;

@@ -1,14 +1,17 @@
 #pragma once
-#include <jb.hpp>
 #include <SFML/Graphics.hpp>
+
+#include <jb.hpp>
 #include <Line.hpp>
+#include <Speaker.hpp>
 #include <TextCursor.hpp>
+#include <Entity.hpp>
 
 
 
-class TextField : public sf::Drawable {
+
+class TextField : public Entity {
 public:
-	static void setup();
 	static void cleanup();
 
 	TextField(){};
@@ -19,19 +22,19 @@ public:
 	void write(const char character);
 	void delete_char();
 	void shift_cursor(jb::Direc direction);
-	void clear_buffer(bool audible = false);
+	void clear_back(bool audible = false);
 	void fill(std::string content);
 	void clear_all();
 	std::string get_buffer() const;
+	void reset();
 	void update(float dt);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 
 private:
-	static sf::Font font;
 	static aud::Speaker* field_speaker;
 
-	jb::Transform tf;
+	float lerp;
 	int bufmax;
 	sf::RectangleShape box; // the text box itself
 	TextCursor cursor;

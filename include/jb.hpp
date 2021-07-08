@@ -1,18 +1,30 @@
 #pragma once
 #include <ctime>
 #include <string>
+
+#include <SFML/Graphics.hpp>
 #include <Debug.hpp>
-#include <Speaker.hpp>
 
 #define PI 3.14159265
 #define is_in(x,y)   y.find(x) != y.end()
 #define not_in(x,y)  y.find(x) == y.end()
-#define DEV true
+#define DEV false
+
+
+// global constants
+extern sf::Font INCON_FONT;
+void load_font();
+
+const int WINW = 750;
+const int WINH = 750;
+
 
 
 namespace jb {
 
 	struct Transform {
+		static const Transform Zero;
+
 		int x,y,w,h;
 	};
 
@@ -63,21 +75,36 @@ namespace jb {
 			str += (hour % 12 == hour) ? " am" : " pm";
 			return str;
 		}
-
 	};
+
 
 
 	enum Direc {
 		UP = -1,
-		DOWN = 1
+		TOP = 0,
+		DOWN = 1,
+		BOTTOM = 2
 	};
 
 	extern const char* rootPath;
 	const Time current_time();
 	const char* rtrim(const char* s, size_t len, const char target);
 	const char* get_resource(const char* filename);
-	bool clamp(int& value, int low, int high);
 	const char* get_image(const char* filename);
+
+
+	template <typename T, typename T2>
+	bool clamp(T& value, T low, T2 high){
+		// clamps the value to the bounds given, returns true if value was constrained, false otherwise.
+		if (value < low){
+			value = low;
+			return true;
+		} else if (value >= high){
+			value = (high - 1 >= low) ? high - 1 : high;
+			return true;
+		}
+		return false;
+	}
 
 }
 

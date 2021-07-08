@@ -2,7 +2,16 @@
 #include <stdarg.h>
 
 
+const jb::Transform jb::Transform::Zero = {0,0,0,0};
 const char* jb::rootPath = nullptr;
+
+
+sf::Font INCON_FONT;
+
+void load_font() {
+	INCON_FONT.loadFromFile("res/fonts/incon.ttf");
+}
+
 
 
 const jb::Time jb::current_time(){
@@ -46,17 +55,6 @@ const char* jb::get_image(const char* filename){
 }
 
 
-bool jb::clamp(int& value, int low, int high){
-	// clamps the value to the bounds given, returns true if value was constrained, false otherwise.
-	if (value < low){
-		value = low;
-		return true;
-	} else if (value >= high){
-		value = (high - 1 >= low) ? high - 1 : high;
-		return true;
-	}
-	return false;
-}
 
 
 
