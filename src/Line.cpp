@@ -20,8 +20,6 @@ void Line::insert_char(char c){
 	sf::Text txt(c, INCON_FONT, fontsize); // TODO: This should create char with font given as param to cons.
 	sf::FloatRect b = txt.getLocalBounds();
 	txt.setOrigin((int)(b.left + b.width/2), (int)(fontsize * .75 - 2)); // this is vital
-	int offset = index * spacing;
-	txt.setPosition((int)(tf.x + margin + offset), (int)(tf.y));
 	txt.setFillColor(fontcolor);
 
 	line.insert(line.begin() + index, txt);
@@ -58,9 +56,11 @@ void Line::set(const char* content){
 
 
 void Line::repos_text(){
+	int offset;
 	for (int i = 0; i < line.size(); ++i){
-		int offset = i * spacing;
-		line[i].setPosition((int)(tf.x + margin + offset), (int)(tf.y));
+		offset = i * spacing;
+		auto bounds = line[i].getLocalBounds();
+		line[i].setPosition(tf.x + margin + offset, tf.y); // TODO: Text chars not aligned as sf::Text would
 	}
 }
 

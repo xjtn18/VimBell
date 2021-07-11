@@ -37,7 +37,7 @@ void VStack::update(float dt) {
 	tf.h = 0;
 	float _y = tf.y;
 	for (auto& e : entities){
-		e->tf.x = tf.x;
+		//e->tf.x = tf.x; // NOTE: X of entities will not change as the stack moves
 		e->tf.y = _y;
 		_y += e->tf.h + padding;
 		e->update(dt);
@@ -103,7 +103,7 @@ void HStack::update(float dt) {
 		tf.w += e->tf.w + padding;
 		tf.h = std::max(e->tf.h, tf.h);
 	}
-	tf.h -= padding;
+	tf.w -= padding;
 }
 
 

@@ -1,18 +1,21 @@
 #pragma once
 #include <jb.hpp>
-#include <SFML/Graphics.hpp>
 #include <functional>
+#include <Entity.hpp>
 
 
-class TextCursor : public sf::Drawable {
-public:
+struct TextCursor : public Entity {
+
+	sf::RectangleShape box; // the visual of the text cursor
+	float lerp, blink_target, blink_rate;
 	std::function<float(float)> lerpf;
 
+
 	TextCursor(){}
-	TextCursor(jb::Transform tf);
+	TextCursor(jb::Transform _tf);
 	~TextCursor();
 
-	void update(float dt, float lerp);
+	void update(float dt);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	void translate(const int new_x, const int new_y);
 	void move(int dir);
@@ -21,11 +24,6 @@ public:
 	int get_width() const {
 		return tf.w;
 	}
-
-private:
-	jb::Transform tf;
-	sf::RectangleShape box; // the visual of the text cursor
-	float blink_target, blink_rate;
 };
 
 

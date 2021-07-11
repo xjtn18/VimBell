@@ -1,4 +1,28 @@
 #include <Program.hpp>
+#include <Text.hpp>
+#include <Image.hpp>
+
+
+struct LineShape : public Entity {
+	sf::RectangleShape rect;
+
+
+	LineShape(jb::Transform _tf)
+		: Entity(_tf)
+	{
+		rect.setOrigin(_tf.w/2, _tf.h/2);
+		rect.setFillColor(JB_GREEN);
+		rect.setSize({(float)tf.w, (float)tf.h});
+	}
+
+   void update(float dt){
+		rect.setPosition(tf.x, tf.y);
+	}
+
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const {
+		target.draw(rect);
+	}
+};
 
 
 
@@ -10,18 +34,20 @@ Program::Program()
 
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 16;
-	window_ptr = new sf::RenderWindow(sf::VideoMode(750, 750), "jBell", sf::Style::Titlebar | sf::Style::Close, settings);
+	window_ptr = new sf::RenderWindow(sf::VideoMode(WINW, WINH), "jBell", sf::Style::Titlebar | sf::Style::Close, settings);
 
 	// Set the Icon
    sf::Image icon;
    icon.loadFromFile(jb::get_image("clock-ico.png"));
    window_ptr->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+	window_ptr->setFramerateLimit(120);
+	//window_ptr->setVerticalSyncEnabled(true);
 
 	// UI entities
-	main_tbox = new TextField("", {225, 75, 500, 50}, true);
+	main_tbox = new TextField("", {230, 75, WINW - 230 - 50, 50});
 	main_digitime = new DigitalTimeView({50, 75, 0, 0});
 
-	load_rack(rack); // load saved alarm rack
+	load_rack(rack, "work-day-rack"); // load saved alarm rack
 	rack_view = new Menu({0, 0, WINW, 0}, 1, rack);
 
 	// program state
@@ -37,33 +63,58 @@ Program::Program()
 	// fps counter
 	fps = sf::Text("0", INCON_FONT, 30);
 	sf::FloatRect bounds = fps.getLocalBounds();
-	fps.setPosition(20, WINH - bounds.height - bounds.top);
-	fps.setFillColor(sf::Color::Green);
+	fps.setPosition(20, WINH - bounds.height - bounds.top - 5);
+	fps.setFillColor(JB_GREEN);
 
-	v = new VStack({0, 0, 0, 0}, 0, {
+	// grid lines
+	float grid_line_thickness = 2;
+	auto yaxis = new LineShape({CENTER_WIN_X, CENTER_WIN_Y, grid_line_thickness, WINH});
+	auto xaxis = new LineShape({CENTER_WIN_X, CENTER_WIN_Y, WINW, grid_line_thickness});
+
+	auto rack_name = new Text({CENTER_WIN_X, 0, 0, 0}, "---------| " + rack->name + " |---------", INCON_FONT, 30);
+	rack_name->center_xaxis();
+
+	auto bg_clock = new Image({WINW, WINH, 0, 0}, "res/images/roman_clock.png");
+	bg_clock->sprite.setScale(0.6, 0.6);
+	bg_clock->sprite.setColor(sf::Color(0,0,0,50));
+
+
+	section_stack = new VStack({0, 0, 0, 0}, 6, {
 			sector_top,
+			rack_name,
 			rack_view
 		});
 
+
 	draw_list = {
+		bg_clock,
 		sector_top,
-		v,
+		section_stack,
 		main_digitime,
 		main_tbox,
 		bezel_top,
 		bezel_bottom
 	};
 
+	engage_with((Entity**)&main_tbox);
 
 }
 
 
-
+void Program::engage_with(Entity **ent){
+	if (engaged_entity){
+		(*engaged_entity)->engage(false); // disengage current entity
+	}
+	engaged_entity = ent;
+	(*engaged_entity)->engage(true);
+	mode_switched = true;
+}
 
 
 void Program::cleanup(){
-	// free all remaining program heap memory and audio buffers
-	//std::this_thread::sleep_for(std::chrono::milliseconds(2000)); @NOTE for testing purposes
+	//std::this_thread::sleep_for(std::chrono::milliseconds(2000)); @NOTE for testing
+
+	// cleanup up audio resources
 	Alarm::cleanup();
 	Rack::cleanup();
 	TextField::cleanup();
@@ -104,7 +155,7 @@ void Program::update_frame(float dt){
 	static int count = 0;
 	char c[6];
 	sprintf(c, "%d", (int)(1/dt));
-	if (count++ == 50){
+	if (count++ == 25){
 		fps.setString(sf::String(std::string(c)));
 		count = 0;
 	}
@@ -117,8 +168,7 @@ void Program::draw_frame(sf::RenderWindow& window){
 	}
 
 	//framerate
-	window.draw(fps);
-
+	//window.draw(fps);
 }
 
 
@@ -130,28 +180,19 @@ void Program::mainloop(){
 	//
 
 	sf::RenderWindow& window = *(window_ptr);
-	window.setFramerateLimit(120);
-	//window.setVerticalSyncEnabled(true);
-
-
 	sf::Clock clock;
 
 	while (running && window.isOpen()) {
-		window.clear(sf::Color(20,20,20,20)); // clear last frame and set bg color
+		window.clear(JBC_BG); // clear last frame and set bg color
 
 		univ_triggered = false;
 		mode_switched = false;
 		sf::Event event;
 
 		while (window.pollEvent(event)) {
-			handle_universal_input(event, *this); // handle universal commands regardless of whats engaged.
-			if (univ_triggered) continue; // NOTE: Must be done this way, with a global boolean.
-			if (mode == RACK){
-				handle_rack_mode(event, *this);
-			} else if (mode == TEXT && !mode_switched){
-				handle_text_mode(event, *this);
-			} else if (mode == QUIT){
-				handle_quit_mode(event, *this);
+			handle_universal_input(event, *this); // handle universal commands
+			if (!mode_switched){
+				(*engaged_entity)->handler(event, *this);
 			}
 		}
 		// all inputs polled for this frame
@@ -160,7 +201,7 @@ void Program::mainloop(){
 		draw_frame(window);
 
 
-		window.display(); // display final frame
+		window.display(); // display completed frame
 	}
 }
 

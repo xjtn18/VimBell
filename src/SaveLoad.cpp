@@ -2,11 +2,11 @@
 using namespace json;
 
 
-void load_rack(std::shared_ptr<Rack>& rack){
-	rack = std::shared_ptr<Rack>(new Rack("R1"));
+void load_rack(std::shared_ptr<Rack>& rack, const std::string& rack_name){
+	rack = std::shared_ptr<Rack>(new Rack(rack_name));
 
 	std::fstream fs;
-	fs.open("R1.rack", std::fstream::in);
+	fs.open("racks/" + rack_name + ".rack", std::fstream::in);
    Object objDocument;
    //const Object& objRoot = objDocument;
 	try {
@@ -17,7 +17,7 @@ void load_rack(std::shared_ptr<Rack>& rack){
 	}
 	fs.close();
 
-	const Array& arrayAlarms = objDocument["R1"];
+	const Array& arrayAlarms = objDocument[rack_name];
    Array::const_iterator it(arrayAlarms.Begin()), itEnd(arrayAlarms.End());
    for (; it != itEnd; ++it){ // for each Alarm
 		const Object& objAlarm = *it;
@@ -60,7 +60,7 @@ void save_rack(const std::shared_ptr<Rack>& rack){
    Object objDocument;
    objDocument[rack->name] = arrayAlarms;
 	std::fstream fs;
-	fs.open(rack->name + ".rack", std::fstream::out);
+	fs.open("racks" + rack->name + ".rack", std::fstream::out);
 	Writer::Write(objDocument, fs);
 	fs.close();
 }

@@ -14,28 +14,26 @@ YesNoPopup::YesNoPopup(jb::Transform _tf, const std::string& _question)
 
 	// question text
 	question = sf::Text(_question, INCON_FONT, 30);
+	question.setFillColor(JB_WHITE);
 	bounds = question.getGlobalBounds();
-	question.setOrigin(bounds.width/2, 30 * .75 - 2);
-	question.setPosition(tf.x, tf.y - (bounds.height));
+	question.setOrigin((int)(bounds.width/2), (int)(30 * .75 - 2));
+	question.setPosition((int)tf.x, (int)tf.y - (bounds.height));
 
 	// box
 	box.setSize({bounds.width + padding/2, bounds.height + padding});
 	sf::Vector2f size = box.getSize();
 	box.setOrigin(size.x/2, size.y/2);
 	box.setPosition(tf.x, tf.y);
-	box.setFillColor(sf::Color(60,100,140));
-	box.setOutlineThickness(1);
-	box.setOutlineColor(sf::Color::White);
+	box.setFillColor(sf::Color(50,50,50));
+	box.setOutlineThickness(2);
+	box.setOutlineColor(JB_WHITE);
 
 	// yes + no
-
 	option_yes = new Text({0,0,0,0}, "yes (y)", INCON_FONT, 30);
-	//option_yes.setOrigin(bounds.width/2, 30 * .75 - 2);
+	option_no = new Text({0,0,0,0}, "no (n)", INCON_FONT, 30);
 
-	option_no = new Text({0,0,0,0}, "no (y)", INCON_FONT, 30);
-	//option_no.setOrigin(bounds.width/2, 30 * .75 - 2);
-
-	answers = HStack ({tf.x, tf.y, 0, 0}, 50, {option_yes, option_no});
+	int answer_padding = 50;
+	answers = HStack ({tf.x - option_yes->tf.w - answer_padding/2, tf.y, 0, 0}, answer_padding, {option_yes, option_no});
 
 }
 

@@ -1,5 +1,4 @@
 #pragma once
-#include <SFML/Graphics.hpp>
 
 #include <jb.hpp>
 #include <Line.hpp>
@@ -15,7 +14,7 @@ public:
 	static void cleanup();
 
 	TextField(){};
-	TextField(const char* init_content, jb::Transform tf, bool _active);
+	TextField(const char* init_content, jb::Transform tf, bool _engaged = false);
 	~TextField();
 
 	void engage(bool value);
@@ -29,6 +28,7 @@ public:
 	void reset();
 	void update(float dt);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	void handler(sf::Event& event, Program& p);
 
 
 private:

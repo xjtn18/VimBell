@@ -1,10 +1,9 @@
 #pragma once
-#include <SFML/Graphics.hpp>
 
+#include <jb.hpp>
 #include <AlarmCell.hpp>
 #include <Debug.hpp>
 #include <Rack.hpp>
-#include <jb.hpp>
 #include <Entity.hpp>
 #include <Stack.hpp>
 
@@ -29,6 +28,7 @@ public:
 
 	void update(float dt);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	void handler(sf::Event& event, Program& p);
 };
 
 

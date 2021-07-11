@@ -1,6 +1,8 @@
 #pragma once
 #include <jb.hpp>
-#include <SFML/Graphics.hpp>
+
+struct Program; // FD
+
 
 struct Entity : public sf::Drawable {
 	jb::Transform tf;
@@ -12,7 +14,6 @@ struct Entity : public sf::Drawable {
 	{ }
 
 	Entity(const Entity& other) = default;
-
 	virtual ~Entity(){};
 
 
@@ -29,6 +30,7 @@ struct Entity : public sf::Drawable {
 	// static UI entities do not require defining these
 	virtual void engage(bool value)  {}
 	virtual void update(float dt)    {}
+	virtual void handler(sf::Event& event, Program& p) {}
 
 	// every entity will define a draw method
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;

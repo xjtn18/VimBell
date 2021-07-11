@@ -1,6 +1,5 @@
 #pragma once
 #include <jb.hpp>
-#include <SFML/Graphics.hpp>
 #include <functional>
 
 

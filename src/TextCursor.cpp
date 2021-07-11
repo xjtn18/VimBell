@@ -2,7 +2,7 @@
 
 
 TextCursor::TextCursor(jb::Transform _tf)
-	:  tf(_tf), box(sf::RectangleShape(sf::Vector2f(tf.w, tf.h)))
+	:  Entity(_tf), box(sf::RectangleShape(sf::Vector2f(tf.w, tf.h)))
 {
 	blink_target 	= 255.0f;
 	blink_rate 		= 0.05f;
@@ -25,7 +25,7 @@ void TextCursor::translate(const int new_x, const int new_y){
 
 
 
-void TextCursor::update(float dt, float lerp){
+void TextCursor::update(float dt){
 	float x = 180/PI * lerp;
 	sf::Color color = box.getFillColor();
 	color.a = blink_target * lerpf(x);

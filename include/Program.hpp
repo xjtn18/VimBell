@@ -1,7 +1,6 @@
 #pragma once
-#include <functional>
-#include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include <functional>
 #include <cmath>
 
 #include <Menu.hpp>
@@ -30,8 +29,9 @@ struct Program {
 	TextField *main_tbox;
 	DigitalTimeView *main_digitime;
 	Menu *rack_view;
-	VStack *v;
+	VStack *section_stack;
 	sf::Text fps;
+	Entity **engaged_entity = nullptr;
 
 	// program state
 	std::vector<Entity*> draw_list;
@@ -50,5 +50,7 @@ struct Program {
 	void mainloop();
 	void cleanup();
 	void test_input();
+	void engage_with(Entity **ent);
+
 };
 

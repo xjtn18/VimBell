@@ -1,46 +1,21 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include <Entity.hpp>
 
 
-namespace img {
 
-	class Image : public sf::Drawable {
-		sf::Image image;
-		sf::Texture tex;
-		sf::Sprite sprite;
-		int w, h;
+struct Image : public Entity {
+	sf::Image image;
+	sf::Texture tex;
+	sf::Sprite sprite;
 		
-	public:
-		Image(const char* filename){
-			image.loadFromFile(filename);
-			sf::Vector2u imageDim = image.getSize();
-			w = imageDim.x;
-			h = imageDim.y;
-			tex.loadFromImage(image);
-			sprite.setTexture(tex);
-		}
+	Image(jb::Transform _tf, const char* filename);
 
-
-		int getWidth() const {
-			return w;
-		}
-
-		int getHeight() const {
-			return h;
-		}
-
-		void setXY(int x, int y){
-			sprite.setPosition(x, y);
-		}
-
-		void draw(sf::RenderTarget& target, sf::RenderStates states) const {
-			target.draw(sprite);
-		}
-
-	};
-
-
-
-
+	void update(float dt);
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
+
+
+
+

@@ -1,4 +1,5 @@
 #include <TextField.hpp>
+#include <Program.hpp>
 
 
 auto blink_func = [] (float x) -> float { return pow(-pow(sin(x - 0.6f), 18) + 1, 80); };
@@ -23,7 +24,7 @@ TextField::TextField(const char* init_buffer, jb::Transform _tf, bool _engaged)
 	bufmax = tf.w / cursor.get_width() - 2;
 	box.setOrigin(0, tf.h/2);
 	box.setPosition(tf.x, tf.y);
-	box.setFillColor(sf::Color(255, 101, 74));
+	box.setFillColor(JB_RED);
 
 	cursor.lerpf = blink_func;
 	line.lerpf = blink_func;
@@ -127,7 +128,8 @@ void TextField::update(float dt){
 		float inc = 0.05 * dt;
 		lerp += inc;
 		if (lerp > 360) lerp = 0;
-		cursor.update(dt, lerp);
+		cursor.lerp = lerp;
+		cursor.update(dt);
 		line.update(dt, lerp);
 	}
 }
@@ -149,3 +151,63 @@ void TextField::fill(std::string content){
 }
 
 
+
+void TextField::handler(sf::Event& event, Program& p){
+	// for text events
+	if (event.type == sf::Event::TextEntered){
+		if (event.text.unicode >= 32 && event.text.unicode <= 126){
+			p.main_tbox->write(event.text.unicode);
+		}
+
+		// for special key events
+	} else if (event.type == sf::Event::KeyPressed){
+		switch (event.key.code){
+
+		case sf::Keyboard::Tab: // switch modes
+			if (!p.editing && p.rack->size() != 0){
+				p.engage_with((Entity**)&(p.rack_view));
+			}
+			break;
+
+		case sf::Keyboard::Backspace: // remove char
+			if (LSHIFT_IS_DOWN){
+				p.main_tbox->clear_back(true);
+			} else {
+				p.main_tbox->delete_char();
+			}
+			break;
+
+		case sf::Keyboard::Return: // submit text to new/edited alarm
+			if (p.editing == false){
+				p.rack->add_alarm(p.main_tbox->get_buffer());
+			} else {
+				p.rack->edit_selection(p.main_tbox->get_buffer());
+				p.editing = false;
+			}
+			p.main_tbox->clear_all();
+			p.engage_with((Entity**)&(p.rack_view));
+			break;
+
+		case sf::Keyboard::Left: // move cursor back
+			if (LSHIFT_IS_DOWN){
+				p.main_tbox->shift_cursor(jb::TOP);
+			} else {
+				p.main_tbox->shift_cursor(jb::UP);
+			}
+			break;
+
+		case sf::Keyboard::Right: // move cursor forward
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)){
+				p.main_tbox->shift_cursor(jb::BOTTOM);
+			} else {
+				p.main_tbox->shift_cursor(jb::DOWN);
+			}
+			break;
+
+		case sf::Keyboard::Escape: // cancel edit
+			p.editing = false;
+			p.main_tbox->clear_all();
+			p.engage_with((Entity**)&(p.rack_view));
+		}
+	}
+}

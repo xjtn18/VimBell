@@ -1,5 +1,4 @@
 #pragma once
-#include <SFML/Graphics.hpp>
 #include <jb.hpp>
 #include <Entity.hpp>
 #include <Stack.hpp>

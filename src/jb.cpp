@@ -6,11 +6,20 @@ const jb::Transform jb::Transform::Zero = {0,0,0,0};
 const char* jb::rootPath = nullptr;
 
 
+const float WINW = 600;
+const float WINH = 750;
+
+
 sf::Font INCON_FONT;
 
 void load_font() {
 	INCON_FONT.loadFromFile("res/fonts/incon.ttf");
 }
+
+const sf::Color JB_GREEN     = sf::Color(108,161,59);
+const sf::Color JB_RED       = sf::Color(255,101,74);
+const sf::Color JB_WHITE     = sf::Color(229, 240, 225);
+const sf::Color JBC_BG       = sf::Color(30, 34, 36);
 
 
 

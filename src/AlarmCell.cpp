@@ -1,7 +1,7 @@
 #include <AlarmCell.hpp>
 
-sf::Color AlarmCell::idleColor = sf::Color(80, 80, 80, 255);
-sf::Color AlarmCell::hoverColor = sf::Color(132, 231, 47, 255);
+sf::Color AlarmCell::idleColor = sf::Color(80, 80, 80, 150);
+sf::Color AlarmCell::hoverColor = sf::Color(132, 231, 47, 150);
 
 
 
@@ -15,7 +15,7 @@ AlarmCell::AlarmCell(jb::Transform _tf, const std::string _text)
 	//box.setOrigin(w/2, h/2);
 
 	bText = sf::Text(text, INCON_FONT, (unsigned int) (tf.h/1.85));
-	bText.setFillColor(sf::Color::Black); // set font color
+	bText.setFillColor(JB_WHITE); // set font color
 	sf::FloatRect textBounds = bText.getLocalBounds();
 	bText.setOrigin(0, (int)(tf.h/2)-5);
 	set_pos();
@@ -42,10 +42,6 @@ AlarmCell& AlarmCell::operator =(const AlarmCell& other) // assignment operator
 	return *this;
 }
 
-
-void AlarmCell::cleanup(){
-
-}
 
 
 void AlarmCell::set_pos(){

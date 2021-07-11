@@ -4,7 +4,7 @@
 
 DigitalTimeView::DigitalTimeView(jb::Transform _tf)
 	: Entity(_tf),
-	  line(Line("12:30", 50, _tf, 0, 30, sf::Color::White)),
+	  line(Line("12:30", 50, _tf, 0, 30, JB_WHITE)),
 	  lerp(0),
 	  lerp_target(5)
 {
@@ -22,7 +22,6 @@ DigitalTimeView& DigitalTimeView::operator =(const DigitalTimeView& from){
 
 
 void DigitalTimeView::update(float dt){
-	return;
 	float rate = 0.1;
 	int target = 255;
 	float inc = rate * dt;

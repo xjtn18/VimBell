@@ -3,6 +3,7 @@
 #include <string>
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include <Debug.hpp>
 
 #define PI 3.14159265
@@ -10,13 +11,32 @@
 #define not_in(x,y)  y.find(x) == y.end()
 #define DEV false
 
+#define LSHIFT_IS_DOWN sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)
 
-// global constants
+//////
+///////////////////////
+//////////////////////////////////////////////////////////////////////
+// Global Constants
+
+// Fonts
 extern sf::Font INCON_FONT;
 void load_font();
 
-const int WINW = 750;
-const int WINH = 750;
+// Window params
+extern const float WINW;
+extern const float WINH;
+const float CENTER_WIN_X = WINW/2;
+const float CENTER_WIN_Y = WINH/2;
+
+// Colors
+extern const sf::Color JB_GREEN;
+extern const sf::Color JB_RED;
+extern const sf::Color JB_WHITE;
+extern const sf::Color JBC_BG;
+
+//////////////////////////////////////////////////////////////////////
+///////////////////////
+//////
 
 
 
@@ -25,7 +45,7 @@ namespace jb {
 	struct Transform {
 		static const Transform Zero;
 
-		int x,y,w,h;
+		float x,y,w,h;
 	};
 
 

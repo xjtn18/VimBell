@@ -8,3 +8,4 @@ objs/
 portable/
 *.rack
 scratch
+racks/
