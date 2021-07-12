@@ -14,7 +14,7 @@ public:
 	static void cleanup();
 
 	TextField(){};
-	TextField(const char* init_content, jb::Transform tf, bool _engaged = false);
+	TextField(jb::Transform _tf, const char* init_content, bool _engaged = false);
 	~TextField();
 
 	void engage(bool value);
@@ -28,7 +28,7 @@ public:
 	void reset();
 	void update(float dt);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-	void handler(sf::Event& event, Program& p);
+	bool handler(sf::Event& event, Program& p);
 
 
 private:
@@ -39,7 +39,6 @@ private:
 	sf::RectangleShape box; // the text box itself
 	TextCursor cursor;
 	Line line;
-	bool engaged;
 };
 
 

@@ -10,7 +10,11 @@ struct Entity : public sf::Drawable {
 
 	Entity(){}
 	Entity(jb::Transform _tf)
-		: tf(_tf)
+		: tf(_tf), engaged(false)
+	{ }
+
+	Entity(jb::Transform _tf, bool _engaged)
+		: tf(_tf), engaged(_engaged)
 	{ }
 
 	Entity(const Entity& other) = default;
@@ -30,7 +34,7 @@ struct Entity : public sf::Drawable {
 	// static UI entities do not require defining these
 	virtual void engage(bool value)  {}
 	virtual void update(float dt)    {}
-	virtual void handler(sf::Event& event, Program& p) {}
+	virtual bool handler(sf::Event& event, Program& p) {return false;}
 
 	// every entity will define a draw method
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;

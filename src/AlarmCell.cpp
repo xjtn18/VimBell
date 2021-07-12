@@ -17,7 +17,7 @@ AlarmCell::AlarmCell(jb::Transform _tf, const std::string _text)
 	bText = sf::Text(text, INCON_FONT, (unsigned int) (tf.h/1.85));
 	bText.setFillColor(JB_WHITE); // set font color
 	sf::FloatRect textBounds = bText.getLocalBounds();
-	bText.setOrigin(0, (int)(tf.h/2)-5);
+	bText.setOrigin(0, (int)(tf.h/2 - 3));
 	set_pos();
 }
 

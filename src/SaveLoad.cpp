@@ -60,7 +60,7 @@ void save_rack(const std::shared_ptr<Rack>& rack){
    Object objDocument;
    objDocument[rack->name] = arrayAlarms;
 	std::fstream fs;
-	fs.open("racks" + rack->name + ".rack", std::fstream::out);
+	fs.open("racks/" + rack->name + ".rack", std::fstream::out);
 	Writer::Write(objDocument, fs);
 	fs.close();
 }

@@ -11,15 +11,12 @@
 #include <initializer_list>
 
 
-
-class Menu : public VStack {
+struct Menu : public VStack {
 	//
 	// A vertical arrangment of buttons.
 	//
 	std::shared_ptr<Rack> rack_state;
-
-
-public:
+	bool editing = false;
 
 	Menu(){}
 	Menu(jb::Transform _tf, int _padding, std::shared_ptr<Rack> _rack_state, bool _engaged = false);
@@ -28,7 +25,7 @@ public:
 
 	void update(float dt);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-	void handler(sf::Event& event, Program& p);
+	bool handler(sf::Event& event, Program& p);
 };
 
 

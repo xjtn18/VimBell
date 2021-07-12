@@ -44,17 +44,14 @@ Program::Program()
 	//window_ptr->setVerticalSyncEnabled(true);
 
 	// UI entities
-	main_tbox = new TextField("", {230, 75, WINW - 230 - 50, 50});
-	main_digitime = new DigitalTimeView({50, 75, 0, 0});
+	main_digitime = new DigitalTimeView({30, 75, 0, 0});
+	main_tbox = new TextField({180, 75, WINW - 180 - 25, 50}, "");
 
-	load_rack(rack, "work-day-rack"); // load saved alarm rack
+	load_rack(rack, "my-alarms-1"); // load saved alarm rack
 	rack_view = new Menu({0, 0, WINW, 0}, 1, rack);
 
-	// program state
-	mode = TEXT; // initial mode is text mode
 
 	// sectors
-	padding = 1;
 	sector_top = new BorderedRect({0, 0, WINW, 120}, 2);
 
 	bezel_top = new BorderedRect({0, 0, WINW, 30}, 2);
@@ -71,12 +68,14 @@ Program::Program()
 	auto yaxis = new LineShape({CENTER_WIN_X, CENTER_WIN_Y, grid_line_thickness, WINH});
 	auto xaxis = new LineShape({CENTER_WIN_X, CENTER_WIN_Y, WINW, grid_line_thickness});
 
-	auto rack_name = new Text({CENTER_WIN_X, 0, 0, 0}, "---------| " + rack->name + " |---------", INCON_FONT, 30);
+	auto rack_name = new Text({CENTER_WIN_X, 0, 0, 0},
+									  "-------------------|  " + rack->name +
+									  "  |-------------------", INCON_FONT, 30);
 	rack_name->center_xaxis();
 
 	auto bg_clock = new Image({WINW, WINH, 0, 0}, "res/images/roman_clock.png");
-	bg_clock->sprite.setScale(0.6, 0.6);
-	bg_clock->sprite.setColor(sf::Color(0,0,0,50));
+	bg_clock->sprite.setScale(0.5, 0.5);
+	bg_clock->sprite.setColor(sf::Color(0,0,0,75));
 
 
 	section_stack = new VStack({0, 0, 0, 0}, 6, {
@@ -96,18 +95,18 @@ Program::Program()
 		bezel_bottom
 	};
 
-	engage_with((Entity**)&main_tbox);
+	engage_with(main_tbox);
 
 }
 
 
-void Program::engage_with(Entity **ent){
+void Program::engage_with(Entity *ent){
 	if (engaged_entity){
-		(*engaged_entity)->engage(false); // disengage current entity
+		engaged_entity->engage(false); // disengage current entity
 	}
+	last_engaged = engaged_entity;
 	engaged_entity = ent;
-	(*engaged_entity)->engage(true);
-	mode_switched = true;
+	engaged_entity->engage(true);
 }
 
 
@@ -150,7 +149,7 @@ void Program::update_frame(float dt){
 	for (Entity *ent : draw_list){
 	   ent->update(dt);
 	}
-
+	
 	// framerate
 	static int count = 0;
 	char c[6];
@@ -186,13 +185,18 @@ void Program::mainloop(){
 		window.clear(JBC_BG); // clear last frame and set bg color
 
 		univ_triggered = false;
-		mode_switched = false;
+		bool event_processed = false;
 		sf::Event event;
 
 		while (window.pollEvent(event)) {
-			handle_universal_input(event, *this); // handle universal commands
-			if (!mode_switched){
-				(*engaged_entity)->handler(event, *this);
+			// @NOTE: A single keystroke produces both a KeyPressed and a TextEntered event; be aware of that.
+			if (!event_processed){
+				event_processed = engaged_entity->handler(event, *this);
+				// @NOTE: keystrokes shared by the current entity and the universals should override the latter.
+				// So entity handlers should be called first.
+			}
+			if (!event_processed){
+				handle_universal_input(event, *this); // handle universal commands
 			}
 		}
 		// all inputs polled for this frame

@@ -1,4 +1,5 @@
 #include <Line.hpp>
+#include <unordered_set>
 
 
 
@@ -17,9 +18,12 @@ Line::Line(const char* initial, int _fontsize, jb::Transform _tf, int _margin, i
 
 
 void Line::insert_char(char c){
-	sf::Text txt(c, INCON_FONT, fontsize); // TODO: This should create char with font given as param to cons.
+	sf::Text txt(c, FONT_LIBMONO_B, fontsize); // TODO: This should create char with font given as param to constructor.
 	sf::FloatRect b = txt.getLocalBounds();
-	txt.setOrigin((int)(b.left + b.width/2), (int)(fontsize * .75 - 2)); // this is vital
+	int shift = 0;
+	std::unordered_set<char> shifted = {'s', 'n'}; // @NOTE these letters need to be shifted left
+	if (is_in(c, shifted)) shift = 1;
+	txt.setOrigin((int)(b.left + b.width/2 + shift), (int)(fontsize * .75 - 2));
 	txt.setFillColor(fontcolor);
 
 	line.insert(line.begin() + index, txt);

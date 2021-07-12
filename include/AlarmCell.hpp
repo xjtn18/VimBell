@@ -34,7 +34,7 @@ public:
 	bool is_hovered = false;
 	static sf::Color idleColor, hoverColor;
 	float lerp = 0;
-	float rate = 0.05;
+	float rate = 0.025;
 };
 
 

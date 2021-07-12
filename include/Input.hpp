@@ -4,13 +4,6 @@
 #include <Alarm.hpp>
 
 
-enum Mode {
-	TEXT = 0,
-	RACK,
-	QUIT
-};
-
-
 struct Program; // FD
 
 void handle_universal_input(sf::Event& event, Program& p);

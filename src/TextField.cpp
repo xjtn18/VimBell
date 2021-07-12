@@ -13,18 +13,19 @@ void TextField::cleanup(){
 }
 
 
-TextField::TextField(const char* init_buffer, jb::Transform _tf, bool _engaged)
-	: Entity(_tf),
+TextField::TextField(jb::Transform _tf, const char* init_content, bool _engaged)
+	: Entity(_tf, _engaged),
 	  box(sf::RectangleShape(sf::Vector2f(tf.w, tf.h))),
 	  cursor(TextCursor({tf.x + 24, tf.y, 19, tf.h-10})),
-	  line(Line(init_buffer, cursor.get_width()*2, _tf, 24, cursor.get_width(), sf::Color(50,50,50))),
-	  engaged(_engaged)
+	  line(Line(init_content, cursor.get_width()*2 - 5, _tf, 24, cursor.get_width(), sf::Color(50,50,50)))
 {
 #define CURSOR_HOME {tf.x + 24, tf.y, tf.w, tf.h}
 	bufmax = tf.w / cursor.get_width() - 2;
 	box.setOrigin(0, tf.h/2);
 	box.setPosition(tf.x, tf.y);
 	box.setFillColor(JB_RED);
+	box.setOutlineThickness(1);
+	box.setOutlineColor(sf::Color(50,50,50));
 
 	cursor.lerpf = blink_func;
 	line.lerpf = blink_func;
@@ -152,11 +153,12 @@ void TextField::fill(std::string content){
 
 
 
-void TextField::handler(sf::Event& event, Program& p){
+bool TextField::handler(sf::Event& event, Program& p){
 	// for text events
 	if (event.type == sf::Event::TextEntered){
 		if (event.text.unicode >= 32 && event.text.unicode <= 126){
-			p.main_tbox->write(event.text.unicode);
+			write(event.text.unicode);
+			return true;
 		}
 
 		// for special key events
@@ -164,50 +166,58 @@ void TextField::handler(sf::Event& event, Program& p){
 		switch (event.key.code){
 
 		case sf::Keyboard::Tab: // switch modes
-			if (!p.editing && p.rack->size() != 0){
-				p.engage_with((Entity**)&(p.rack_view));
+			if (!p.rack_view->editing && p.rack->size() != 0){
+				p.engage_with(p.rack_view);
 			}
-			break;
+			return true;
 
 		case sf::Keyboard::Backspace: // remove char
 			if (LSHIFT_IS_DOWN){
-				p.main_tbox->clear_back(true);
+				clear_back(true);
 			} else {
-				p.main_tbox->delete_char();
+				delete_char();
 			}
-			break;
+			return true;
 
 		case sf::Keyboard::Return: // submit text to new/edited alarm
-			if (p.editing == false){
-				p.rack->add_alarm(p.main_tbox->get_buffer());
+			if (!p.rack_view->editing){
+				p.rack->add_alarm(get_buffer());
 			} else {
-				p.rack->edit_selection(p.main_tbox->get_buffer());
-				p.editing = false;
+				p.rack->edit_selection(get_buffer());
+				p.rack_view->editing = false;
 			}
-			p.main_tbox->clear_all();
-			p.engage_with((Entity**)&(p.rack_view));
-			break;
+			clear_all();
+			p.engage_with(p.rack_view);
+			return true;
 
 		case sf::Keyboard::Left: // move cursor back
 			if (LSHIFT_IS_DOWN){
-				p.main_tbox->shift_cursor(jb::TOP);
+				shift_cursor(jb::TOP);
 			} else {
-				p.main_tbox->shift_cursor(jb::UP);
+				shift_cursor(jb::UP);
 			}
-			break;
+			return true;
 
 		case sf::Keyboard::Right: // move cursor forward
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)){
-				p.main_tbox->shift_cursor(jb::BOTTOM);
+				shift_cursor(jb::BOTTOM);
 			} else {
-				p.main_tbox->shift_cursor(jb::DOWN);
+				shift_cursor(jb::DOWN);
 			}
-			break;
+			return true;
 
 		case sf::Keyboard::Escape: // cancel edit
-			p.editing = false;
-			p.main_tbox->clear_all();
-			p.engage_with((Entity**)&(p.rack_view));
+			if (p.rack_view->editing){
+				p.rack_view->editing = false;
+				clear_all();
+				p.engage_with(p.rack_view);
+				return true;
+			}
 		}
 	}
+	return false;
 }
+
+
+
+

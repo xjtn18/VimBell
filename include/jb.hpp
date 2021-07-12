@@ -19,7 +19,9 @@
 // Global Constants
 
 // Fonts
-extern sf::Font INCON_FONT;
+extern sf::Font FONT_INCON;
+extern sf::Font FONT_LIBMONO;
+extern sf::Font FONT_LIBMONO_B;
 void load_font();
 
 // Window params

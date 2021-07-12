@@ -1,4 +1,5 @@
 #include <YesNoPopup.hpp>
+#include <Program.hpp>
 
 
 YesNoPopup::YesNoPopup(jb::Transform _tf, const std::string& _question)
@@ -49,3 +50,27 @@ void YesNoPopup::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	target.draw(question);
 	target.draw(answers);
 }
+
+
+bool YesNoPopup::handler(sf::Event& event, Program& p){
+	if (event.type == sf::Event::KeyPressed){
+		switch (event.key.code){
+
+		case sf::Keyboard::Y:
+			yes_routine();
+			return true;
+
+		case sf::Keyboard::N:
+			no_routine();
+			return true;
+
+		case sf::Keyboard::Escape:
+			p.engage_with(p.last_engaged);
+			p.draw_list.pop_back();
+			return true;
+		}
+	}
+	return false;
+}
+
+

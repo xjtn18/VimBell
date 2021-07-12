@@ -21,37 +21,19 @@ void handle_universal_input(sf::Event& event, Program& p){
 			break;
 
 		case sf::Keyboard::Escape: // back out / end program
-			if (!p.editing && p.mode != QUIT){
-				p.mode = QUIT;
-				auto quit_popup = new YesNoPopup({WINW/2, WINH/2, 0, 0},
-															"Save current rack ("+p.rack->name+")?");
-				p.draw_list.push_back(quit_popup);
-				p.univ_triggered = true;
-			}
-			break;
-		}
-	}
-}
+			auto quit_popup = new YesNoPopup({WINW/2, WINH/2, 0, 0},
+														"Save current rack ("+p.rack->name+")?");
+			quit_popup->yes_routine = [&](){
+				p.prepare_quit(true);
+			};
+			quit_popup->no_routine = [&](){
+				p.prepare_quit(false);
+			};
 
+			p.draw_list.push_back(quit_popup);
+			p.univ_triggered = true;
 
-
-void handle_quit_mode(sf::Event& event, Program& p){
-	if (event.type == sf::Event::KeyPressed){
-		switch (event.key.code){
-
-		case sf::Keyboard::Y:
-			p.prepare_quit(true);
-			break;
-
-		case sf::Keyboard::N:
-			p.prepare_quit(false);
-			break;
-
-		case sf::Keyboard::Escape:
-			p.draw_list.pop_back();
-			//p.mode = TEXT; // TODO: Have it revert to whatever the previous mode was.
-			//switch_mode(TEXT, p);
-			p.engage_with((Entity**)&(p.main_tbox));
+			p.engage_with(quit_popup);
 			break;
 		}
 	}

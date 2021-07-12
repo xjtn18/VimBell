@@ -18,9 +18,7 @@
 struct Program {
 	bool running = true,
 		saving = false,
-		univ_triggered	= false,
-		editing = false,
-		mode_switched = false;
+		univ_triggered	= false;
 
 	// window setup
 	sf::RenderWindow *window_ptr;
@@ -31,12 +29,12 @@ struct Program {
 	Menu *rack_view;
 	VStack *section_stack;
 	sf::Text fps;
-	Entity **engaged_entity = nullptr;
 
 	// program state
 	std::vector<Entity*> draw_list;
 	std::shared_ptr<Rack> rack;
-	Mode mode;
+	Entity *engaged_entity = nullptr;
+	Entity *last_engaged = nullptr;
 
 	// sectors
 	int padding;
@@ -50,7 +48,7 @@ struct Program {
 	void mainloop();
 	void cleanup();
 	void test_input();
-	void engage_with(Entity **ent);
+	void engage_with(Entity *ent);
 
 };
 

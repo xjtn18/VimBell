@@ -6,14 +6,16 @@ const jb::Transform jb::Transform::Zero = {0,0,0,0};
 const char* jb::rootPath = nullptr;
 
 
-const float WINW = 600;
+const float WINW = 650;
 const float WINH = 750;
 
 
 sf::Font INCON_FONT;
 
 void load_font() {
-	INCON_FONT.loadFromFile("res/fonts/incon.ttf");
+	FONT_INCON.loadFromFile("res/fonts/incon.ttf");
+	FONT_LIBMONO.loadFromFile("res/fonts/libmono.ttf");
+	FONT_LIBMONO_B.loadFromFile("res/fonts/libmonobold.ttf");
 }
 
 const sf::Color JB_GREEN     = sf::Color(108,161,59);

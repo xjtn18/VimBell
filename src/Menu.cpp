@@ -23,7 +23,7 @@ void Menu::refresh(){
 	clear();
 	auto alarms = rack_state->alarms;
 	for (int i = 0; i < alarms.size(); ++i){
-		auto* A = new AlarmCell({0,0,tf.w,60}, alarms[i].msg);
+		auto* A = new AlarmCell({0, 0, tf.w, 45}, alarms[i].msg);
 		insert(-1, A);
 		if (i == rack_state->select_index){
 			entities[i]->engage(engaged);
@@ -42,7 +42,7 @@ void Menu::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 }
 
 
-void Menu::handler(sf::Event& event, Program& p){
+bool Menu::handler(sf::Event& event, Program& p){
 	if (event.type == sf::Event::KeyPressed){
 		switch (event.key.code){
 
@@ -54,7 +54,7 @@ void Menu::handler(sf::Event& event, Program& p){
 				p.rack->select_move(jb::DOWN);
 				refresh();
 			}
-			break;
+			return true;
 
 		case sf::Keyboard::K: // move rack selector up
 			if (LSHIFT_IS_DOWN){
@@ -64,12 +64,12 @@ void Menu::handler(sf::Event& event, Program& p){
 				p.rack->select_move(jb::UP);
 				refresh();
 			}
-			break;
+			return true;
 
 		case sf::Keyboard::Enter: // duplicate currently selected alarm
 			p.rack->duplicate_alarm();
 			refresh();
-			break;
+			return true;
 
 		case sf::Keyboard::Backspace: // remove alarm from rack
 			/*
@@ -81,33 +81,36 @@ void Menu::handler(sf::Event& event, Program& p){
 			*/
 			p.rack->remove_alarm();
 			if (p.rack->size() == 0){
-				p.engage_with((Entity**)&(p.main_tbox));
+				p.engage_with(p.main_tbox);
 			}
 			refresh();
-			break;
+			return true;
 
 		case sf::Keyboard::T: // toggle alarm active state
 			p.rack->toggle_selection();
 			refresh();
-			break;
+			return true;
 
 		case sf::Keyboard::W: // increment duplicate time adjustment
 			p.rack->adjust_dup_increment(5);
-			break;
+			return true;
 
 		case sf::Keyboard::S: // decrement duplicate time adjustment
 			p.rack->adjust_dup_increment(-5);
-			break;
+			return true;
 
 		case sf::Keyboard::E: // edit alarm
 			p.main_tbox->fill(p.rack->get_selection_message());
-			p.engage_with((Entity**)&(p.main_tbox));
-			p.editing = true;
-			break;
+			p.engage_with(p.main_tbox);
+			editing = true;
 
 		case sf::Keyboard::Tab: // switch modes
-			p.engage_with((Entity**)&(p.main_tbox));
-			break;
+			p.engage_with(p.main_tbox);
+			return true;
 		}
 	}
+	return false;
 }
+
+
+
