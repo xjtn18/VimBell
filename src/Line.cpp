@@ -3,13 +3,13 @@
 
 
 
-Line::Line(const char* initial, int _fontsize, jb::Transform _tf, int _margin, int _spacing, sf::Color _fontcolor)
-	: fontsize(_fontsize),
-	  spacing(_spacing),
-	  index(0),
-	  tf(_tf),
-	  margin(_margin),
-	  fontcolor(_fontcolor)
+Line::Line(jb::Transform _tf, const char* initial, int _fontsize, int _margin, int _spacing, sf::Color _fontcolor)
+	: tf(_tf),
+		index(0),
+		spacing(_spacing),
+		margin(_margin),
+		fontsize(_fontsize),
+		fontcolor(_fontcolor)
 {
 	for (int i = 0; i < strlen(initial); ++i){
 		insert_char(initial[i]);
@@ -17,11 +17,13 @@ Line::Line(const char* initial, int _fontsize, jb::Transform _tf, int _margin, i
 }
 
 
+
+
 void Line::insert_char(char c){
-	sf::Text txt(c, FONT_LIBMONO_B, fontsize); // TODO: This should create char with font given as param to constructor.
+	sf::Text txt(c, FONT_LIBMONO, fontsize); // TODO: This should create char with font given as param to constructor.
 	sf::FloatRect b = txt.getLocalBounds();
 	int shift = 0;
-	std::unordered_set<char> shifted = {'s', 'n'}; // @NOTE these letters need to be shifted left
+	std::unordered_set<char> shifted = {'b', 't', 'S', 'm', 'n', 'M', 'J'}; // @NOTE these letters need to be shifted left
 	if (is_in(c, shifted)) shift = 1;
 	txt.setOrigin((int)(b.left + b.width/2 + shift), (int)(fontsize * .75 - 2));
 	txt.setFillColor(fontcolor);
@@ -64,9 +66,19 @@ void Line::repos_text(){
 	for (int i = 0; i < line.size(); ++i){
 		offset = i * spacing;
 		auto bounds = line[i].getLocalBounds();
-		line[i].setPosition(tf.x + margin + offset, tf.y); // TODO: Text chars not aligned as sf::Text would
+		line[i].setPosition((int)tf.x + margin + offset, (int)tf.y); // TODO: Text chars not aligned as sf::Text would
 	}
 }
+
+
+std::string Line::get_string() const {
+	std::string result;
+	for (int i = 0; i < line.size(); ++i){
+		result += line[i].getString();
+	}
+	return result;
+}
+
 
 
 void Line::engage(bool value){
@@ -104,4 +116,5 @@ void Line::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 		target.draw(c);
 	}
 }
+
 

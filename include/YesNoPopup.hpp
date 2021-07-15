@@ -11,7 +11,8 @@ struct YesNoPopup : public Entity {
 	Text *option_yes, *option_no;
 	sf::RectangleShape box, dimmer;
 	HStack answers;
-	std::function<void()> yes_routine, no_routine;
+	std::function<void(void)> yes_routine = [](){};
+	std::function<void(void)> no_routine = [](){};
 	
 	YesNoPopup(jb::Transform _tf, const std::string& _question);
 

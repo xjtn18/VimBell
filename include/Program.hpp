@@ -17,8 +17,7 @@
 
 struct Program {
 	bool running = true,
-		saving = false,
-		univ_triggered	= false;
+		saving = false;
 
 	// window setup
 	sf::RenderWindow *window_ptr;

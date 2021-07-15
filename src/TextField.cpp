@@ -17,7 +17,7 @@ TextField::TextField(jb::Transform _tf, const char* init_content, bool _engaged)
 	: Entity(_tf, _engaged),
 	  box(sf::RectangleShape(sf::Vector2f(tf.w, tf.h))),
 	  cursor(TextCursor({tf.x + 24, tf.y, 19, tf.h-10})),
-	  line(Line(init_content, cursor.get_width()*2 - 5, _tf, 24, cursor.get_width(), sf::Color(50,50,50)))
+	  line(Line(_tf, init_content, cursor.get_width()*2 - 6, 24, cursor.get_width(), sf::Color(50,50,50)))
 {
 #define CURSOR_HOME {tf.x + 24, tf.y, tf.w, tf.h}
 	bufmax = tf.w / cursor.get_width() - 2;
@@ -116,11 +116,7 @@ void TextField::clear_all(){
 
 
 std::string TextField::get_buffer() const {
-	std::string result;
-	for (int i = 0; i < line.line.size(); ++i){
-		result += line.line[i].getString();
-	}
-	return result;
+	return line.get_string();
 }
 
 
@@ -181,7 +177,7 @@ bool TextField::handler(sf::Event& event, Program& p){
 
 		case sf::Keyboard::Return: // submit text to new/edited alarm
 			if (!p.rack_view->editing){
-				p.rack->add_alarm(get_buffer());
+				p.rack->add_alarm(p.main_digitime->get_time(), get_buffer());
 			} else {
 				p.rack->edit_selection(get_buffer());
 				p.rack_view->editing = false;

@@ -79,17 +79,33 @@
 	- refresh optimization of alarm rack display.
 	- general refactor
 
+### 7/11/21:
+	- event handled through currently engaged entities.
+	- universal events handled after entity events so keystroke overrides are easier to manage.
+	- switched to liberation mono font.
+
+### 7/12/21:
+	- fixed program crashing bug: wasn't returning true in the 'edit' path of the rack event handled.
+
+### 7/15/21:
+	- Using COMMAND+LSHIFT (placeholder), user can engage the digital time view and edit the time.
+	- Time set here will become the target of any newly created alarms.
+	- Pressing 'm' will change the meridean.
+	- Added a font loading macro to make loading new fonts less of a pain.
+	- shifted the on some origins of characters in the libmono font.
 
 
 ### TODO:
 	- Sort the rack based on target time.
-	- Make main digital clock editable.
 	- Display current duplicate increment to user.
 	- Add more custom alarm tones.
-	- Add typing sounds when writing in main text field.
-	- Draw pretty analog clock in the background.
-	- Allocate entities on the stack and create a draw_list of pointers to each.
-	- Have events handled by the entity itself; engaged entities handle current input.
+	- Make duplicate alarms stack into one alarm to make UI tidier. Show stack count in the alarm cell.
+	- Make fade-in intro for all UI entities when the program starts.
+	- Add a start menu that lets you choose from your saved racks in the racks/ folder.
+	- Make a key events hash table that maps keys to functions; can check if key was matched by checking if found in the map. Would be difficult to match 2-stroke keybindings.
+	- Make popups have a vstack of text, box size changes with stack height.
+	- Think about either making the Menu struct/class combine with the Rack class and draw it dynamically like you would with a Line, or think of a new solution all together. The way the menu is drawn with the refresh method is inconsistent with every other entity.
+	- some characters rendered in a Line seem off-place; verify that its just the font or if the position rounding is what's causing it.
 
 
 ### Syntax Formatting
@@ -97,7 +113,7 @@
 	- Function names: 			"function_name"
 	- SFML function names:		"functionName"
 	- Variable/Object names:	"object_name"
-	- Globals:			        "GLOBAL"
+	- Globals:			        	"GLOBAL_VAR"
 
 
 

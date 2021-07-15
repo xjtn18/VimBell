@@ -8,9 +8,12 @@ Text::Text(jb::Transform _tf, std::string _content, sf::Font& _font, int _fontsi
 
 	max_bounds = sf::Text(")", _font, _fontsize).getLocalBounds();
 
-	txt.setFillColor(JB_WHITE);
 	tf.w = bounds.width + bounds.left;
 	tf.h = max_bounds.height;
+}
+
+void Text::set_color(sf::Color c){
+	txt.setFillColor(c);
 }
 
 void Text::center_xaxis(){

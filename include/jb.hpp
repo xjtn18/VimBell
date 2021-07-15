@@ -12,6 +12,8 @@
 #define DEV false
 
 #define LSHIFT_IS_DOWN sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)
+#define LCOMMAND_IS_DOWN sf::Keyboard::isKeyPressed(sf::Keyboard::LSystem)
+#define LALT_IS_DOWN sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt)
 
 //////
 ///////////////////////
@@ -19,10 +21,9 @@
 // Global Constants
 
 // Fonts
-extern sf::Font FONT_INCON;
 extern sf::Font FONT_LIBMONO;
 extern sf::Font FONT_LIBMONO_B;
-void load_font();
+void load_fonts();
 
 // Window params
 extern const float WINW;
@@ -71,6 +72,10 @@ namespace jb {
 			: hour(other.hour), minute(other.minute)
 		{ }
 
+		Time(const std::string& time_str) // construct from string in format "hh:mm"
+			: hour(std::stoi(time_str.substr(0,2))), minute(std::stoi(time_str.substr(3,5)))
+		{ }
+
 		Time operator +(const int& increment) const {
 			std::time_t sinceEpoch = std::time(nullptr);
 			std::tm startT = *std::localtime(&sinceEpoch);
@@ -80,6 +85,19 @@ namespace jb {
 			std::tm newT = *std::localtime(&t);
 			return Time(newT.tm_hour, newT.tm_min);
 		}
+
+		Time& operator +=(const int& increment) {
+			std::time_t sinceEpoch = std::time(nullptr);
+			std::tm startT = *std::localtime(&sinceEpoch);
+			startT.tm_hour = this->hour;
+			startT.tm_min = this->minute;
+			std::time_t t = std::mktime(&startT) + increment * 60;
+			std::tm newT = *std::localtime(&t);
+			this->hour = newT.tm_hour;
+			this->minute = newT.tm_min;
+			return *this;
+		}
+
 
 		friend std::ostream& operator <<(std::ostream& os, const Time& time){
 			os << "Time(" << time.hour << "h, " << time.minute << "m)";

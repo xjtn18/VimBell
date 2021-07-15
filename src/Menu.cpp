@@ -1,6 +1,7 @@
 #include <Menu.hpp>
 #include <Program.hpp>
 #include <YesNoPopup.hpp>
+#include <sstream>
 
 
 Menu::Menu(jb::Transform _tf, int _padding, std::shared_ptr<Rack> _rack_state, bool _engaged)
@@ -23,7 +24,10 @@ void Menu::refresh(){
 	clear();
 	auto alarms = rack_state->alarms;
 	for (int i = 0; i < alarms.size(); ++i){
-		auto* A = new AlarmCell({0, 0, tf.w, 45}, alarms[i].msg);
+		std::ostringstream ss;
+		ss << std::right << std::setw(8) << (std::string) alarms[i].target
+			<< "    " << alarms[i].msg;
+		auto* A = new AlarmCell({0, 0, tf.w, 45}, ss.str());
 		insert(-1, A);
 		if (i == rack_state->select_index){
 			entities[i]->engage(engaged);
@@ -72,18 +76,28 @@ bool Menu::handler(sf::Event& event, Program& p){
 			return true;
 
 		case sf::Keyboard::Backspace: // remove alarm from rack
-			/*
 			{
 				auto confirm_popup = new YesNoPopup({WINW/2, WINH/2, 0, 0},
 														"Delete this alarm ("+p.rack->get_selection_message()+")?");
+				confirm_popup->yes_routine = [&](){
+					p.rack->remove_alarm();
+					refresh();
+					p.draw_list.pop_back(); // destroy popup
+					if (p.rack->size() == 0){
+						p.engage_with(p.main_tbox); // engage the text field
+					} else {
+						p.engage_with(this); // engage the rack again
+					}
+				};
+
+				confirm_popup->no_routine = [&](){
+					p.draw_list.pop_back(); // destroy popup
+					p.engage_with(this); // engage the rack again
+				};
+
 				p.draw_list.push_back(confirm_popup);
+				p.engage_with(confirm_popup);
 			}
-			*/
-			p.rack->remove_alarm();
-			if (p.rack->size() == 0){
-				p.engage_with(p.main_tbox);
-			}
-			refresh();
 			return true;
 
 		case sf::Keyboard::T: // toggle alarm active state
@@ -92,17 +106,24 @@ bool Menu::handler(sf::Event& event, Program& p){
 			return true;
 
 		case sf::Keyboard::W: // increment duplicate time adjustment
-			p.rack->adjust_dup_increment(5);
-			return true;
+			if (LALT_IS_DOWN){
+				p.rack->adjust_dup_increment(5);
+				return true;
+			}
+			return false;
 
 		case sf::Keyboard::S: // decrement duplicate time adjustment
-			p.rack->adjust_dup_increment(-5);
-			return true;
+			if (LALT_IS_DOWN){
+				p.rack->adjust_dup_increment(-5);
+				return true;
+			}
+			return false;
 
 		case sf::Keyboard::E: // edit alarm
 			p.main_tbox->fill(p.rack->get_selection_message());
 			p.engage_with(p.main_tbox);
 			editing = true;
+			return true;
 
 		case sf::Keyboard::Tab: // switch modes
 			p.engage_with(p.main_tbox);

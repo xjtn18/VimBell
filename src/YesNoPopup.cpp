@@ -14,7 +14,7 @@ YesNoPopup::YesNoPopup(jb::Transform _tf, const std::string& _question)
 	sf::FloatRect bounds;
 
 	// question text
-	question = sf::Text(_question, INCON_FONT, 30);
+	question = sf::Text(_question, FONT_LIBMONO_B, 30);
 	question.setFillColor(JB_WHITE);
 	bounds = question.getGlobalBounds();
 	question.setOrigin((int)(bounds.width/2), (int)(30 * .75 - 2));
@@ -27,11 +27,14 @@ YesNoPopup::YesNoPopup(jb::Transform _tf, const std::string& _question)
 	box.setPosition(tf.x, tf.y);
 	box.setFillColor(sf::Color(50,50,50));
 	box.setOutlineThickness(2);
-	box.setOutlineColor(JB_WHITE);
+	box.setOutlineColor(sf::Color(100,100,100));
 
 	// yes + no
-	option_yes = new Text({0,0,0,0}, "yes (y)", INCON_FONT, 30);
-	option_no = new Text({0,0,0,0}, "no (n)", INCON_FONT, 30);
+	option_yes = new Text({0,0,0,0}, "yes (y)", FONT_LIBMONO, 25);
+	option_yes->set_color(JB_GREEN);
+
+	option_no = new Text({0,0,0,0}, "no (n)", FONT_LIBMONO, 25);
+	option_no->set_color(JB_RED);
 
 	int answer_padding = 50;
 	answers = HStack ({tf.x - option_yes->tf.w - answer_padding/2, tf.y, 0, 0}, answer_padding, {option_yes, option_no});
@@ -60,13 +63,18 @@ bool YesNoPopup::handler(sf::Event& event, Program& p){
 			yes_routine();
 			return true;
 
+		case sf::Keyboard::Enter:
+			yes_routine();
+			return true;
+
 		case sf::Keyboard::N:
 			no_routine();
 			return true;
 
 		case sf::Keyboard::Escape:
 			p.engage_with(p.last_engaged);
-			p.draw_list.pop_back();
+			p.draw_list.pop_back(); // @NOTE: popup should always come last, but this feels error prone.
+											// Need way of specifying which entity specificially to destroy.
 			return true;
 		}
 	}

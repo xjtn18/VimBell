@@ -11,7 +11,7 @@ public:
 
 	Rack(std::string _name);
 	~Rack();
-	void add_alarm(std::string message);
+	void add_alarm(jb::Time target, std::string message);
 	void query_active_alarms(const jb::Time t);
 	void select_move(jb::Direc direction);
 	void toggle_selection();

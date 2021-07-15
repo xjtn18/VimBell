@@ -5,21 +5,26 @@
 const jb::Transform jb::Transform::Zero = {0,0,0,0};
 const char* jb::rootPath = nullptr;
 
-
+// Window params
 const float WINW = 650;
 const float WINH = 750;
 
+// Fonts
+sf::Font FONT_LIBMONO;
+sf::Font FONT_LIBMONO_B;
 
-sf::Font INCON_FONT;
+#define _LOAD_TTF(font) font.loadFromFile("res/fonts/" + (std::string)#font + ".ttf")
+// '#' is a stringify preproc command: returns string representation of the variable name
 
-void load_font() {
-	FONT_INCON.loadFromFile("res/fonts/incon.ttf");
-	FONT_LIBMONO.loadFromFile("res/fonts/libmono.ttf");
-	FONT_LIBMONO_B.loadFromFile("res/fonts/libmonobold.ttf");
+void load_fonts() {
+	// macro expects font file base name and font variable name to be equivalent
+	_LOAD_TTF(FONT_LIBMONO);
+	_LOAD_TTF(FONT_LIBMONO_B);
 }
 
-const sf::Color JB_GREEN     = sf::Color(108,161,59);
-const sf::Color JB_RED       = sf::Color(255,101,74);
+// Colors
+const sf::Color JB_GREEN     = sf::Color(108, 161, 59);
+const sf::Color JB_RED       = sf::Color(255, 101, 74);
 const sf::Color JB_WHITE     = sf::Color(229, 240, 225);
 const sf::Color JBC_BG       = sf::Color(30, 34, 36);
 

@@ -26,9 +26,7 @@ Rack::~Rack()
 }
 
 
-void Rack::add_alarm(std::string message){
-
-	jb::Time target = jb::current_time() + 1;
+void Rack::add_alarm(jb::Time target, std::string message){
 	insert_alarm(Alarm(target, message));
 }
 
@@ -65,7 +63,7 @@ void Rack::toggle_selection(){
 
 void Rack::duplicate_alarm(){
 	if (alarms.size() == 0){
-		add_alarm("---"); // THIS SHOULD NEVER HAPPEN!
+		add_alarm(jb::Time("00:00"), "---"); // THIS SHOULD NEVER HAPPEN!
 	} else {
 		Alarm& curr = alarms[select_index]; // currently selected alarm
 		Alarm dup = Alarm(curr);

@@ -30,7 +30,7 @@ Program::Program()
 {
 	// setup any static members
 	aud::load_all(); // load all the program sounds
-	load_font();
+	load_fonts();
 
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 16;
@@ -58,7 +58,7 @@ Program::Program()
 	bezel_bottom = new BorderedRect({0, WINH-30, WINW, 30}, 2);
 
 	// fps counter
-	fps = sf::Text("0", INCON_FONT, 30);
+	fps = sf::Text("0", FONT_LIBMONO, 30);
 	sf::FloatRect bounds = fps.getLocalBounds();
 	fps.setPosition(20, WINH - bounds.height - bounds.top - 5);
 	fps.setFillColor(JB_GREEN);
@@ -70,15 +70,16 @@ Program::Program()
 
 	auto rack_name = new Text({CENTER_WIN_X, 0, 0, 0},
 									  "-------------------|  " + rack->name +
-									  "  |-------------------", INCON_FONT, 30);
+									  "  |-------------------", FONT_LIBMONO_B, 20);
 	rack_name->center_xaxis();
+	rack_name->set_color(JB_WHITE);
 
 	auto bg_clock = new Image({WINW, WINH, 0, 0}, "res/images/roman_clock.png");
 	bg_clock->sprite.setScale(0.5, 0.5);
-	bg_clock->sprite.setColor(sf::Color(0,0,0,75));
+	bg_clock->sprite.setColor(sf::Color(0,0,0,50));
 
 
-	section_stack = new VStack({0, 0, 0, 0}, 6, {
+	section_stack = new VStack({0, 0, 0, 0}, 10, {
 			sector_top,
 			rack_name,
 			rack_view
@@ -134,7 +135,7 @@ void Program::prepare_quit(bool _saving){
 
 void Program::quit(){
 	//
-	// Clean heap memory and close the program window
+	// Close the program window and clean up heap
 	//
 	if (saving) save_rack(rack);
 	window_ptr->close(); // close window
@@ -184,19 +185,18 @@ void Program::mainloop(){
 	while (running && window.isOpen()) {
 		window.clear(JBC_BG); // clear last frame and set bg color
 
-		univ_triggered = false;
 		bool event_processed = false;
 		sf::Event event;
 
 		while (window.pollEvent(event)) {
-			// @NOTE: A single keystroke produces both a KeyPressed and a TextEntered event; be aware of that.
+			// @NOTE: A single character keystroke produces both a KeyPressed and a TextEntered event; be aware of that.
 			if (!event_processed){
 				event_processed = engaged_entity->handler(event, *this);
-				// @NOTE: keystrokes shared by the current entity and the universals should override the latter.
+				// @NOTE: keystrokes shared by the current entity and the universals should prioritize the entity.
 				// So entity handlers should be called first.
 			}
-			if (!event_processed){
-				handle_universal_input(event, *this); // handle universal commands
+			if (!event_processed){ // @FIXME: some events are processed by both the entity and the global handler.
+				handle_global_input(event, *this); // handle global commands
 			}
 		}
 		// all inputs polled for this frame
