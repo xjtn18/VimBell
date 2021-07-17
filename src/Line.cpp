@@ -4,7 +4,7 @@
 
 
 Line::Line(jb::Transform _tf, const char* initial, int _fontsize, int _margin, int _spacing, sf::Color _fontcolor)
-	: tf(_tf),
+	: Entity(_tf),
 		index(0),
 		spacing(_spacing),
 		margin(_margin),
@@ -23,7 +23,7 @@ void Line::insert_char(char c){
 	sf::Text txt(c, FONT_LIBMONO, fontsize); // TODO: This should create char with font given as param to constructor.
 	sf::FloatRect b = txt.getLocalBounds();
 	int shift = 0;
-	std::unordered_set<char> shifted = {'b', 't', 'S', 'm', 'n', 'M', 'J'}; // @NOTE these letters need to be shifted left
+	SET<char> shifted = {'b', 't', 'S', 'm', 'n', 'M', 'J'}; // @NOTE these letters need to be shifted left
 	if (is_in(c, shifted)) shift = 1;
 	txt.setOrigin((int)(b.left + b.width/2 + shift), (int)(fontsize * .75 - 2));
 	txt.setFillColor(fontcolor);
@@ -66,7 +66,7 @@ void Line::repos_text(){
 	for (int i = 0; i < line.size(); ++i){
 		offset = i * spacing;
 		auto bounds = line[i].getLocalBounds();
-		line[i].setPosition((int)tf.x + margin + offset, (int)tf.y); // TODO: Text chars not aligned as sf::Text would
+		line[i].setPosition((int)tf.x + margin + offset, (int)tf.y); // TODO: Text chars not aligned as sf::Text would be.
 	}
 }
 
@@ -82,7 +82,7 @@ std::string Line::get_string() const {
 
 
 void Line::engage(bool value){
-	if (!value){
+	if (!value){ // if disengaging, reset font color to default (if its in the middle of blinking)
 		if (line.size() > 0){
 			line[index].setFillColor(sf::Color(50, 50, 50));
 		}
@@ -90,7 +90,7 @@ void Line::engage(bool value){
 }
 
 
-void Line::update(float dt, float lerp){
+void Line::update(float dt){
 	// set character colors
 	for (int i = 0; i < line.size(); ++i){
 		if (i != index){

@@ -2,7 +2,6 @@
 using namespace aud;
 
 
-//auto aud::sound_map = std::unordered_map<std::string, sf::SoundBuffer>;
 std::unordered_map<std::string, sf::SoundBuffer> aud::sound_map;
 
 

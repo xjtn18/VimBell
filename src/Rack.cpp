@@ -1,4 +1,5 @@
 #include <Rack.hpp>
+#include <iterator>
 
 Speaker *Rack::rack_speaker			 = new Speaker(100.0f, false);
 const int Rack::max_dup_increment	 = 121; // upper bound, exclusive
@@ -88,13 +89,15 @@ void Rack::remove_alarm(){
 
 void Rack::insert_alarm(Alarm newAlarm, bool audible){
 	if (audible) rack_speaker->play("create.wav");
+
 	if (alarms.size() != 0){
-		alarms.insert(alarms.begin() + select_index + 1, newAlarm);
+		auto lower = std::lower_bound(alarms.begin(), alarms.end(), newAlarm);
+		select_index = std::distance(alarms.begin(), lower); // std::distance helps us convert iterator to integer index
+		alarms.insert(lower, newAlarm);
+
 	} else {
 		alarms.push_back(newAlarm);
 	}
-	select_index += 1;
-	jb::clamp(select_index, 0, alarms.size());
 }
 
 

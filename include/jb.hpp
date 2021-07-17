@@ -10,6 +10,7 @@
 #define is_in(x,y)   y.find(x) != y.end()
 #define not_in(x,y)  y.find(x) == y.end()
 #define DEV false
+#define SET std::unordered_set
 
 #define LSHIFT_IS_DOWN sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)
 #define LCOMMAND_IS_DOWN sf::Keyboard::isKeyPressed(sf::Keyboard::LSystem)
@@ -72,6 +73,14 @@ namespace jb {
 			: hour(other.hour), minute(other.minute)
 		{ }
 
+		Time& operator=(const Time& other){
+			if (&other != this){
+				hour = other.hour;
+				minute = other.minute;
+			}
+			return *this;
+		}
+
 		Time(const std::string& time_str) // construct from string in format "hh:mm"
 			: hour(std::stoi(time_str.substr(0,2))), minute(std::stoi(time_str.substr(3,5)))
 		{ }
@@ -87,15 +96,20 @@ namespace jb {
 		}
 
 		Time& operator +=(const int& increment) {
-			std::time_t sinceEpoch = std::time(nullptr);
-			std::tm startT = *std::localtime(&sinceEpoch);
-			startT.tm_hour = this->hour;
-			startT.tm_min = this->minute;
-			std::time_t t = std::mktime(&startT) + increment * 60;
-			std::tm newT = *std::localtime(&t);
-			this->hour = newT.tm_hour;
-			this->minute = newT.tm_min;
+			// TODO: define assignment operator so we can delete all of these repeated code and just write 'return *this + increment'
+			*this = *this + increment;
 			return *this;
+			//return (*this) + increment;
+		}
+
+		bool operator <(const Time& other) const {
+			if (this->hour < other.hour){
+				return true;
+			} else if (this->hour > other.hour){
+				return false;
+			} else { // same hour, distinguish by minute
+				return this->minute < other.minute;
+			}
 		}
 
 

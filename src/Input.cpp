@@ -18,11 +18,6 @@ void handle_global_input(sf::Event& event, Program& p){
 			}
 			break;
 
-		case sf::Keyboard::LShift:
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LSystem)){
-				p.engage_with(p.main_digitime);
-			}
-			break;
 
 		case sf::Keyboard::Escape: // back out / end program
 			auto quit_popup = new YesNoPopup({WINW/2, WINH/2, 0, 0},

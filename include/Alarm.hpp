@@ -4,6 +4,7 @@
 using namespace aud;
 
 
+
 struct Alarm {
 	///////// members /////////
 	static Speaker *alarm_speaker;
@@ -24,6 +25,8 @@ struct Alarm {
 	inline void toggle(){
 		active = !active;
 	}
+
+	bool operator<(const Alarm& other) const;
 
 	void query(jb::Time t);
 	void trigger();

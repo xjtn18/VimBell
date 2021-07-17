@@ -94,15 +94,19 @@
 	- Added a font loading macro to make loading new fonts less of a pain.
 	- shifted the on some origins of characters in the libmono font.
 
+### 7/17/21:
+	- added selection arrows to indicate whether the hour is being modified or the minute is.
+	- alarm rack insertions are now sorted based on target time. Added operator 'less' for jb::Time.
+	- Switched some controls around.
+
+
 
 ### TODO:
-	- Sort the rack based on target time.
 	- Display current duplicate increment to user.
 	- Add more custom alarm tones.
 	- Make duplicate alarms stack into one alarm to make UI tidier. Show stack count in the alarm cell.
 	- Make fade-in intro for all UI entities when the program starts.
 	- Add a start menu that lets you choose from your saved racks in the racks/ folder.
-	- Make a key events hash table that maps keys to functions; can check if key was matched by checking if found in the map. Would be difficult to match 2-stroke keybindings.
 	- Make popups have a vstack of text, box size changes with stack height.
 	- Think about either making the Menu struct/class combine with the Rack class and draw it dynamically like you would with a Line, or think of a new solution all together. The way the menu is drawn with the refresh method is inconsistent with every other entity.
 	- some characters rendered in a Line seem off-place; verify that its just the font or if the position rounding is what's causing it.

@@ -1,15 +1,16 @@
 #pragma once
 #include <jb.hpp>
 #include <functional>
+#include <Entity.hpp>
 
 
-class Line : public sf::Drawable {
+class Line : public Entity {
 public:
 	std::vector<sf::Text> line;
 	int fontsize, spacing, index, margin;
-	jb::Transform tf;
 	sf::Color fontcolor;
 	std::function<float(float)> lerpf = [](float x) -> float {return x;};
+	float lerp;
 
 
 	Line(){}
@@ -24,7 +25,7 @@ public:
 	std::string get_string() const;
 
 	void engage(bool value);
-	void update(float dt, float lerp);
+	void update(float dt);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 private:

@@ -4,14 +4,20 @@
 #include <Line.hpp>
 #include <math.h>
 #include <Entity.hpp>
+#include <Speaker.hpp>
+using namespace aud;
 
 
-enum Meridiem { ANTE, POST, MERIDIEM_N };
+enum Meridiem { ANTE, POST };
 
 
 struct DigitalTimeView : public Entity {
+	static Speaker *clock_speaker;
+	static void cleanup();
+
+
 	Line line;
-	sf::Text semicolon;
+	sf::CircleShape top_arrow, bottom_arrow;
 	float lerp, lerp_target;
 	int index;
 	Meridiem meridiem;
@@ -27,6 +33,7 @@ struct DigitalTimeView : public Entity {
 	void switch_meridiem();
 	jb::Time get_time();
 
+	void engage(bool value);
 	void update(float dt);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	bool handler(sf::Event& event, Program& p);

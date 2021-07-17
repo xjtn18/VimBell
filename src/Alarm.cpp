@@ -24,6 +24,12 @@ Alarm::~Alarm(){
 }
 
 
+
+bool Alarm::operator<(const Alarm& other) const {
+	return this->target < other.target;
+}
+
+
 void Alarm::query(jb::Time t){
 	if (active && t == target){
 		this->trigger();

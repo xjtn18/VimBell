@@ -28,7 +28,7 @@ void Menu::refresh(){
 		ss << std::right << std::setw(8) << (std::string) alarms[i].target
 			<< "    " << alarms[i].msg;
 		auto* A = new AlarmCell({0, 0, tf.w, 45}, ss.str());
-		insert(-1, A);
+		insert(-1, A); // Stack::insert
 		if (i == rack_state->select_index){
 			entities[i]->engage(engaged);
 		}

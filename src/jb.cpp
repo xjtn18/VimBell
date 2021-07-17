@@ -6,7 +6,7 @@ const jb::Transform jb::Transform::Zero = {0,0,0,0};
 const char* jb::rootPath = nullptr;
 
 // Window params
-const float WINW = 650;
+const float WINW = 1000;
 const float WINH = 750;
 
 // Fonts

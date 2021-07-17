@@ -12,7 +12,6 @@ AlarmCell::AlarmCell(jb::Transform _tf, const std::string _text)
 {
 	box = sf::RectangleShape(sf::Vector2f(tf.w,tf.h));
 	box.setFillColor(idleColor);
-	//box.setOrigin(w/2, h/2);
 
 	bText = sf::Text(text, FONT_LIBMONO, (unsigned int) (tf.h/1.85));
 	bText.setFillColor(JB_WHITE); // set font color

@@ -68,9 +68,7 @@ Program::Program()
 	auto yaxis = new LineShape({CENTER_WIN_X, CENTER_WIN_Y, grid_line_thickness, WINH});
 	auto xaxis = new LineShape({CENTER_WIN_X, CENTER_WIN_Y, WINW, grid_line_thickness});
 
-	auto rack_name = new Text({CENTER_WIN_X, 0, 0, 0},
-									  "-------------------|  " + rack->name +
-									  "  |-------------------", FONT_LIBMONO_B, 20);
+	auto rack_name = new Text({CENTER_WIN_X, 0, 0, 0}, rack->name, FONT_LIBMONO, 20);
 	rack_name->center_xaxis();
 	rack_name->set_color(JB_WHITE);
 
@@ -118,6 +116,7 @@ void Program::cleanup(){
 	Alarm::cleanup();
 	Rack::cleanup();
 	TextField::cleanup();
+	DigitalTimeView::cleanup();
 	aud::cleanup();
 
 	rack.reset();			// delete current rack
@@ -190,14 +189,15 @@ void Program::mainloop(){
 
 		while (window.pollEvent(event)) {
 			// @NOTE: A single character keystroke produces both a KeyPressed and a TextEntered event; be aware of that.
-			if (!event_processed){
+			// @NOTE: keystrokes shared by the current entity and the universals should prioritize the entity.
+			// So entity handlers should be called first.
+			
+			// @FIXME: some events are processed by both the entity and the global handler.
+			if (!event_processed)
 				event_processed = engaged_entity->handler(event, *this);
-				// @NOTE: keystrokes shared by the current entity and the universals should prioritize the entity.
-				// So entity handlers should be called first.
-			}
-			if (!event_processed){ // @FIXME: some events are processed by both the entity and the global handler.
-				handle_global_input(event, *this); // handle global commands
-			}
+			if (!event_processed)
+				handle_global_input(event, *this);
+
 		}
 		// all inputs polled for this frame
 

@@ -23,7 +23,7 @@ TextField::TextField(jb::Transform _tf, const char* init_content, bool _engaged)
 	bufmax = tf.w / cursor.get_width() - 2;
 	box.setOrigin(0, tf.h/2);
 	box.setPosition(tf.x, tf.y);
-	box.setFillColor(JB_RED);
+	box.setFillColor(sf::Color(100,100,100));
 	box.setOutlineThickness(1);
 	box.setOutlineColor(sf::Color(50,50,50));
 
@@ -126,8 +126,9 @@ void TextField::update(float dt){
 		lerp += inc;
 		if (lerp > 360) lerp = 0;
 		cursor.lerp = lerp;
+		line.lerp = lerp;
 		cursor.update(dt);
-		line.update(dt, lerp);
+		line.update(dt);
 	}
 }
 
@@ -162,8 +163,8 @@ bool TextField::handler(sf::Event& event, Program& p){
 		switch (event.key.code){
 
 		case sf::Keyboard::Tab: // switch modes
-			if (!p.rack_view->editing && p.rack->size() != 0){
-				p.engage_with(p.rack_view);
+			if (!p.rack_view->editing){
+				p.engage_with(p.main_digitime);
 			}
 			return true;
 
