@@ -11,14 +11,15 @@ void Alarm::cleanup(){
 
 
 Alarm::Alarm(jb::Time initTarget, std::string initMsg, bool initActive)
-	: target(initTarget), msg(initMsg), active(initActive), alarm_name("tone1.wav")
+	: target(initTarget),
+	msg(initMsg),
+	active(initActive),
+	alarm_name("meadows.wav"),
+	stacc(1),
+	stacc_interval(1)
 { 
 }
 
-Alarm::Alarm(const Alarm& other)
-	: target(other.target), msg(other.msg), active(other.active), alarm_name(other.alarm_name)
-{ 
-}
 
 Alarm::~Alarm(){
 }
@@ -30,15 +31,30 @@ bool Alarm::operator<(const Alarm& other) const {
 }
 
 
+
+void Alarm::add_to_stack(){
+	jb::clamp(++stacc, 1, 11);
+}
+
+
+
+bool Alarm::remove_from_stack(){
+	return jb::clamp(--stacc, 1, 11);
+}
+
+
+
 void Alarm::query(jb::Time t){
-	if (active && t == target){
-		this->trigger();
+	if (active){
+		for (int i = 0; i < stacc; ++i){
+			if (target + stacc_interval * i == t){
+				this->trigger();
+			}
+		}
 	}
 }
 
 void Alarm::trigger(){
-	std::cout << this->msg << std::endl;
-
 	// sound the alarm if speaker is free
 	if (! alarm_speaker->is_playing()){
 		alarm_speaker->play(alarm_name);

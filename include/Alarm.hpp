@@ -14,11 +14,13 @@ struct Alarm {
 	bool 				active;
 	std::string 	msg;
 	std::string 	alarm_name;
+	int 				stacc;
+	int				stacc_interval;
 	///////////////////////////
 
 	Alarm(){};
 	Alarm(jb::Time initTarget, std::string initMsg = "default", bool initActive = true);
-	Alarm(const Alarm& other);
+	Alarm(const Alarm& other) = default;
 	static void cleanup();
 	~Alarm();
 
@@ -26,6 +28,8 @@ struct Alarm {
 		active = !active;
 	}
 
+	void add_to_stack();
+	bool remove_from_stack();
 	bool operator<(const Alarm& other) const;
 
 	void query(jb::Time t);

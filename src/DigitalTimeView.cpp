@@ -44,9 +44,6 @@ DigitalTimeView::DigitalTimeView(jb::Transform _tf)
 
 
 void DigitalTimeView::alter_digit(int direction){
-	// NOTE: plan is to just be able to alter the hour number and minute number as a whole.
-	// 		This would be easier than having to navigate through each individual digit.
-
 	std::string time_strs = line.get_string();
 
 	if (index == 0){ // modifying hour
@@ -56,9 +53,14 @@ void DigitalTimeView::alter_digit(int direction){
 		if (!jb::clamp(new_hour, 1, 13)){
 			line.line[index].setString(new_hour_str[0]);
 			line.line[index+1].setString(new_hour_str[1]);
-			
-		} else { // play error sound
-			clock_speaker->play("error.wav");
+		} else {
+			if (direction == -1){
+				line.line[index].setString("1");
+				line.line[index+1].setString("2");
+			} else {
+				line.line[index].setString("0");
+				line.line[index+1].setString("1");
+			}
 		}
 
 	} else if (index == 1){ // modifying minute
@@ -69,9 +71,14 @@ void DigitalTimeView::alter_digit(int direction){
 			// + 2 and + 3 to properly map index 1 to values in the line
 			line.line[index+2].setString(new_minute_str[0]);
 			line.line[index+3].setString(new_minute_str[1]);
-			
-		} else { // play error sound
-			clock_speaker->play("error.wav");
+		} else {
+			if (direction == -1){
+				line.line[index+2].setString("5");
+				line.line[index+3].setString("9");
+			} else {
+				line.line[index+2].setString("0");
+				line.line[index+3].setString("0");
+			}
 		}
 	}
 }

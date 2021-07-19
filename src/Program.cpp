@@ -40,8 +40,7 @@ Program::Program()
    sf::Image icon;
    icon.loadFromFile(jb::get_image("clock-ico.png"));
    window_ptr->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
-	window_ptr->setFramerateLimit(120);
-	//window_ptr->setVerticalSyncEnabled(true);
+	window_ptr->setFramerateLimit(30);
 
 	// UI entities
 	main_digitime = new DigitalTimeView({30, 75, 0, 0});

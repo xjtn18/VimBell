@@ -2,16 +2,13 @@
 #include <jb.hpp>
 #include <thread>
 
-class Rack;
+struct Rack;
 
-class ThreadClock {
-public:
-
+struct ThreadClock {
 	ThreadClock(std::shared_ptr<Rack> _rack);
 	void callback();
 	void stop();
 
-private:
 	std::thread thr;
 	std::atomic<bool> stopped;
 	std::shared_ptr<Rack> rack;

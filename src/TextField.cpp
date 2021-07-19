@@ -125,6 +125,7 @@ void TextField::update(float dt){
 		float inc = 0.05 * dt;
 		lerp += inc;
 		if (lerp > 360) lerp = 0;
+
 		cursor.lerp = lerp;
 		line.lerp = lerp;
 		cursor.update(dt);
@@ -168,6 +169,7 @@ bool TextField::handler(sf::Event& event, Program& p){
 			}
 			return true;
 
+
 		case sf::Keyboard::Backspace: // remove char
 			if (LSHIFT_IS_DOWN){
 				clear_back(true);
@@ -175,6 +177,7 @@ bool TextField::handler(sf::Event& event, Program& p){
 				delete_char();
 			}
 			return true;
+
 
 		case sf::Keyboard::Return: // submit text to new/edited alarm
 			if (!p.rack_view->editing){
@@ -187,6 +190,7 @@ bool TextField::handler(sf::Event& event, Program& p){
 			p.engage_with(p.rack_view);
 			return true;
 
+
 		case sf::Keyboard::Left: // move cursor back
 			if (LSHIFT_IS_DOWN){
 				shift_cursor(jb::TOP);
@@ -195,6 +199,7 @@ bool TextField::handler(sf::Event& event, Program& p){
 			}
 			return true;
 
+
 		case sf::Keyboard::Right: // move cursor forward
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)){
 				shift_cursor(jb::BOTTOM);
@@ -202,6 +207,7 @@ bool TextField::handler(sf::Event& event, Program& p){
 				shift_cursor(jb::DOWN);
 			}
 			return true;
+
 
 		case sf::Keyboard::Escape: // cancel edit
 			if (p.rack_view->editing){

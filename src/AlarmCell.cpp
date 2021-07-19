@@ -21,26 +21,6 @@ AlarmCell::AlarmCell(jb::Transform _tf, const std::string _text)
 }
 
 
-AlarmCell::AlarmCell(const AlarmCell& other) // copy constructor
-	: text(other.text),
-	  box(other.box),
-	  bText(other.bText)
-{
-	tf = other.tf;
-	set_pos();
-}
-
-
-AlarmCell& AlarmCell::operator =(const AlarmCell& other) // assignment operator
-{
-	if (this != &other){
-		text = other.text;
-		tf = other.tf;
-		set_pos();
-	}
-	return *this;
-}
-
 
 
 void AlarmCell::set_pos(){
@@ -94,6 +74,7 @@ void AlarmCell::update(float dt){
 void AlarmCell::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	target.draw(box); // draw the button box
 	target.draw(bText); // draw the button text
+	target.draw(stacc_indicator);
 }
 
 

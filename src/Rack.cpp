@@ -2,7 +2,6 @@
 #include <iterator>
 
 Speaker *Rack::rack_speaker			 = new Speaker(100.0f, false);
-const int Rack::max_dup_increment	 = 121; // upper bound, exclusive
 
 void Rack::cleanup(){
 	delete rack_speaker;
@@ -12,10 +11,20 @@ void Rack::cleanup(){
 
 Rack::Rack(std::string _name)
 	: name(_name),
-	  select_index(0),
-	  dup_increment(5)
+	  select_index(0)
 { 
 	clock = new ThreadClock(std::shared_ptr<Rack>(this)); // run clock thread
+}
+
+
+
+Rack& Rack::operator=(const Rack& other){
+	dlog("YOO");
+	if (&other != this){
+		name = other.name;
+		select_index = other.select_index;
+	}
+	return *this;
 }
 
 
@@ -30,6 +39,21 @@ Rack::~Rack()
 void Rack::add_alarm(jb::Time target, std::string message){
 	insert_alarm(Alarm(target, message));
 }
+
+
+void Rack::insert_alarm(Alarm new_alarm, bool audible){
+	if (audible) rack_speaker->play("create.wav");
+
+	if (alarms.size() != 0){
+		auto lower = std::lower_bound(alarms.begin(), alarms.end(), new_alarm);
+		select_index = std::distance(alarms.begin(), lower); // std::distance helps us convert iterator to integer index; set the index to the newly added alarm
+		alarms.insert(lower, new_alarm);
+
+	} else {
+		alarms.push_back(new_alarm);
+	}
+}
+
 
 
 void Rack::query_active_alarms(const jb::Time t){
@@ -62,15 +86,15 @@ void Rack::toggle_selection(){
 }
 
 
-void Rack::duplicate_alarm(){
-	if (alarms.size() == 0){
-		add_alarm(jb::Time("00:00"), "---"); // THIS SHOULD NEVER HAPPEN!
-	} else {
-		Alarm& curr = alarms[select_index]; // currently selected alarm
-		Alarm dup = Alarm(curr);
-		dup.target = curr.target + dup_increment;
-		insert_alarm(dup);
-	}
+
+void Rack::add_to_stack(){
+	alarms[select_index].add_to_stack();
+}
+
+
+bool Rack::remove_from_stack(){
+	return alarms[select_index].remove_from_stack();
+
 }
 
 
@@ -87,23 +111,8 @@ void Rack::remove_alarm(){
 }
 
 
-void Rack::insert_alarm(Alarm newAlarm, bool audible){
-	if (audible) rack_speaker->play("create.wav");
-
-	if (alarms.size() != 0){
-		auto lower = std::lower_bound(alarms.begin(), alarms.end(), newAlarm);
-		select_index = std::distance(alarms.begin(), lower); // std::distance helps us convert iterator to integer index
-		alarms.insert(lower, newAlarm);
-
-	} else {
-		alarms.push_back(newAlarm);
-	}
-}
-
 
 void Rack::adjust_dup_increment(int value){
-	dup_increment += value;
-	jb::clamp(dup_increment, 5, max_dup_increment);
 }
 
 std::string Rack::get_selection_message(){
@@ -113,5 +122,6 @@ std::string Rack::get_selection_message(){
 void Rack::edit_selection(std::string new_message){
 	alarms[select_index].msg = new_message;
 }
+
 
 

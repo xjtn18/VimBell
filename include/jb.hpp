@@ -65,13 +65,16 @@ namespace jb {
 			: hour(hr), minute(mn)
 		{ }
 
+
 		bool operator ==(const Time& other) const { // equals operator
 			return minute == other.minute && hour == other.hour;
 		}
 
+
 		Time(const Time& other) // copy constructor
 			: hour(other.hour), minute(other.minute)
 		{ }
+
 
 		Time& operator=(const Time& other){
 			if (&other != this){
@@ -81,9 +84,11 @@ namespace jb {
 			return *this;
 		}
 
+
 		Time(const std::string& time_str) // construct from string in format "hh:mm"
 			: hour(std::stoi(time_str.substr(0,2))), minute(std::stoi(time_str.substr(3,5)))
 		{ }
+
 
 		Time operator +(const int& increment) const {
 			std::time_t sinceEpoch = std::time(nullptr);
@@ -95,12 +100,12 @@ namespace jb {
 			return Time(newT.tm_hour, newT.tm_min);
 		}
 
+
 		Time& operator +=(const int& increment) {
-			// TODO: define assignment operator so we can delete all of these repeated code and just write 'return *this + increment'
 			*this = *this + increment;
 			return *this;
-			//return (*this) + increment;
 		}
+
 
 		bool operator <(const Time& other) const {
 			if (this->hour < other.hour){
@@ -118,6 +123,7 @@ namespace jb {
 			return os;
 		}
 
+
 		operator std::string() const {
 			std::string str;
 			int hour_nonmilitary = (hour % 12 == 0) ? 12 : hour % 12;
@@ -132,13 +138,13 @@ namespace jb {
 	};
 
 
-
 	enum Direc {
 		UP = -1,
 		TOP = 0,
 		DOWN = 1,
 		BOTTOM = 2
 	};
+
 
 	extern const char* rootPath;
 	const Time current_time();
@@ -148,8 +154,10 @@ namespace jb {
 
 
 	template <typename T, typename T2>
-	bool clamp(T& value, T low, T2 high){
+	bool clamp(T& value, T low, T2 _high){
 		// clamps the value to the bounds given, returns true if value was constrained, false otherwise.
+		float high = (float) _high; // @NOTE: if size_t is passed as T2, since it is unsigned, if high == low,
+												// 'value' will be invalid
 		if (value < low){
 			value = low;
 			return true;

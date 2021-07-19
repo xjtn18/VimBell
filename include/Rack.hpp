@@ -5,20 +5,23 @@
 #include <Entity.hpp>
 
 
-class Rack {
-public:
+struct Rack {
 	static void cleanup();
 
 	Rack(std::string _name);
+	Rack(const Rack&) = default;
+	Rack& operator=(const Rack& other);
 	~Rack();
+
 	void add_alarm(jb::Time target, std::string message);
 	void query_active_alarms(const jb::Time t);
 	void select_move(jb::Direc direction);
 	void toggle_selection();
-	void duplicate_alarm();
+	void add_to_stack();
 	void adjust_dup_increment(int value);
+	bool remove_from_stack();
 	void remove_alarm();
-	void insert_alarm(Alarm newAlarm, bool audible = true);
+	void insert_alarm(Alarm new_alarm, bool audible = true);
 	std::string get_selection_message();
 	void edit_selection(std::string);
 
@@ -31,18 +34,12 @@ public:
 		return alarms.size();
 	}
 
-	static const int max_dup_increment;
 	static Speaker *rack_speaker;
 
-	int select_index, dup_increment;
+	int select_index;
 	std::vector<Alarm> alarms;
 	std::string name;
-
-
-
-protected:
-	 ThreadClock *clock;
-
+	ThreadClock *clock;
 };
 
 

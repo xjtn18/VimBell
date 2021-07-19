@@ -1,4 +1,6 @@
 #include <Speaker.hpp>
+#include <filesystem>
+namespace fs = std::filesystem;
 using namespace aud;
 
 
@@ -11,23 +13,16 @@ void aud::cleanup(){
 
 
 void aud::load_all(){
-	// add new sounds here when they are added to resources dir
-	std::string sound_names[] = 
-		{ 	"error.wav",
-			"create.wav", 
-			"move.wav", 
-			"remove.wav",
-			"click.wav",
-			"tone1.wav"
-		}; // @TODO: search the res/sounds dir and grab the names that way.
-
+	// load all sounds found in res/sounds
 	sf::SoundBuffer sbuf; 
-	for (int i = 0; i < sizeof(sound_names)/sizeof(sound_names[0]); ++i){
-		sbuf.loadFromFile("res/sounds/" + sound_names[i]);
-		sound_map[sound_names[i]] = sbuf;
+	std::string filename;
+
+	for (const auto& entry : fs::directory_iterator("res/sounds/")){
+		filename = entry.path().filename();
+		sbuf.loadFromFile("res/sounds/" + filename);
+		sound_map[filename] = sbuf;
 	}
 }
-
 
 
 Speaker::Speaker(const char* filename, float vol, bool loop){
