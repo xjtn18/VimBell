@@ -1,5 +1,4 @@
 #pragma once
-#include <jb.hpp>
 #include <thread>
 
 struct Rack;

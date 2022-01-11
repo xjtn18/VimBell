@@ -1,6 +1,8 @@
 #include <Input.hpp>
 #include <Program.hpp>
 #include <YesNoPopup.hpp>
+#include <Rack.hpp>
+#include <Alarm.hpp>
 
 
 void handle_global_input(sf::Event& event, Program& p){

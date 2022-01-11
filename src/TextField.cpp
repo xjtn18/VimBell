@@ -1,5 +1,9 @@
 #include <TextField.hpp>
 #include <Program.hpp>
+#include <Menu.hpp>
+#include <Rack.hpp>
+#include <DigitalTimeView.hpp>
+#include <Speaker.hpp>
 
 
 auto blink_func = [] (float x) -> float { return pow(-pow(sin(x - 0.6f), 18) + 1, 80); };
@@ -116,7 +120,7 @@ void TextField::clear_all(){
 
 
 std::string TextField::get_buffer() const {
-	return line.get_string();
+	return jb::trim(line.get_string());
 }
 
 

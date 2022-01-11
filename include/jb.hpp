@@ -1,9 +1,9 @@
 #pragma once
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include <ctime>
 #include <string>
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
 #include <Debug.hpp>
 
 #define PI 3.14159265
@@ -167,6 +167,52 @@ namespace jb {
 		}
 		return false;
 	}
+
+	template <typename T1, typename T2, typename T3>
+	bool anim_clamp(T1& value, T2 low, T3 _high){
+		// clamps the value to the bounds given, returns true if value was constrained, false otherwise.
+		float high = (float) _high; // @NOTE: if size_t is passed as T2, since it is unsigned, if high == low,
+												// 'value' will be invalid
+		if (value < low){
+			value = low;
+			return true;
+		} else if (value >= high){
+			value = (high - 0.001 >= low) ? high - 0.001 : high;
+			return true;
+		}
+		return false;
+	}
+
+	template <typename T>
+	void set_fill_alpha(T& t, uint8_t a){
+		sf::Color c = t.getFillColor();
+		t.setFillColor(sf::Color(c.r, c.g, c.b, a));
+	}
+
+	template <typename T>
+	void set_outline_alpha(T& t, uint8_t a){
+		sf::Color c = t.getOutlineColor();
+		t.setOutlineColor(sf::Color(c.r, c.g, c.b, a));
+	}
+
+
+	//
+	// Rounding functions >>
+	// Certain objects, like text, get blurry if their positioning is not discrete pixel values.
+	// Rounding the position and origin will eliminate this issue.
+	//
+
+	void round_position(sf::Transformable *thing);
+	void round_origin(sf::Transformable *thing);
+	std::string trimmable(const std::string &s, int maxlen);
+
+	std::string ltrim(const std::string &s);
+	std::string rtrim(const std::string &s);
+	std::string trim(const std::string &s);
+
+	float distance(const sf::Vector2f& A, const sf::Vector2f& B);
+	sf::Vector2f get_intermediate_position(const sf::Vector2f& A, const sf::Vector2f& B, float n);
+	uint8_t get_intermediate_int(const uint8_t& source, const uint8_t& target, const float& n);
 
 }
 

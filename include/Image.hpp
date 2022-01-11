@@ -1,8 +1,5 @@
 #pragma once
-#include <SFML/Graphics.hpp>
-#include <SFML/System.hpp>
 #include <Entity.hpp>
-
 
 
 struct Image : public Entity {

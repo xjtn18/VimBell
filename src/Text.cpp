@@ -10,10 +10,17 @@ Text::Text(jb::Transform _tf, std::string _content, sf::Font& _font, int _fontsi
 
 	tf.w = bounds.width + bounds.left;
 	tf.h = max_bounds.height;
+
+	set_color(JB_WHITE);
 }
+
 
 void Text::set_color(sf::Color c){
 	txt.setFillColor(c);
+}
+
+void Text::set_text(const std::string& new_text){
+	txt.setString(new_text);
 }
 
 void Text::center_xaxis(){
@@ -23,7 +30,7 @@ void Text::center_xaxis(){
 
 void Text::center_yaxis(){
 	sf::FloatRect bounds = txt.getLocalBounds();
-	txt.setOrigin(0, (int) bounds.height + max_bounds.top);
+	txt.setOrigin(0, (int) max_bounds.height/2 + max_bounds.top - 1);
 }
 
 void Text::update(float dt){
@@ -32,14 +39,6 @@ void Text::update(float dt){
 
 
 void Text::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-	/*
-	auto bounds = txt.getGlobalBounds();
-	sf::RectangleShape rec({bounds.width, bounds.height});
-	rec.setPosition(bounds.left, bounds.top);
-	rec.setFillColor(JB_GREEN);
-	target.draw(rec);
-	*/
-
 	target.draw(txt);
 }
 

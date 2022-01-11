@@ -1,28 +1,22 @@
 #include <Program.hpp>
+#include <Entity.hpp>
 #include <Text.hpp>
 #include <Image.hpp>
+#include <Speaker.hpp>
+#include <SaveLoad.hpp>
+#include <Stack.hpp>
+#include <Shapes.hpp>
+#include <Input.hpp>
+#include <TextField.hpp>
+#include <DigitalTimeView.hpp>
+#include <Menu.hpp>
+#include <Rack.hpp>
+#include <Alarm.hpp>
+#include <Chooser.hpp>
+#include <filesystem>
 
-
-struct LineShape : public Entity {
-	sf::RectangleShape rect;
-
-
-	LineShape(jb::Transform _tf)
-		: Entity(_tf)
-	{
-		rect.setOrigin(_tf.w/2, _tf.h/2);
-		rect.setFillColor(JB_GREEN);
-		rect.setSize({(float)tf.w, (float)tf.h});
-	}
-
-   void update(float dt){
-		rect.setPosition(tf.x, tf.y);
-	}
-
-	void draw(sf::RenderTarget& target, sf::RenderStates states) const {
-		target.draw(rect);
-	}
-};
+namespace fs = std::filesystem;
+using namespace jb;
 
 
 
@@ -40,15 +34,11 @@ Program::Program()
    sf::Image icon;
    icon.loadFromFile(jb::get_image("clock-ico.png"));
    window_ptr->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
-	window_ptr->setFramerateLimit(30);
-
+	window_ptr->setFramerateLimit(60);
+	
 	// UI entities
 	main_digitime = new DigitalTimeView({30, 75, 0, 0});
 	main_tbox = new TextField({180, 75, WINW - 180 - 25, 50}, "");
-
-	load_rack(rack, "my-alarms-1"); // load saved alarm rack
-	rack_view = new Menu({0, 0, WINW, 0}, 1, rack);
-
 
 	// sectors
 	sector_top = new BorderedRect({0, 0, WINW, 120}, 2);
@@ -56,32 +46,60 @@ Program::Program()
 	bezel_top = new BorderedRect({0, 0, WINW, 30}, 2);
 	bezel_bottom = new BorderedRect({0, WINH-30, WINW, 30}, 2);
 
+	sf::FloatRect bounds;
+
+	/*
 	// fps counter
 	fps = sf::Text("0", FONT_LIBMONO, 30);
-	sf::FloatRect bounds = fps.getLocalBounds();
+	bounds = fps.getLocalBounds();
 	fps.setPosition(20, WINH - bounds.height - bounds.top - 5);
 	fps.setFillColor(JB_GREEN);
+	*/
 
 	// grid lines
 	float grid_line_thickness = 2;
 	auto yaxis = new LineShape({CENTER_WIN_X, CENTER_WIN_Y, grid_line_thickness, WINH});
 	auto xaxis = new LineShape({CENTER_WIN_X, CENTER_WIN_Y, WINW, grid_line_thickness});
 
-	auto rack_name = new Text({CENTER_WIN_X, 0, 0, 0}, rack->name, FONT_LIBMONO, 20);
-	rack_name->center_xaxis();
-	rack_name->set_color(JB_WHITE);
-
-	auto bg_clock = new Image({WINW, WINH, 0, 0}, "res/images/roman_clock.png");
+	bg_clock = new Image({WINW, WINH, 0, 0}, "res/images/roman_clock.png");
 	bg_clock->sprite.setScale(0.5, 0.5);
 	bg_clock->sprite.setColor(sf::Color(0,0,0,50));
 
+
+	rack_select = new Chooser({0, 0, WINW/3, 0}, 1);
+	std::string filename;
+	for (const auto& entry : fs::directory_iterator("racks/")){
+		filename = entry.path().filename().stem();
+		rack_select->options.push_back([&](){this->set_pane_main("my-alarms-1");});
+		//rack_select->options.back()
+	}
+
+	set_pane_rack_select();
+}
+
+
+void Program::set_pane_rack_select(){
+	draw_list = {
+		rack_select
+	};
+
+	engage_with(rack_select);
+}
+
+
+void Program::set_pane_main(const std::string &filename){
+	load_rack(rack, filename); // load saved alarm rack
+	rack_view = new Menu({0, 0, WINW, 0}, 1, rack);
+
+	auto rack_name = new Text({CENTER_WIN_X, 0, 0, 0}, rack->name, FONT_LIBMONO, 20);
+	rack_name->center_xaxis();
+	rack_name->set_color(JB_WHITE);
 
 	section_stack = new VStack({0, 0, 0, 0}, 10, {
 			sector_top,
 			rack_name,
 			rack_view
 		});
-
 
 	draw_list = {
 		bg_clock,
@@ -92,9 +110,7 @@ Program::Program()
 		bezel_top,
 		bezel_bottom
 	};
-
 	engage_with(main_tbox);
-
 }
 
 
@@ -150,6 +166,7 @@ void Program::update_frame(float dt){
 	}
 	
 	// framerate
+	/*
 	static int count = 0;
 	char c[6];
 	sprintf(c, "%d", (int)(1/dt));
@@ -157,6 +174,7 @@ void Program::update_frame(float dt){
 		fps.setString(sf::String(std::string(c)));
 		count = 0;
 	}
+	*/
 }
 
 

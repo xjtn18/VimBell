@@ -6,6 +6,5 @@
 jBell
 objs/
 portable/
-*.rack
-scratch
 racks/
+scratch

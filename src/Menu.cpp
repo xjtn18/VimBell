@@ -1,7 +1,12 @@
 #include <Menu.hpp>
+#include <Rack.hpp>
+#include <Alarm.hpp>
 #include <Program.hpp>
 #include <YesNoPopup.hpp>
+#include <AlarmCell.hpp>
+#include <TextField.hpp>
 #include <sstream>
+#include <iomanip>
 
 
 Menu::Menu(jb::Transform _tf, int _padding, std::shared_ptr<Rack> _rack_state, bool _engaged)
@@ -27,7 +32,7 @@ void Menu::refresh(){
 		std::ostringstream ss;
 		ss << std::right << std::setw(8) << (std::string) alarms[i].target
 			<< "    " << alarms[i].msg;
-		auto* new_cell = new AlarmCell({0, 0, tf.w, 45}, ss.str());
+		auto* new_cell = new AlarmCell({0, 0, tf.w, 45}, ss.str(), alarms[i].stacc, alarms[i].stacc_interval);
 		if (i == rack_state->select_index){
 			new_cell->engage(engaged);
 		}
@@ -44,6 +49,7 @@ void Menu::update(float dt){
 void Menu::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	VStack::draw(target, states);
 }
+
 
 
 bool Menu::handler(sf::Event& event, Program& p){
@@ -73,36 +79,47 @@ bool Menu::handler(sf::Event& event, Program& p){
 
 
 		case sf::Keyboard::Enter: // duplicate currently selected alarm
-			p.rack->add_to_stack();
+			{
+				Alarm& a = p.rack->get_selection();
+				if (LSHIFT_IS_DOWN){
+					a.alter_stacc_interval(1);
+				} else {
+					a.add_to_stack();
+				}
+			}
 			refresh();
 			return true;
 
 
 		case sf::Keyboard::Backspace: // remove alarm from rack
 			{
-				bool last_in_stack = p.rack->remove_from_stack();
+				Alarm& a = p.rack->get_selection();
+				if (LSHIFT_IS_DOWN){
+					a.alter_stacc_interval(-1);
+				} else {
+					bool last_in_stack = a.remove_from_stack();
+					if (last_in_stack){
+						auto confirm_popup = new YesNoPopup({WINW/2, WINH/2, 0, 0},
+																"Delete this alarm?(\""+trimmable(p.rack->get_selection_message(),11)+"\")?");
+						confirm_popup->yes_routine = [&](){
+							p.rack->remove_alarm();
+							refresh();
+							p.draw_list.pop_back(); // destroy popup
+							if (p.rack->size() == 0){
+								p.engage_with(p.main_tbox); // engage the text field
+							} else {
+								p.engage_with(this); // engage the rack again
+							}
+						};
 
-				if (last_in_stack){
-					auto confirm_popup = new YesNoPopup({WINW/2, WINH/2, 0, 0},
-															"Delete this alarm ("+p.rack->get_selection_message()+")?");
-					confirm_popup->yes_routine = [&](){
-						p.rack->remove_alarm();
-						refresh();
-						p.draw_list.pop_back(); // destroy popup
-						if (p.rack->size() == 0){
-							p.engage_with(p.main_tbox); // engage the text field
-						} else {
+						confirm_popup->no_routine = [&](){
+							p.draw_list.pop_back(); // destroy popup
 							p.engage_with(this); // engage the rack again
-						}
-					};
+						};
 
-					confirm_popup->no_routine = [&](){
-						p.draw_list.pop_back(); // destroy popup
-						p.engage_with(this); // engage the rack again
-					};
-
-					p.draw_list.push_back(confirm_popup);
-					p.engage_with(confirm_popup);
+						p.draw_list.push_back(confirm_popup);
+						p.engage_with(confirm_popup);
+					}
 				}
 			}
 			refresh();

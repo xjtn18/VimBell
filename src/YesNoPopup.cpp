@@ -1,5 +1,6 @@
 #include <YesNoPopup.hpp>
 #include <Program.hpp>
+#include <Text.hpp>
 
 
 YesNoPopup::YesNoPopup(jb::Transform _tf, const std::string& _question)
@@ -9,7 +10,7 @@ YesNoPopup::YesNoPopup(jb::Transform _tf, const std::string& _question)
 
 	// dimmer
 	dimmer = sf::RectangleShape({(float) WINW, (float) WINH});
-	dimmer.setFillColor(sf::Color(30,30,30,175));
+	dimmer.setFillColor(sf::Color(30,30,30,200));
 
 	sf::FloatRect bounds;
 

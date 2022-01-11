@@ -1,9 +1,11 @@
 #pragma once
-#include <jb.hpp>
 #include <Entity.hpp>
 #include <Stack.hpp>
-#include <Text.hpp>
 #include <functional>
+
+
+// FD
+struct Text;
 
 
 struct YesNoPopup : public Entity {

@@ -6,15 +6,16 @@
 struct Rack;
 
 
-struct Menu : public VStack {
+struct Chooser : public VStack {
 	//
 	// A vertical arrangment of buttons.
 	//
-	std::shared_ptr<Rack> rack_state;
 	bool editing = false;
+	std::vector<std::function<void(void)>> options;
+	int select_index = 0;
 
-	Menu(){}
-	Menu(jb::Transform _tf, int _padding, std::shared_ptr<Rack> _rack_state, bool _engaged = false);
+	Chooser(){}
+	Chooser(jb::Transform _tf, int _padding, bool _engaged = false);
 	void engage(bool value);
 	void refresh();
 

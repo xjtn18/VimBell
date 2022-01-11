@@ -1,6 +1,5 @@
 #pragma once
 #include <SFML/Audio.hpp>
-#include <jb.hpp>
 #include <unordered_map>
 
 
@@ -10,13 +9,8 @@ namespace aud {
 	void load_all();
 	void cleanup();
 
-
-
-	class Speaker {
-		//sf::SoundBuffer buffer;
+	struct Speaker {
 		sf::Sound sound;
-
-	public:
 
 		Speaker() { };
 		Speaker(const char* filename, float vol = 100.0f, bool loop = false);

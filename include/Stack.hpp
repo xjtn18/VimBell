@@ -1,7 +1,6 @@
 #pragma once
 #include <Entity.hpp>
 #include <initializer_list>
-#include <SFML/Graphics.hpp>
 
 
 struct VStack : public Entity {

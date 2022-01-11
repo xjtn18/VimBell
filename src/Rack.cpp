@@ -1,7 +1,10 @@
 #include <Rack.hpp>
-#include <iterator>
+#include <Speaker.hpp>
+#include <Alarm.hpp>
+#include <ThreadClock.hpp>
 
-Speaker *Rack::rack_speaker			 = new Speaker(100.0f, false);
+
+auto *Rack::rack_speaker = new aud::Speaker(100.0f, false);
 
 void Rack::cleanup(){
 	delete rack_speaker;
@@ -19,7 +22,6 @@ Rack::Rack(std::string _name)
 
 
 Rack& Rack::operator=(const Rack& other){
-	dlog("YOO");
 	if (&other != this){
 		name = other.name;
 		select_index = other.select_index;
@@ -36,21 +38,40 @@ Rack::~Rack()
 }
 
 
+void Rack::set_select(const int new_index){
+	select_index = new_index;
+	jb::clamp(select_index, 0, alarms.size());
+}
+
+
+Alarm& Rack::get_selection(){
+	return alarms[select_index];
+}
+
+
+int Rack::size(){
+	return alarms.size();
+}
+
+
 void Rack::add_alarm(jb::Time target, std::string message){
-	insert_alarm(Alarm(target, message));
+	insert_alarm(Alarm(target, message, 1, 1, true));
 }
 
 
 void Rack::insert_alarm(Alarm new_alarm, bool audible){
 	if (audible) rack_speaker->play("create.wav");
 
-	if (alarms.size() != 0){
+	if (alarms.size() > 0 && alarms.size() < 10){
 		auto lower = std::lower_bound(alarms.begin(), alarms.end(), new_alarm);
 		select_index = std::distance(alarms.begin(), lower); // std::distance helps us convert iterator to integer index; set the index to the newly added alarm
 		alarms.insert(lower, new_alarm);
 
-	} else {
+	} else if (alarms.size() != 10){
 		alarms.push_back(new_alarm);
+
+	} else { // rack is full
+		rack_speaker->play("error.wav");
 	}
 }
 
@@ -87,15 +108,6 @@ void Rack::toggle_selection(){
 
 
 
-void Rack::add_to_stack(){
-	alarms[select_index].add_to_stack();
-}
-
-
-bool Rack::remove_from_stack(){
-	return alarms[select_index].remove_from_stack();
-
-}
 
 
 void Rack::remove_alarm(){

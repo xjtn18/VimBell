@@ -51,6 +51,9 @@ run:
 	 @ make build
 	 @ ./$(EXEC)
 
+runonly:
+	 @ ./$(EXEC)
+
 release: $(OBJS)
 	@ echo Linking release build ...
 	@ $(CC) $^ $(LFLAGS-RLS) -o $(EXEC)

@@ -1,17 +1,26 @@
 #pragma once
 
-#include <jb.hpp>
-#include <Line.hpp>
-#include <Speaker.hpp>
-#include <TextCursor.hpp>
 #include <Entity.hpp>
+#include <Line.hpp>
+#include <TextCursor.hpp>
 
 
+// FD
+namespace aud {
+	struct Speaker;
+}
 
 
-class TextField : public Entity {
-public:
+struct TextField : public Entity {
+	static aud::Speaker* field_speaker;
 	static void cleanup();
+
+	float lerp;
+	int bufmax;
+	sf::RectangleShape box; // the text box itself
+	TextCursor cursor;
+	Line line;
+
 
 	TextField(){};
 	TextField(jb::Transform _tf, const char* init_content, bool _engaged = false);
@@ -30,15 +39,6 @@ public:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	bool handler(sf::Event& event, Program& p);
 
-
-private:
-	static aud::Speaker* field_speaker;
-
-	float lerp;
-	int bufmax;
-	sf::RectangleShape box; // the text box itself
-	TextCursor cursor;
-	Line line;
 };
 
 

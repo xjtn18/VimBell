@@ -1,5 +1,12 @@
 #include <DigitalTimeView.hpp>
 #include <Program.hpp>
+#include <Speaker.hpp>
+#include <Menu.hpp>
+#include <Rack.hpp>
+#include <TextField.hpp>
+
+
+using namespace jb;
 
 
 Speaker *DigitalTimeView::clock_speaker = new Speaker(100.0f, false);
@@ -26,7 +33,7 @@ DigitalTimeView::DigitalTimeView(jb::Transform _tf)
 	  top_arrow(8, 3),
 	  bottom_arrow(8, 3),
 	  index(0),
-	  meridiem(POST),
+	  meridiem(ANTE),
 	  lerp(0),
 	  lerp_target(5)
 {
@@ -40,6 +47,58 @@ DigitalTimeView::DigitalTimeView(jb::Transform _tf)
 	bottom_arrow.setFillColor(JB_GREEN);
 	bottom_arrow.setRotation(180);
 	set_origin_center(bottom_arrow);
+
+
+	uint8_t grayout = 25;
+	sf::FloatRect bounds;
+
+	sf::Vector2f optsize(100,50);
+	selector = sf::RectangleShape(optsize);
+	selector.setOrigin(optsize.x/2, optsize.y/2);
+	selector.setPosition(WINW-(optsize.x+optsize.x/2+20), WINH-75);
+	selector.setFillColor(JB_GREEN);
+
+	sf::Vector2f lt = selector.getPosition();
+	sf::Vector2f rt = selector.getPosition() + sf::Vector2f(100,0);
+
+
+	libmono.loadFromFile(get_resource("fonts/FONT_LIBMONO.ttf"));
+
+	txt_AM = sf::Text("AM", libmono, 40);
+	txt_AM.setFillColor(sf::Color(255,255,255,255));
+	bounds = txt_AM.getGlobalBounds();
+	txt_AM.setOrigin(bounds.left + bounds.width/2, bounds.top + bounds.height/2);
+	txt_AM.setPosition(lt);
+	//round_position(&txt_AM);
+	round_origin(&txt_AM);
+
+	txt_PM = sf::Text("PM", libmono, 40);
+	txt_PM.setFillColor(sf::Color(255,255,255,grayout));
+	bounds = txt_PM.getGlobalBounds();
+	txt_PM.setOrigin(bounds.left + bounds.width/2, bounds.top + bounds.height/2);
+	txt_PM.setPosition(rt);
+	//round_position(&txt_PM);
+	round_origin(&txt_PM);
+
+
+	anim = PositionAnimation(&selector, lt, rt);
+	anim.rate = 3.0;
+	anim.f 			= [](float x) { return pow(-pow(1/(x/2 + 0.5) - 1, 3) + 1, 3); }; // fluid transition
+	anim.inversef 	= [](float x) { return 2/((cbrt(cbrt(-x) + 1)) + 1) - 1; }; // its inverse
+
+	// this function describes how the animation will modulate certain objects
+	anim.stepper = [&](float y) -> void {
+		float not_y = 1-y;
+		uint8_t full = 255;
+		uint8_t grayout = 25;
+
+		if (anim.forw) std::swap(y, not_y);
+
+		set_fill_alpha(txt_AM, get_intermediate_int(full, grayout, not_y));
+		set_fill_alpha(txt_PM, get_intermediate_int(full, grayout, y));
+
+		if (anim.forw) std::swap(y, not_y);
+	};
 }
 
 
@@ -97,6 +156,8 @@ void DigitalTimeView::move_selector(int direction){
 
 
 void DigitalTimeView::switch_meridiem(){
+	if (anim.forw) anim.back();
+	else anim.forward();
 	meridiem = (Meridiem)((meridiem+1) % 2);
 }
 
@@ -131,11 +192,15 @@ void DigitalTimeView::update(float dt){
 	last.a = target/2 * clr;
 	line.line[2].setFillColor(last);
 
+	anim.step(dt); // meridiem selection display
 }
 
 
 void DigitalTimeView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	target.draw(line);
+	target.draw(selector);
+	target.draw(txt_AM);
+	target.draw(txt_PM);
 	if (engaged){
 		target.draw(top_arrow);
 		target.draw(bottom_arrow);
@@ -176,8 +241,19 @@ bool DigitalTimeView::handler(sf::Event& event, Program& p){
 			switch_meridiem();
 			return true;
 
+		case sf::Keyboard::Return:
+			if (!p.rack_view->editing){
+				p.rack->add_alarm(get_time(), p.main_tbox->get_buffer());
+			} else {
+				p.rack->edit_selection(p.main_tbox->get_buffer());
+				p.rack_view->editing = false;
+			}
+			p.main_tbox->clear_all();
+			p.engage_with(p.rack_view);
+			return true;
+
 		case sf::Keyboard::Tab:
-			p.engage_with(p.main_tbox);
+			p.engage_with((Entity*)p.main_tbox);
 			return true;
 		}
 	}

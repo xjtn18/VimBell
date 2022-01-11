@@ -1,11 +1,9 @@
 #pragma once
-#include <jb.hpp>
-#include <functional>
 #include <Entity.hpp>
+#include <functional>
 
 
-class Line : public Entity {
-public:
+struct Line : public Entity {
 	std::vector<sf::Text> line;
 	int fontsize, spacing, index, margin;
 	sf::Color fontcolor;
@@ -31,4 +29,5 @@ public:
 private:
 	void repos_text();
 };
+
 

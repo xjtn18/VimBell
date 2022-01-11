@@ -99,25 +99,17 @@
 	- alarm rack insertions are now sorted based on target time. Added operator 'less' for jb::Time.
 	- Switched some controls around.
 
+### 1/10/22:
+	- fixed out-of-bounds array indexing in Line when disengaging text fields; was causing random seg faults.
+	- added AM/PM visualization and incroprated the Animation struct.
+	- Messages added to alarms are now trimmed of all outer whitespace.
+
 
 
 ### TODO:
-	- Display current duplicate increment to user.
 	- Add more custom alarm tones.
-	- Make duplicate alarms stack into one alarm to make UI tidier. Show stack count in the alarm cell.
-	- Make fade-in intro for all UI entities when the program starts.
-	- Add a start menu that lets you choose from your saved racks in the racks/ folder.
 	- Make popups have a vstack of text, box size changes with stack height.
 	- Think about either making the Menu struct/class combine with the Rack class and draw it dynamically like you would with a Line, or think of a new solution all together. The way the menu is drawn with the refresh method is inconsistent with every other entity.
-	- some characters rendered in a Line seem off-place; verify that its just the font or if the position rounding is what's causing it.
-
-
-### Syntax Formatting
-	- Class names: 				"ClassName"
-	- Function names: 			"function_name"
-	- SFML function names:		"functionName"
-	- Variable/Object names:	"object_name"
-	- Globals:			        	"GLOBAL_VAR"
-
+	- Make Entities have an order member that specifies their order in the draw list.
 
 

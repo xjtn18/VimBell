@@ -1,12 +1,14 @@
 #include <jb.hpp>
+#include <cmath>
 #include <stdarg.h>
 
 
 const jb::Transform jb::Transform::Zero = {0,0,0,0};
 const char* jb::rootPath = nullptr;
+const std::string WHITESPACE = " \n\r\t\f\v";
 
 // Window params
-const float WINW = 1000;
+const float WINW = 750;
 const float WINH = 750;
 
 // Fonts
@@ -51,6 +53,56 @@ const char* jb::rtrim(const char* s, size_t len, const char target){
 	res[i] = '\0';
 	return res;
 }
+
+
+
+float jb::distance(const sf::Vector2f& A, const sf::Vector2f& B){
+	return std::hypot(A.x - B.x, A.y - B.y);
+}
+
+
+sf::Vector2f jb::get_intermediate_position(const sf::Vector2f& A, const sf::Vector2f& B, float n){
+	//float dist = distance(A, B);
+	float xn = A.x + n * (B.x - A.x);
+	float yn = A.y + n * (B.y - A.y);
+	return {xn, yn};
+}
+
+
+uint8_t jb::get_intermediate_int(const uint8_t& source, const uint8_t& target, const float& n){
+	return (target-source) * n + source;
+}
+
+std::string jb::trimmable(const std::string &s, int maxlen){
+	if (s.length() > maxlen) return s.substr(0,maxlen)+"..";
+	else return s;
+}
+
+std::string jb::ltrim(const std::string &s){
+    size_t start = s.find_first_not_of(WHITESPACE);
+    return (start == std::string::npos) ? "" : s.substr(start);
+}
+ 
+std::string jb::rtrim(const std::string &s){
+    size_t end = s.find_last_not_of(WHITESPACE);
+    return (end == std::string::npos) ? "" : s.substr(0, end + 1);
+}
+ 
+std::string jb::trim(const std::string &s){
+    return jb::rtrim(jb::ltrim(s));
+}
+
+
+void jb::round_position(sf::Transformable *thing){
+	sf::Vector2f pos = thing->getPosition();
+	thing->setPosition(round(pos.x), round(pos.y));
+}
+
+void jb::round_origin(sf::Transformable *thing){
+	sf::Vector2f origin = thing->getOrigin();
+	thing->setOrigin(round(origin.x), round(origin.y));
+}
+
 
 
 const char* jb::get_resource(const char* filename){

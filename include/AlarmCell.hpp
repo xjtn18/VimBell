@@ -1,18 +1,15 @@
 #pragma once
-#include <SFML/Graphics.hpp>
-#include <functional>
-#include <cmath>
-#include <thread>
-
-#include <Debug.hpp>
 #include <Entity.hpp>
+
+// FD
+struct Text;
 
 
 class AlarmCell: public Entity {
 
 public:
 	// UI
-	AlarmCell(jb::Transform _tf, const std::string _text);
+	AlarmCell(jb::Transform _tf, const std::string _text, int _stacc, int _interval);
 
 	static void cleanup();
 	void set_pos();
@@ -28,7 +25,8 @@ public:
 	sf::RectangleShape box; // the visual of the button
 	sf::Text bText;
 	sf::String text;
-	sf::Text stacc_indicator;
+	Text *stacc_indicator;
+	Text *stacc_interval_indicator;
 
 	bool is_hovered = false;
 	static sf::Color idleColor, hoverColor;

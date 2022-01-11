@@ -83,7 +83,7 @@ std::string Line::get_string() const {
 
 void Line::engage(bool value){
 	if (!value){ // if disengaging, reset font color to default (if its in the middle of blinking)
-		if (line.size() > 0){
+		if (line.size() > 0 && index < line.size()){
 			line[index].setFillColor(sf::Color(50, 50, 50));
 		}
 	}

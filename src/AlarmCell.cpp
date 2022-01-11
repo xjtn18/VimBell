@@ -1,11 +1,15 @@
 #include <AlarmCell.hpp>
+#include <Text.hpp>
+#include <cmath>
+
+
 
 sf::Color AlarmCell::idleColor = sf::Color(80, 80, 80, 150);
 sf::Color AlarmCell::hoverColor = sf::Color(132, 231, 47, 150);
 
 
 
-AlarmCell::AlarmCell(jb::Transform _tf, const std::string _text)
+AlarmCell::AlarmCell(jb::Transform _tf, const std::string _text, int _stacc, int _interval)
 	: Entity(_tf),
 	  text(_text),
 	  lerp(0)
@@ -17,6 +21,13 @@ AlarmCell::AlarmCell(jb::Transform _tf, const std::string _text)
 	bText.setFillColor(JB_WHITE); // set font color
 	sf::FloatRect textBounds = bText.getLocalBounds();
 	bText.setOrigin(0, (int)(tf.h/2 - 3));
+
+	stacc_indicator = new Text(jb::Transform::Zero, "x" + std::to_string(_stacc), FONT_LIBMONO, tf.h/1.85);
+	stacc_indicator->center_yaxis();
+
+	stacc_interval_indicator = new Text(jb::Transform::Zero, std::to_string(_interval), FONT_LIBMONO, tf.h/1.85);
+	stacc_interval_indicator->center_yaxis();
+
 	set_pos();
 }
 
@@ -24,9 +35,19 @@ AlarmCell::AlarmCell(jb::Transform _tf, const std::string _text)
 
 
 void AlarmCell::set_pos(){
-	zone = sf::Rect<int>(tf.x-tf.w/2, tf.y-tf.h/2, tf.w, tf.h);
+	//zone = sf::Rect<int>(tf.x-tf.w/2, tf.y-tf.h/2, tf.w, tf.h);
 	box.setPosition(tf.x, tf.y);
-	bText.setPosition(tf.x + 25, tf.y+tf.h/1.8);
+	bText.setPosition(tf.x + 25, tf.y + tf.h/1.8);
+
+	// equivalent to set_pos
+	stacc_indicator->tf.x = tf.w - 150;
+	stacc_indicator->tf.y = tf.y + tf.h/2;
+	stacc_indicator->update(0.0f);
+	
+	// equivalent to set_pos
+	stacc_interval_indicator->tf.x = tf.w - 80;
+	stacc_interval_indicator->tf.y = tf.y + tf.h/2;
+	stacc_interval_indicator->update(0.0f);
 };
 
 
@@ -59,7 +80,6 @@ void AlarmCell::update(float dt){
 		if (x >= PI) lerp = 0;
 		auto lerpf = [] (float x) -> float {return -(0.5 * (cos(x) + 1) - 1);};
 
-
 		sf::Color last = box.getFillColor();
 		last.r = (rtarget - hoverColor.r) * lerpf(x) + hoverColor.r;
 		last.g = (gtarget - hoverColor.g) * lerpf(x) + hoverColor.g;
@@ -74,7 +94,8 @@ void AlarmCell::update(float dt){
 void AlarmCell::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	target.draw(box); // draw the button box
 	target.draw(bText); // draw the button text
-	target.draw(stacc_indicator);
+	target.draw(*stacc_indicator);
+	target.draw(*stacc_interval_indicator);
 }
 
 

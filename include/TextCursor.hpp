@@ -1,7 +1,6 @@
 #pragma once
-#include <jb.hpp>
-#include <functional>
 #include <Entity.hpp>
+#include <functional>
 
 
 struct TextCursor : public Entity {

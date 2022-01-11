@@ -16,7 +16,7 @@ Image::Image(jb::Transform _tf, const char* filename)
 
 void Image::update(float dt){
 	sprite.setPosition(tf.x, tf.y);
-	sprite.rotate(dt);
+	sprite.rotate(2*dt);
 }
 
 void Image::draw(sf::RenderTarget& target, sf::RenderStates states) const {

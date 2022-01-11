@@ -1,10 +1,14 @@
 #pragma once
-#include <SFML/Graphics.hpp>
-#include <jb.hpp>
-#include <Line.hpp>
-#include <math.h>
 #include <Entity.hpp>
-#include <Speaker.hpp>
+#include <Line.hpp>
+#include <Animation.hpp>
+
+// FD
+namespace aud {
+	struct Speaker;
+}
+
+
 using namespace aud;
 
 
@@ -21,6 +25,11 @@ struct DigitalTimeView : public Entity {
 	float lerp, lerp_target;
 	int index;
 	Meridiem meridiem;
+	PositionAnimation anim;
+	sf::RectangleShape selector;
+	sf::Text txt_AM;
+	sf::Text txt_PM;
+	sf::Font libmono;
 
 
 	DigitalTimeView(){}
@@ -38,3 +47,6 @@ struct DigitalTimeView : public Entity {
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	bool handler(sf::Event& event, Program& p);
 };
+
+
+
