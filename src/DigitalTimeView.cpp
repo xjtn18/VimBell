@@ -4,6 +4,9 @@
 #include <Menu.hpp>
 #include <Rack.hpp>
 #include <TextField.hpp>
+#include <AlarmCell.hpp>
+#include <sstream>
+#include <iomanip>
 
 
 using namespace jb;
@@ -241,19 +244,15 @@ bool DigitalTimeView::handler(sf::Event& event, Program& p){
 			switch_meridiem();
 			return true;
 
-		case sf::Keyboard::Return:
-			if (!p.rack_view->editing){
-				p.rack->add_alarm(get_time(), p.main_tbox->get_buffer());
-			} else {
-				p.rack->edit_selection(p.main_tbox->get_buffer());
-				p.rack_view->editing = false;
-			}
-			p.main_tbox->clear_all();
-			p.engage_with(p.rack_view);
+		case sf::Keyboard::Return: // submit text to new/edited alarm
+			p.rack_view->add(p);
 			return true;
 
 		case sf::Keyboard::Tab:
-			p.engage_with((Entity*)p.main_tbox);
+			if (LSHIFT_IS_DOWN){
+				if (p.rack->size() != 0) p.engage_with(p.rack_view);
+			}
+			else p.engage_with(p.main_tbox);
 			return true;
 		}
 	}

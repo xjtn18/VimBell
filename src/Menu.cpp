@@ -5,6 +5,8 @@
 #include <YesNoPopup.hpp>
 #include <AlarmCell.hpp>
 #include <TextField.hpp>
+#include <Text.hpp>
+#include <DigitalTimeView.hpp>
 #include <sstream>
 #include <iomanip>
 
@@ -14,19 +16,7 @@ Menu::Menu(jb::Transform _tf, int _padding, std::shared_ptr<Rack> _rack_state, b
 	  rack_state(_rack_state)
 {
 	engaged = _engaged;
-	refresh();
-	VStack::update(0.0f);
-}
 
-
-void Menu::engage(bool value){
-	engaged = value;
-	refresh();
-}
-
-
-void Menu::refresh(){
-	clear();
 	auto alarms = rack_state->alarms;
 	for (int i = 0; i < alarms.size(); ++i){
 		std::ostringstream ss;
@@ -38,6 +28,55 @@ void Menu::refresh(){
 		}
 		insert(-1, new_cell); // Stack::insert
 	}
+	VStack::update(0.0f);
+}
+
+
+void Menu::engage(bool value){
+	if (value == true){
+		entities[rack_state->select_index]->engage(true);
+	} else {
+		entities[rack_state->select_index]->engage(false);
+	}
+	engaged = value;
+}
+
+
+
+void Menu::move_selector(jb::Direc dir){
+	entities[rack_state->select_index]->engage(false);
+	rack_state->select_move(dir);
+	entities[rack_state->select_index]->engage(true);
+}
+
+
+void Menu::set_selector(int index){
+	entities[rack_state->select_index]->engage(false);
+	rack_state->set_select(index);
+	entities[rack_state->select_index]->engage(true);
+}
+
+
+void Menu::add(Program &p){
+	std::ostringstream ss;
+	std::string message = p.main_tbox->get_buffer();
+	if (!editing){
+		rack_state->add_alarm(p.main_digitime->get_time(), message);
+		ss << std::right << std::setw(8) << (std::string) p.main_digitime->get_time()
+			<< "    " << message;
+		auto* new_cell = new AlarmCell({0, 0, WINW, 45}, ss.str(), 1, 1);
+		insert(rack_state->select_index, new_cell); // Stack::insert
+
+	} else {
+		ss << std::right << std::setw(8) << (std::string) p.main_digitime->get_time()
+			<< "    " << message;
+		rack_state->edit_selection(message);
+		AlarmCell *acell = (AlarmCell*)entities[rack_state->select_index];
+		acell->bText.setString(ss.str());
+		editing = false;
+	}
+	p.main_tbox->clear_all();
+	p.engage_with(this);
 }
 
 
@@ -57,55 +96,52 @@ bool Menu::handler(sf::Event& event, Program& p){
 		switch (event.key.code){
 
 		case sf::Keyboard::J: // move rack selector down
-			if (LSHIFT_IS_DOWN){
-				p.rack->set_select(p.rack->size()-1);
-				refresh();
-			} else {
-				p.rack->select_move(jb::DOWN);
-				refresh();
-			}
+			if (LSHIFT_IS_DOWN) set_selector(rack_state->size()-1);
+			else move_selector(DOWN);
 			return true;
 
-
 		case sf::Keyboard::K: // move rack selector up
-			if (LSHIFT_IS_DOWN){
-				p.rack->set_select(0);
-				refresh();
-			} else {
-				p.rack->select_move(jb::UP);
-				refresh();
-			}
+			if (LSHIFT_IS_DOWN) set_selector(0);
+			else move_selector(UP);
 			return true;
 
 
 		case sf::Keyboard::Enter: // duplicate currently selected alarm
 			{
-				Alarm& a = p.rack->get_selection();
+				Alarm& a = rack_state->get_selection();
+				AlarmCell *acell = static_cast<AlarmCell*>(entities[rack_state->select_index]);
 				if (LSHIFT_IS_DOWN){
 					a.alter_stacc_interval(1);
+					acell->stacc_interval_indicator->set_text(std::to_string(a.stacc_interval));
 				} else {
 					a.add_to_stack();
+					acell->stacc_indicator->set_text("x"+std::to_string(a.stacc));
 				}
 			}
-			refresh();
 			return true;
 
 
 		case sf::Keyboard::Backspace: // remove alarm from rack
 			{
 				Alarm& a = p.rack->get_selection();
+				AlarmCell *acell = static_cast<AlarmCell*>(entities[rack_state->select_index]);
+
 				if (LSHIFT_IS_DOWN){
 					a.alter_stacc_interval(-1);
+					acell->stacc_interval_indicator->set_text(std::to_string(a.stacc_interval));
 				} else {
 					bool last_in_stack = a.remove_from_stack();
+					acell->stacc_indicator->set_text("x"+std::to_string(a.stacc));
+
 					if (last_in_stack){
 						auto confirm_popup = new YesNoPopup({WINW/2, WINH/2, 0, 0},
 																"Delete this alarm?(\""+trimmable(p.rack->get_selection_message(),11)+"\")?");
 						confirm_popup->yes_routine = [&](){
-							p.rack->remove_alarm();
-							refresh();
+							remove(rack_state->select_index);
+							rack_state->remove_alarm();
+
 							p.draw_list.pop_back(); // destroy popup
-							if (p.rack->size() == 0){
+							if (rack_state->size() == 0){
 								p.engage_with(p.main_tbox); // engage the text field
 							} else {
 								p.engage_with(this); // engage the rack again
@@ -122,27 +158,11 @@ bool Menu::handler(sf::Event& event, Program& p){
 					}
 				}
 			}
-			refresh();
 			return true;
 
 		case sf::Keyboard::T: // toggle alarm active state
 			p.rack->toggle_selection();
-			refresh();
 			return true;
-
-		case sf::Keyboard::W: // increment duplicate time adjustment
-			if (LALT_IS_DOWN){
-				p.rack->adjust_dup_increment(5);
-				return true;
-			}
-			return false;
-
-		case sf::Keyboard::S: // decrement duplicate time adjustment
-			if (LALT_IS_DOWN){
-				p.rack->adjust_dup_increment(-5);
-				return true;
-			}
-			return false;
 
 		case sf::Keyboard::E: // edit alarm
 			p.main_tbox->fill(p.rack->get_selection_message());
@@ -151,8 +171,11 @@ bool Menu::handler(sf::Event& event, Program& p){
 			return true;
 
 		case sf::Keyboard::Tab: // switch modes
-			p.engage_with(p.main_tbox);
-			return true;
+			if (LSHIFT_IS_DOWN){
+				p.engage_with(p.main_tbox);
+				return true;
+			}
+			return false;
 		}
 	}
 	return false;

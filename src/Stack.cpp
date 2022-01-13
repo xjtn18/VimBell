@@ -30,7 +30,10 @@ void VStack::insert(int index, Entity *entity){
 	}
 }
 
-
+void VStack::remove(int index){
+	delete entities[index];
+	entities.erase(entities.begin() + index);
+}
 
 
 void VStack::update(float dt) {
@@ -88,6 +91,10 @@ void HStack::insert(int index, Entity *entity){
 	}
 }
 
+void HStack::remove(int index){
+	delete entities[index];
+	entities.erase(entities.begin() + index);
+}
 
 
 

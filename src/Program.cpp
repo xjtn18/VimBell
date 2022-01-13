@@ -12,6 +12,8 @@
 #include <Menu.hpp>
 #include <Rack.hpp>
 #include <Alarm.hpp>
+#include <AlarmCell.hpp>
+#include <Option.hpp>
 #include <Chooser.hpp>
 #include <filesystem>
 
@@ -31,10 +33,13 @@ Program::Program()
 	window_ptr = new sf::RenderWindow(sf::VideoMode(WINW, WINH), "jBell", sf::Style::Titlebar | sf::Style::Close, settings);
 
 	// Set the Icon
-   sf::Image icon;
-   icon.loadFromFile(jb::get_image("clock-ico.png"));
-   window_ptr->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+	sf::Image icon;
+	icon.loadFromFile(jb::get_image("clock-ico.png"));
+	window_ptr->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 	window_ptr->setFramerateLimit(60);
+
+	// Load all UI entities at program start that can be created now,
+	// regardless of whether or not they appear in the initial pane (draw_list).
 	
 	// UI entities
 	main_digitime = new DigitalTimeView({30, 75, 0, 0});
@@ -65,30 +70,38 @@ Program::Program()
 	bg_clock->sprite.setScale(0.5, 0.5);
 	bg_clock->sprite.setColor(sf::Color(0,0,0,50));
 
+	set_pane_rack_chooser();
+}
 
-	rack_select = new Chooser({0, 0, WINW/3, 0}, 1);
+
+void Program::set_pane_rack_chooser(){
+	stage = RACKOPEN;
+	rack_chooser = new Chooser({0, 0, WINW/3, 0}, 1);
 	std::string filename;
 	for (const auto& entry : fs::directory_iterator("racks/")){
 		filename = entry.path().filename().stem();
-		rack_select->options.push_back([&](){this->set_pane_main("my-alarms-1");});
-		//rack_select->options.back()
+		rack_chooser->options.push_back([=](){this->set_pane_main(filename);});
+			// ^ must capture by value
+			// The filename to pass to set_pane_main will be deleted upon exiting this function
+			// unless we pass the filename by value to the lambda object.
+		rack_chooser->insert(-1, new Option({0,0,WINW,50},filename));
 	}
+	rack_chooser->options.push_back([&](){ this->set_pane_main(""); });
+	rack_chooser->insert(-1, new Option({0,0,WINW,50},"+"));
 
-	set_pane_rack_select();
-}
-
-
-void Program::set_pane_rack_select(){
 	draw_list = {
-		rack_select
+		rack_chooser
 	};
 
-	engage_with(rack_select);
+	engage_with(rack_chooser);
 }
+
 
 
 void Program::set_pane_main(const std::string &filename){
-	load_rack(rack, filename); // load saved alarm rack
+	stage = RACKOPEN;
+	if (filename == "") rack = std::shared_ptr<Rack>(new Rack("test-rack")); // create new rack
+	else load_rack(rack, filename); // load saved alarm rack
 	rack_view = new Menu({0, 0, WINW, 0}, 1, rack);
 
 	auto rack_name = new Text({CENTER_WIN_X, 0, 0, 0}, rack->name, FONT_LIBMONO, 20);
@@ -124,6 +137,8 @@ void Program::engage_with(Entity *ent){
 }
 
 
+
+
 void Program::cleanup(){
 	//std::this_thread::sleep_for(std::chrono::milliseconds(2000)); @NOTE for testing
 
@@ -135,7 +150,7 @@ void Program::cleanup(){
 	aud::cleanup();
 
 	rack.reset();			// delete current rack
-	delete rack_view;
+	if (rack_view) delete rack_view;
 	delete window_ptr;
 }
 

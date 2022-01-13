@@ -9,25 +9,26 @@
 #include <iomanip>
 
 
-
-
 Chooser::Chooser(jb::Transform _tf, int _padding, bool _engaged)
 	: VStack(_tf, _padding, {})
 {
 	engaged = _engaged;
-	refresh();
 	VStack::update(0.0f);
 }
 
 
 void Chooser::engage(bool value){
 	engaged = value;
-	refresh();
+	if (entities.size() > 0) entities[0]->engage(true);
 }
 
 
-void Chooser::refresh(){
-	VStack::clear();
+
+void Chooser::move_selector(jb::Direc dir){
+	entities[select_index]->engage(false);
+	select_index += dir;
+	bool clamped = jb::clamp(select_index, 0, entities.size());
+	entities[select_index]->engage(true);
 }
 
 
@@ -47,26 +48,15 @@ bool Chooser::handler(sf::Event& event, Program& p){
 		switch (event.key.code){
 
 		case sf::Keyboard::J: // move rack selector down
-			{
-				++select_index;
-				bool clamped = jb::clamp(select_index, 0, options.size());
-				dlog(select_index);
-				refresh();
-			}
+			move_selector(DOWN);
 			return true;
 
 		case sf::Keyboard::K: // move rack selector up
-			{
-				--select_index;
-				bool clamped = jb::clamp(select_index, 0, options.size());
-				dlog(select_index);
-				refresh();
-			}
+			move_selector(UP);
 			return true;
 
 		case sf::Keyboard::Enter: // duplicate currently selected alarm
 			options[select_index]();
-			//refresh();
 			return true;
 		}
 	}

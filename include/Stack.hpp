@@ -14,6 +14,7 @@ struct VStack : public Entity {
 
 	void clear();
 	void insert(int index, Entity *entity);
+	void remove(int index);
 
 	// overrides
 	void update(float dt) override;
@@ -32,6 +33,7 @@ struct HStack : public Entity {
 
 	void clear();
 	void insert(int index, Entity *entity);
+	void remove(int index);
 
 	// overrides
 	void update(float dt) override;

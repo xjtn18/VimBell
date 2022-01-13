@@ -22,19 +22,28 @@ void handle_global_input(sf::Event& event, Program& p){
 
 
 		case sf::Keyboard::Escape: // back out / end program
-			auto quit_popup = new YesNoPopup({WINW/2, WINH/2, 0, 0},
-														"Save current rack ("+p.rack->name+")?");
-			quit_popup->yes_routine = [&](){
-				p.prepare_quit(true);
-			};
-			quit_popup->no_routine = [&](){
-				p.prepare_quit(false);
-			};
+			{
+				switch (p.stage){
+				case RACKOPEN:
+					{
+						auto quit_popup = new YesNoPopup({WINW/2, WINH/2, 0, 0},
+																	"Save current rack ("+p.rack->name+")?");
+						quit_popup->yes_routine = [&](){
+							p.prepare_quit(true);
+						};
+						quit_popup->no_routine = [&](){
+							p.prepare_quit(false);
+						};
 
-			p.draw_list.push_back(quit_popup);
+						p.draw_list.push_back(quit_popup);
 
-			p.engage_with(quit_popup);
-			break;
+						p.engage_with(quit_popup);
+						break;
+					}
+				case RACKSELECT:
+					p.prepare_quit(false);
+				}
+			}
 		}
 	}
 }

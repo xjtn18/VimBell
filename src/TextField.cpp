@@ -4,6 +4,9 @@
 #include <Rack.hpp>
 #include <DigitalTimeView.hpp>
 #include <Speaker.hpp>
+#include <AlarmCell.hpp>
+#include <sstream>
+#include <iomanip>
 
 
 auto blink_func = [] (float x) -> float { return pow(-pow(sin(x - 0.6f), 18) + 1, 80); };
@@ -168,10 +171,14 @@ bool TextField::handler(sf::Event& event, Program& p){
 		switch (event.key.code){
 
 		case sf::Keyboard::Tab: // switch modes
-			if (!p.rack_view->editing){
-				p.engage_with(p.main_digitime);
+			if (!p.rack_view->editing) {
+				if (LSHIFT_IS_DOWN){
+					if (p.rack->size() != 0) p.engage_with(p.rack_view);
+				}
+				else p.engage_with(p.main_digitime);
+				return true;
 			}
-			return true;
+			return false;
 
 
 		case sf::Keyboard::Backspace: // remove char
@@ -184,14 +191,7 @@ bool TextField::handler(sf::Event& event, Program& p){
 
 
 		case sf::Keyboard::Return: // submit text to new/edited alarm
-			if (!p.rack_view->editing){
-				p.rack->add_alarm(p.main_digitime->get_time(), get_buffer());
-			} else {
-				p.rack->edit_selection(get_buffer());
-				p.rack_view->editing = false;
-			}
-			clear_all();
-			p.engage_with(p.rack_view);
+			p.rack_view->add(p);
 			return true;
 
 

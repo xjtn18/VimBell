@@ -21,6 +21,11 @@ struct Chooser;
 struct Image;
 
 
+enum Stage {
+	RACKSELECT,
+	RACKOPEN
+};
+
 
 struct Program {
 	bool running = true,
@@ -32,22 +37,23 @@ struct Program {
 
 	// UI entities
 	// Main
-	TextField *main_tbox;
-	DigitalTimeView *main_digitime;
-	Menu *rack_view;
-	VStack *section_stack;
-	Image *bg_clock;
+	TextField *main_tbox = nullptr;
+	DigitalTimeView *main_digitime = nullptr;
+	Menu *rack_view = nullptr;
+	VStack *section_stack = nullptr;
+	Image *bg_clock = nullptr;
 	sf::Text fps;
 	Entity *engaged_entity = nullptr;
 	Entity *last_engaged = nullptr;
 
 	// Rack Select
-	Chooser *rack_select;
+	Chooser *rack_chooser = nullptr;
 
 
 	// program state
 	std::vector<Entity*> draw_list;
 	std::shared_ptr<Rack> rack;
+	Stage stage;
 
 
 	// sectors
@@ -59,7 +65,7 @@ struct Program {
 	void prepare_quit(bool _saving);
 	void quit();
 	void cleanup();
-	void set_pane_rack_select();
+	void set_pane_rack_chooser();
 	void set_pane_main(const std::string &filename);
 	void engage_with(Entity *ent);
 	void update_frame(float dt);

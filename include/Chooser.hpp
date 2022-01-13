@@ -18,6 +18,7 @@ struct Chooser : public VStack {
 	Chooser(jb::Transform _tf, int _padding, bool _engaged = false);
 	void engage(bool value);
 	void refresh();
+	void move_selector(jb::Direc dir);
 
 	void update(float dt);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
