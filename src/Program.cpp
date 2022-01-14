@@ -67,8 +67,8 @@ Program::Program()
 	auto yaxis = new LineShape({CENTER_WIN_X, CENTER_WIN_Y, grid_line_thickness, WINH});
 	auto xaxis = new LineShape({CENTER_WIN_X, CENTER_WIN_Y, WINW, grid_line_thickness});
 
-	bg_clock = new Image({WINW, WINH, 0, 0}, "res/images/roman_clock.png");
-	bg_clock->sprite.setScale(0.5, 0.5);
+	bg_clock = new Image({WINW-130, WINH+100, 0, 0}, "res/images/roman_clock.png");
+	bg_clock->sprite.setScale(0.45, 0.45);
 	bg_clock->sprite.setColor(sf::Color(0,0,0,50));
 
 	set_pane_rack_chooser();
@@ -102,7 +102,8 @@ void Program::set_pane_rack_chooser(){
 		});
 	rack_chooser->insert(-1, new Option({0,0,WINW,50},"+"));
 
-	Text *title = new Text({CENTER_WIN_X,0,0,0}, "Choose an alarm rack:", FONT_LIBMONO, 30);
+	Text *title = new Text({CENTER_WIN_X,0,0,0}, "[create or load an alarm rack]", FONT_LIBMONO, 30);
+	title->set_color(sf::Color(100,100,100));
 	title->center_xaxis();
 	VStack *v = new VStack({0,20,0,0}, 20, {
 			title,
@@ -170,8 +171,7 @@ void Program::cleanup(){
 }
 
 
-void Program::prepare_quit(bool _saving){
-	saving = _saving;
+void Program::stop(){
 	running = false;
 }
 

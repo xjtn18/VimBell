@@ -62,7 +62,7 @@ struct Program {
 
 
 	Program();
-	void prepare_quit(bool _saving);
+	void stop();
 	void quit();
 	void cleanup();
 	void set_pane_rack_chooser();
