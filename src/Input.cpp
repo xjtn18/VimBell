@@ -42,8 +42,10 @@ void handle_global_input(sf::Event& event, Program& p){
 					}
 				case RACKSELECT:
 					p.prepare_quit(false);
+					break;
 				}
 			}
+			break;
 		}
 	}
 }

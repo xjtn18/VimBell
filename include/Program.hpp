@@ -66,7 +66,7 @@ struct Program {
 	void quit();
 	void cleanup();
 	void set_pane_rack_chooser();
-	void set_pane_main(const std::string &filename);
+	void set_pane_main();
 	void engage_with(Entity *ent);
 	void update_frame(float dt);
 	void draw_frame(sf::RenderWindow& window);

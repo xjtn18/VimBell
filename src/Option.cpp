@@ -19,8 +19,8 @@ Option::Option(jb::Transform _tf, const std::string _text)
 
 	bText = sf::Text(text, FONT_LIBMONO, (unsigned int) (tf.h/1.85));
 	bText.setFillColor(JB_WHITE); // set font color
-	sf::FloatRect textBounds = bText.getLocalBounds();
-	bText.setOrigin(0, (int)(tf.h/2 - 3));
+	sf::FloatRect bounds = bText.getLocalBounds();
+	bText.setOrigin((int)(bounds.width/2 + bounds.left), tf.h/2-5);
 
 	set_pos();
 }
@@ -31,7 +31,8 @@ Option::Option(jb::Transform _tf, const std::string _text)
 void Option::set_pos(){
 	//zone = sf::Rect<int>(tf.x-tf.w/2, tf.y-tf.h/2, tf.w, tf.h);
 	box.setPosition(tf.x, tf.y);
-	bText.setPosition(tf.x + 25, tf.y + tf.h/1.8);
+	//bText.setPosition(tf.x + 25, tf.y + tf.h/1.8);
+	bText.setPosition(tf.w/2, tf.y + tf.h/1.8);
 };
 
 

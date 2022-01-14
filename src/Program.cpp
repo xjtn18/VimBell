@@ -15,6 +15,7 @@
 #include <AlarmCell.hpp>
 #include <Option.hpp>
 #include <Chooser.hpp>
+#include <TextPrompt.hpp>
 #include <filesystem>
 
 namespace fs = std::filesystem;
@@ -75,40 +76,54 @@ Program::Program()
 
 
 void Program::set_pane_rack_chooser(){
-	stage = RACKOPEN;
+	stage = RACKSELECT;
 	rack_chooser = new Chooser({0, 0, WINW/3, 0}, 1);
 	std::string filename;
 	for (const auto& entry : fs::directory_iterator("racks/")){
 		filename = entry.path().filename().stem();
-		rack_chooser->options.push_back([=](){this->set_pane_main(filename);});
-			// ^ must capture by value
-			// The filename to pass to set_pane_main will be deleted upon exiting this function
-			// unless we pass the filename by value to the lambda object.
+		rack_chooser->options.push_back([=](){
+			load_rack(rack, filename);
+			set_pane_main();
+		});
+		// ^ must capture by value
+		// The filename to pass to set_pane_main will be deleted upon exiting this function
+		// unless we pass the filename by value to the lambda object.
 		rack_chooser->insert(-1, new Option({0,0,WINW,50},filename));
 	}
-	rack_chooser->options.push_back([&](){ this->set_pane_main(""); });
+
+	rack_chooser->options.push_back([&](){
+			auto tp = new TextPrompt({CENTER_WIN_X-275, CENTER_WIN_Y-25, 550, 50}, "", true);
+			tp->submit = [&](std::string rackname){
+				rack = std::shared_ptr<Rack>(new Rack(rackname)); // create new rack
+				set_pane_main();
+			};
+			draw_list.push_back(tp);
+			engage_with(tp);
+		});
 	rack_chooser->insert(-1, new Option({0,0,WINW,50},"+"));
 
-	draw_list = {
-		rack_chooser
-	};
+	Text *title = new Text({CENTER_WIN_X,0,0,0}, "Choose an alarm rack:", FONT_LIBMONO, 30);
+	title->center_xaxis();
+	VStack *v = new VStack({0,20,0,0}, 20, {
+			title,
+			rack_chooser
+		});
 
+	draw_list = { v };
 	engage_with(rack_chooser);
 }
 
 
 
-void Program::set_pane_main(const std::string &filename){
+void Program::set_pane_main(){
 	stage = RACKOPEN;
-	if (filename == "") rack = std::shared_ptr<Rack>(new Rack("test-rack")); // create new rack
-	else load_rack(rack, filename); // load saved alarm rack
-	rack_view = new Menu({0, 0, WINW, 0}, 1, rack);
 
+	rack_view = new Menu({0, 0, WINW, 0}, 1, rack);
 	auto rack_name = new Text({CENTER_WIN_X, 0, 0, 0}, rack->name, FONT_LIBMONO, 20);
 	rack_name->center_xaxis();
 	rack_name->set_color(JB_WHITE);
 
-	section_stack = new VStack({0, 0, 0, 0}, 10, {
+	section_stack = new VStack(jb::Transform::Zero, 10, {
 			sector_top,
 			rack_name,
 			rack_view

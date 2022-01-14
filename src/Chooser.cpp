@@ -5,6 +5,7 @@
 #include <YesNoPopup.hpp>
 #include <AlarmCell.hpp>
 #include <TextField.hpp>
+#include <TextPrompt.hpp>
 #include <sstream>
 #include <iomanip>
 
@@ -19,9 +20,13 @@ Chooser::Chooser(jb::Transform _tf, int _padding, bool _engaged)
 
 void Chooser::engage(bool value){
 	engaged = value;
-	if (entities.size() > 0) entities[0]->engage(true);
+	if (entities.size() == 0) return;
+	if (value == true){
+		entities[select_index]->engage(true);
+	} else {
+		entities[select_index]->engage(false);
+	}
 }
-
 
 
 void Chooser::move_selector(jb::Direc dir){
@@ -47,15 +52,15 @@ bool Chooser::handler(sf::Event& event, Program& p){
 	if (event.type == sf::Event::KeyPressed){
 		switch (event.key.code){
 
-		case sf::Keyboard::J: // move rack selector down
+		case sf::Keyboard::J: // move selector down
 			move_selector(DOWN);
 			return true;
 
-		case sf::Keyboard::K: // move rack selector up
+		case sf::Keyboard::K: // move selector up
 			move_selector(UP);
 			return true;
 
-		case sf::Keyboard::Enter: // duplicate currently selected alarm
+		case sf::Keyboard::Enter: // select
 			options[select_index]();
 			return true;
 		}

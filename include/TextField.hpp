@@ -15,6 +15,7 @@ struct TextField : public Entity {
 	static aud::Speaker* field_speaker;
 	static void cleanup();
 
+	jb::Transform CURSOR_HOME;
 	float lerp;
 	int bufmax;
 	sf::RectangleShape box; // the text box itself
@@ -26,6 +27,8 @@ struct TextField : public Entity {
 	TextField(jb::Transform _tf, const char* init_content, bool _engaged = false);
 	~TextField();
 
+	void center_xaxis();
+	void center_yaxis();
 	void engage(bool value);
 	void write(const char character);
 	void delete_char();

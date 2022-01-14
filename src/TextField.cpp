@@ -26,7 +26,7 @@ TextField::TextField(jb::Transform _tf, const char* init_content, bool _engaged)
 	  cursor(TextCursor({tf.x + 24, tf.y, 19, tf.h-10})),
 	  line(Line(_tf, init_content, cursor.get_width()*2 - 6, 24, cursor.get_width(), sf::Color(50,50,50)))
 {
-#define CURSOR_HOME {tf.x + 24, tf.y, tf.w, tf.h}
+	CURSOR_HOME = {tf.x + 24, tf.y, 0, 0};
 	bufmax = tf.w / cursor.get_width() - 2;
 	box.setOrigin(0, tf.h/2);
 	box.setPosition(tf.x, tf.y);
@@ -157,6 +157,18 @@ void TextField::fill(std::string content){
 }
 
 
+void TextField::center_xaxis(){
+	box.setOrigin(tf.w/2, 0);
+	sf::FloatRect fr = box.getGlobalBounds();
+	cursor.tf.x = fr.left + 24;
+}
+
+void TextField::center_yaxis(){
+	box.setOrigin(0, tf.h/2);
+	sf::FloatRect fr = box.getGlobalBounds();
+	cursor.tf.y = fr.top/2;
+}
+
 
 bool TextField::handler(sf::Event& event, Program& p){
 	// for text events
@@ -224,7 +236,5 @@ bool TextField::handler(sf::Event& event, Program& p){
 	}
 	return false;
 }
-
-
 
 
