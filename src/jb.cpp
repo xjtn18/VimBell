@@ -39,7 +39,7 @@ const jb::Time jb::current_time(){
 }
 
 
-// takes path string literal and returns it sans tail
+// takes path string literal and returns it without the tail
 const char* jb::rtrim(const char* s, size_t len, const char target){
 	size_t i = len-1;
 	for (; i >= 0; i--){
@@ -62,7 +62,6 @@ float jb::distance(const sf::Vector2f& A, const sf::Vector2f& B){
 
 
 sf::Vector2f jb::get_intermediate_position(const sf::Vector2f& A, const sf::Vector2f& B, float n){
-	//float dist = distance(A, B);
 	float xn = A.x + n * (B.x - A.x);
 	float yn = A.y + n * (B.y - A.y);
 	return {xn, yn};

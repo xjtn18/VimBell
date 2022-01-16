@@ -82,7 +82,7 @@ void Program::set_pane_rack_chooser(){
 	for (const auto& entry : fs::directory_iterator("racks/")){
 		filename = entry.path().filename().stem();
 		rack_chooser->options.push_back([=](){
-			load_rack(rack, filename);
+			load_rack(*this, filename);
 			set_pane_main();
 		});
 		// ^ must capture by value
@@ -94,7 +94,7 @@ void Program::set_pane_rack_chooser(){
 	rack_chooser->options.push_back([&](){
 			auto tp = new TextPrompt({CENTER_WIN_X-275, CENTER_WIN_Y-25, 550, 50}, "", true);
 			tp->submit = [&](std::string rackname){
-				rack = std::shared_ptr<Rack>(new Rack(rackname)); // create new rack
+				rack = std::shared_ptr<Rack>(new Rack(rackname, *this)); // create new rack
 				set_pane_main();
 			};
 			draw_list.push_back(tp);
@@ -144,9 +144,7 @@ void Program::set_pane_main(){
 
 
 void Program::engage_with(Entity *ent){
-	if (engaged_entity){
-		engaged_entity->engage(false); // disengage current entity
-	}
+	if (engaged_entity) engaged_entity->engage(false);
 	last_engaged = engaged_entity;
 	engaged_entity = ent;
 	engaged_entity->engage(true);

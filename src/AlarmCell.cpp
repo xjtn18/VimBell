@@ -3,16 +3,15 @@
 #include <cmath>
 
 
-
 sf::Color AlarmCell::idleColor = sf::Color(80, 80, 80, 150);
 sf::Color AlarmCell::hoverColor = sf::Color(132, 231, 47, 150);
+sf::Color AlarmCell::hoverTriggered = sf::Color(230, 130, 112);
 
 
 
 AlarmCell::AlarmCell(jb::Transform _tf, const std::string _text, int _stacc, int _interval)
 	: Entity(_tf),
-	  text(_text),
-	  lerp(0)
+	  text(_text)
 {
 	box = sf::RectangleShape(sf::Vector2f(tf.w,tf.h));
 	box.setFillColor(idleColor);
@@ -33,23 +32,18 @@ AlarmCell::AlarmCell(jb::Transform _tf, const std::string _text, int _stacc, int
 
 
 
-
 void AlarmCell::set_pos(){
-	//zone = sf::Rect<int>(tf.x-tf.w/2, tf.y-tf.h/2, tf.w, tf.h);
 	box.setPosition(tf.x, tf.y);
 	bText.setPosition(tf.x + 25, tf.y + tf.h/1.8);
 
-	// equivalent to set_pos
 	stacc_indicator->tf.x = tf.w - 150;
 	stacc_indicator->tf.y = tf.y + tf.h/2;
 	stacc_indicator->update(0.0f);
 	
-	// equivalent to set_pos
 	stacc_interval_indicator->tf.x = tf.w - 80;
 	stacc_interval_indicator->tf.y = tf.y + tf.h/2;
 	stacc_interval_indicator->update(0.0f);
 };
-
 
 
 
@@ -61,33 +55,66 @@ void AlarmCell::set_color(sf::Color c){
 void AlarmCell::engage(bool value){
 	is_hovered = value;
 	if (value == true) {
-		box.setFillColor(hoverColor);
-		lerp = 0;
+		if (!is_triggered) box.setFillColor(hoverColor);
+		else box.setFillColor(hoverTriggered);
 	} else {
-		box.setFillColor(idleColor);
+		if (!is_triggered) box.setFillColor(idleColor);
+		else box.setFillColor(JB_RED);
 	}
 }
 
 
+void AlarmCell::idle(){
+	box.setFillColor(idleColor);
+	bText.setFillColor(JB_WHITE);
+	stacc_indicator->set_color(JB_WHITE);
+	stacc_interval_indicator->set_color(JB_WHITE);
+	is_triggered = false;
+}
+
+void AlarmCell::idle_select(){
+	box.setFillColor(hoverColor);
+	bText.setFillColor(JB_WHITE);
+	stacc_indicator->set_color(JB_WHITE);
+	stacc_interval_indicator->set_color(JB_WHITE);
+	is_triggered = false;
+}
+
+
+void AlarmCell::trigger(){
+	box.setFillColor(JB_RED);
+	bText.setFillColor(JBC_BG);
+	stacc_indicator->set_color(JBC_BG);
+	stacc_interval_indicator->set_color(JBC_BG);
+	is_triggered = true;
+}
+
+void AlarmCell::trigger_select(){
+	box.setFillColor(hoverTriggered);
+	bText.setFillColor(JBC_BG);
+	stacc_indicator->set_color(JBC_BG);
+	stacc_interval_indicator->set_color(JBC_BG);
+	is_triggered = true;
+}
+
+
+void AlarmCell::toggle(){
+	if (active){
+		sf::Color dim(80,80,80);
+		box.setFillColor(hoverColor);
+		bText.setFillColor(dim);
+		stacc_indicator->set_color(dim);
+		stacc_interval_indicator->set_color(dim);
+		is_triggered = false;
+	} else {
+		this->idle_select();
+	}
+	active = !active;
+}
+
 
 
 void AlarmCell::update(float dt){
-	if (is_hovered){
-		lerp += (rate * dt);
-		int rtarget = 89;
-		int gtarget = 153;
-		int btarget = 33;
-		float x = 180/PI * lerp;
-		if (x >= PI) lerp = 0;
-		auto lerpf = [] (float x) -> float {return -(0.5 * (cos(x) + 1) - 1);};
-
-		sf::Color last = box.getFillColor();
-		last.r = (rtarget - hoverColor.r) * lerpf(x) + hoverColor.r;
-		last.g = (gtarget - hoverColor.g) * lerpf(x) + hoverColor.g;
-		last.b = (btarget - hoverColor.b) * lerpf(x) + hoverColor.b;
-		box.setFillColor(last);
-
-	}
 	set_pos();
 }
 

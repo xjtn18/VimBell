@@ -57,22 +57,6 @@ void Option::engage(bool value){
 
 
 void Option::update(float dt){
-	if (is_hovered){
-		lerp += (rate * dt);
-		int rtarget = 89;
-		int gtarget = 153;
-		int btarget = 33;
-		float x = 180/PI * lerp;
-		if (x >= PI) lerp = 0;
-		auto lerpf = [] (float x) -> float {return -(0.5 * (cos(x) + 1) - 1);};
-
-		sf::Color last = box.getFillColor();
-		last.r = (rtarget - hoverColor.r) * lerpf(x) + hoverColor.r;
-		last.g = (gtarget - hoverColor.g) * lerpf(x) + hoverColor.g;
-		last.b = (btarget - hoverColor.b) * lerpf(x) + hoverColor.b;
-		box.setFillColor(last);
-
-	}
 	set_pos();
 }
 

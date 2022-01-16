@@ -2,6 +2,8 @@
 #include <Speaker.hpp>
 #include <Alarm.hpp>
 #include <ThreadClock.hpp>
+#include <Menu.hpp>
+#include <Program.hpp>
 
 
 auto *Rack::rack_speaker = new aud::Speaker(100.0f, false);
@@ -12,13 +14,12 @@ void Rack::cleanup(){
 
 
 
-Rack::Rack(std::string _name)
+Rack::Rack(std::string _name, Program &p)
 	: name(_name),
 	  select_index(0)
-{ 
-	clock = new ThreadClock(std::shared_ptr<Rack>(this)); // run clock thread
+{
+	clock = new ThreadClock(std::shared_ptr<Rack>(this), p); // run clock thread
 }
-
 
 
 Rack& Rack::operator=(const Rack& other){
@@ -37,11 +38,6 @@ Rack::~Rack()
 	}
 }
 
-
-void Rack::set_select(const int new_index){
-	select_index = new_index;
-	jb::clamp(select_index, 0, alarms.size());
-}
 
 
 Alarm& Rack::get_selection(){
@@ -77,10 +73,14 @@ void Rack::insert_alarm(Alarm new_alarm, bool audible){
 
 
 
-void Rack::query_active_alarms(const jb::Time t){
-	for (Alarm& a : alarms){
-		a.query(t);
+std::vector<int> Rack::query_alarms(const jb::Time t){
+	std::vector<int> triggered;
+	for (int i = 0; i < alarms.size(); ++i){
+		if (alarms[i].query(t)){ // alarm was triggered
+			triggered.push_back(i);
+		}
 	}
+	return triggered;
 }
 
 
@@ -88,14 +88,11 @@ void Rack::query_active_alarms(const jb::Time t){
 void Rack::select_move(jb::Direc direction){
 	select_index += direction;
 	bool clamped = jb::clamp(select_index, 0, alarms.size());
+}
 
-	if (alarms.size() > 0){
-		if (!clamped){
-			//rack_speaker->play("move.wav");
-		} else { // tried to move past boundary
-			rack_speaker->play("error.wav");
-		}
-	}
+void Rack::set_select(const int new_index){
+	select_index = new_index;
+	jb::clamp(select_index, 0, alarms.size());
 }
 
 
@@ -105,9 +102,6 @@ void Rack::toggle_selection(){
 		rack_speaker->play("click.wav");
 	}
 }
-
-
-
 
 
 void Rack::remove_alarm(){
@@ -123,9 +117,6 @@ void Rack::remove_alarm(){
 }
 
 
-
-void Rack::adjust_dup_increment(int value){
-}
 
 std::string Rack::get_selection_message(){
 	return alarms[select_index].msg;

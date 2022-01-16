@@ -19,6 +19,8 @@ struct Menu : public VStack {
 	void move_selector(jb::Direc dir);
 	void set_selector(int index);
 	void add(Program &p);
+	void trigger(std::vector<int> triggered);
+	void set_all_idle();
 
 	void update(float dt);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;

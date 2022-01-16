@@ -7,6 +7,7 @@
 #include <TextField.hpp>
 #include <Text.hpp>
 #include <DigitalTimeView.hpp>
+#include <algorithm>
 #include <sstream>
 #include <iomanip>
 
@@ -26,22 +27,37 @@ Menu::Menu(jb::Transform _tf, int _padding, std::shared_ptr<Rack> _rack_state, b
 		if (i == rack_state->select_index){
 			new_cell->engage(engaged);
 		}
-		insert(-1, new_cell); // Stack::insert
+		VStack::insert(-1, new_cell);
 	}
 	VStack::update(0.0f);
 }
 
 
 void Menu::engage(bool value){
-	if (value == true){
-		entities[rack_state->select_index]->engage(true);
-	} else {
-		entities[rack_state->select_index]->engage(false);
-	}
+	entities[rack_state->select_index]->engage(value);
 	engaged = value;
 }
 
 
+void Menu::trigger(std::vector<int> triggered){
+	for (int &index : triggered){
+		if (this->engaged && index == rack_state->select_index){
+			((AlarmCell*) entities[index])->trigger_select();
+		} else {
+			((AlarmCell*) entities[index])->trigger();
+		}
+	}
+}
+
+void Menu::set_all_idle(){
+	for (int i = 0; i < entities.size(); ++i){
+		if (i != rack_state->select_index){
+			((AlarmCell*) entities[i])->idle();
+		} else {
+			((AlarmCell*) entities[i])->idle_select();
+		}
+	}
+}
 
 void Menu::move_selector(jb::Direc dir){
 	entities[rack_state->select_index]->engage(false);
@@ -102,7 +118,8 @@ bool Menu::handler(sf::Event& event, Program& p){
 			return true;
 
 		case sf::Keyboard::K: // move rack selector up
-			if (LSHIFT_IS_DOWN) set_selector(0);
+			if (rack_state->select_index == 0) p.engage_with(p.main_tbox);
+			else if (LSHIFT_IS_DOWN) set_selector(0);
 			else move_selector(UP);
 			return true;
 
@@ -110,7 +127,7 @@ bool Menu::handler(sf::Event& event, Program& p){
 		case sf::Keyboard::Enter: // duplicate currently selected alarm
 			{
 				Alarm& a = rack_state->get_selection();
-				AlarmCell *acell = static_cast<AlarmCell*>(entities[rack_state->select_index]);
+				AlarmCell *acell = (AlarmCell*)(entities[rack_state->select_index]);
 				if (LSHIFT_IS_DOWN){
 					a.alter_stacc_interval(1);
 					acell->stacc_interval_indicator->set_text(std::to_string(a.stacc_interval));
@@ -125,7 +142,7 @@ bool Menu::handler(sf::Event& event, Program& p){
 		case sf::Keyboard::Backspace: // remove alarm from rack
 			{
 				Alarm& a = p.rack->get_selection();
-				AlarmCell *acell = static_cast<AlarmCell*>(entities[rack_state->select_index]);
+				AlarmCell *acell = (AlarmCell*)(entities[rack_state->select_index]);
 
 				if (LSHIFT_IS_DOWN){
 					a.alter_stacc_interval(-1);
@@ -140,13 +157,16 @@ bool Menu::handler(sf::Event& event, Program& p){
 						confirm_popup->yes_routine = [&](){
 							remove(rack_state->select_index);
 							rack_state->remove_alarm();
+							if (std::all_of(entities.begin(), entities.end(), [](Entity *e){
+										return (!((AlarmCell*)e)->is_triggered);
+									}))
+							{
+								Alarm::silence();
+							}
 
 							p.draw_list.pop_back(); // destroy popup
-							if (rack_state->size() == 0){
-								p.engage_with(p.main_tbox); // engage the text field
-							} else {
-								p.engage_with(this); // engage the rack again
-							}
+							if (rack_state->size() == 0) p.engage_with(p.main_tbox); // engage the text field
+							else p.engage_with(this); // engage the rack again
 						};
 
 						confirm_popup->no_routine = [&](){
@@ -162,7 +182,18 @@ bool Menu::handler(sf::Event& event, Program& p){
 			return true;
 
 		case sf::Keyboard::T: // toggle alarm active state
-			p.rack->toggle_selection();
+			{
+				p.rack->toggle_selection();
+				AlarmCell *ac = ((AlarmCell*)entities[rack_state->select_index]);
+				ac->toggle();
+				if (std::all_of(entities.begin(), entities.end(), [](Entity *e){
+							return (!((AlarmCell*)e)->is_triggered);
+						}))
+				{
+					Alarm::silence();
+				}
+			}
+
 			return true;
 
 		case sf::Keyboard::E: // edit alarm

@@ -1,8 +1,8 @@
 #include <SaveLoad.hpp>
-#include <jb.hpp>
+#include <Program.hpp>
 #include <Rack.hpp>
 #include <Alarm.hpp>
-
+#include <jb.hpp>
 #include <fstream>
 
 using namespace json;
@@ -11,13 +11,12 @@ using namespace json;
 #define JSON_GET_VAL(x,y,z) ((z)x[y]).Value()
 
 
-void load_rack(std::shared_ptr<Rack> &rack, const std::string &rack_name){
-	rack = std::shared_ptr<Rack>(new Rack(rack_name));
+void load_rack(Program &p, const std::string &rack_name){
+	p.rack = std::shared_ptr<Rack>(new Rack(rack_name, p));
 
 	std::fstream fs;
 	fs.open("racks/" + rack_name + ".rack", std::fstream::in);
    Object objDocument;
-   //const Object& objRoot = objDocument;
 	try {
 		Reader::Read(objDocument, fs);
 	} catch (Reader::ScanException& e){
@@ -38,10 +37,10 @@ void load_rack(std::shared_ptr<Rack> &rack, const std::string &rack_name){
 		int interval = JSON_GET_VAL(objAlarm, "StaccInterval", Number);
 		bool active = JSON_GET_VAL(objAlarm, "Active", Boolean);
 
-		rack->insert_alarm(Alarm(jb::Time(hour, minute), msg, stacc, interval, active), false);
+		p.rack->insert_alarm(Alarm(jb::Time(hour, minute), msg, stacc, interval, active), false);
 	}
 
-	rack->set_select(0);
+	p.rack->set_select(0);
 }
 
 

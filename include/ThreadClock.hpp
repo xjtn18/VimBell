@@ -2,10 +2,11 @@
 #include <thread>
 
 struct Rack;
+struct Program;
 
 struct ThreadClock {
-	ThreadClock(std::shared_ptr<Rack> _rack);
-	void callback();
+	ThreadClock(std::shared_ptr<Rack> _rack, Program& p);
+	void callback(Program &p);
 	void stop();
 
 	std::thread thr;

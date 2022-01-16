@@ -50,14 +50,15 @@ bool Alarm::remove_from_stack(){
 }
 
 
-void Alarm::query(jb::Time t){
-	if (active){
-		for (int i = 0; i < stacc; ++i){
-			if (target + stacc_interval * i == t){
-				this->trigger();
-			}
+bool Alarm::query(jb::Time t){
+	if (!active) return false;
+	for (int i = 0; i < stacc; ++i){
+		if (target + stacc_interval * i == t){
+			this->trigger();
+			return true;
 		}
 	}
+	return false;
 }
 
 void Alarm::trigger(){

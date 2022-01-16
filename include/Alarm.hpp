@@ -34,7 +34,7 @@ struct Alarm {
 	void alter_stacc_interval(int i);
 	bool operator<(const Alarm& other) const;
 
-	void query(jb::Time t);
+	bool query(jb::Time t);
 	void trigger();
 
 

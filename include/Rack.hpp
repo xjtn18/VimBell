@@ -8,22 +8,22 @@ namespace aud {
 }
 struct ThreadClock;
 struct Alarm;
+struct Program;
 
 
 struct Rack {
 	static void cleanup();
 
-	Rack(std::string _name);
+	Rack(std::string _name, Program &p);
 	Rack(const Rack&) = default;
 	Rack& operator=(const Rack& other);
 	~Rack();
 
 	void add_alarm(jb::Time target, std::string message);
-	void query_active_alarms(const jb::Time t);
+	std::vector<int> query_alarms(const jb::Time t);
 	void select_move(jb::Direc direction);
 	Alarm& get_selection();
 	void toggle_selection();
-	void adjust_dup_increment(int value);
 	void remove_alarm();
 	void insert_alarm(Alarm new_alarm, bool audible = true);
 	std::string get_selection_message();

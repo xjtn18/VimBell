@@ -16,7 +16,11 @@ public:
 	void set_color(sf::Color c);
 
 	void engage(bool value);
-	void deselect();
+	void idle();
+	void trigger();
+	void idle_select();
+	void trigger_select();
+	void toggle();
 	void activate();
 	void update(float dt);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -28,10 +32,10 @@ public:
 	Text *stacc_indicator;
 	Text *stacc_interval_indicator;
 
+	bool active = true;
 	bool is_hovered = false;
-	static sf::Color idleColor, hoverColor;
-	float lerp = 0;
-	float rate = 0.025;
+	bool is_triggered = false;
+	static sf::Color idleColor, hoverColor, hoverTriggered;
 };
 
 

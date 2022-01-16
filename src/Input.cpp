@@ -4,6 +4,7 @@
 #include <Rack.hpp>
 #include <Alarm.hpp>
 #include <SaveLoad.hpp>
+#include <Menu.hpp>
 
 
 void handle_global_input(sf::Event& event, Program& p){
@@ -18,6 +19,7 @@ void handle_global_input(sf::Event& event, Program& p){
 		case sf::Keyboard::Space:
 			if (LALT_IS_DOWN){ // silence any sounding alarms
 				Alarm::silence();
+				p.rack_view->set_all_idle();
 			}
 			break;
 
@@ -31,10 +33,12 @@ void handle_global_input(sf::Event& event, Program& p){
 																	"Save current rack ("+p.rack->name+")?");
 						quit_popup->yes_routine = [&](){
 							save_rack(p.rack);
+							Alarm::silence();
 							p.set_pane_rack_chooser();
 						};
 
 						quit_popup->no_routine = [&](){
+							Alarm::silence();
 							p.set_pane_rack_chooser();
 						};
 
