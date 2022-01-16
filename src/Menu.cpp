@@ -184,8 +184,7 @@ bool Menu::handler(sf::Event& event, Program& p){
 		case sf::Keyboard::T: // toggle alarm active state
 			{
 				p.rack->toggle_selection();
-				AlarmCell *ac = ((AlarmCell*)entities[rack_state->select_index]);
-				ac->toggle();
+				((AlarmCell*)entities[rack_state->select_index])->toggle();
 				if (std::all_of(entities.begin(), entities.end(), [](Entity *e){
 							return (!((AlarmCell*)e)->is_triggered);
 						}))
@@ -203,11 +202,9 @@ bool Menu::handler(sf::Event& event, Program& p){
 			return true;
 
 		case sf::Keyboard::Tab: // switch modes
-			if (LSHIFT_IS_DOWN){
-				p.engage_with(p.main_tbox);
-				return true;
-			}
-			return false;
+			if (LSHIFT_IS_DOWN) p.engage_with(p.main_tbox);
+			else p.engage_with(p.main_digitime);
+			return true;
 		}
 	}
 	return false;

@@ -104,12 +104,11 @@
 	- added AM/PM visualization and incroprated the Animation struct.
 	- Messages added to alarms are now trimmed of all outer whitespace.
 
-
-
-### TODO:
-	- Add more custom alarm tones.
-	- Make popups have a vstack of text, box size changes with stack height.
-	- Think about either making the Menu struct/class combine with the Rack class and draw it dynamically like you would with a Line, or think of a new solution all together. The way the menu is drawn with the refresh method is inconsistent with every other entity.
-	- Make Entities have an order member that specifies their order in the draw list.
+### 1/15/22:
+	- added methods in Program that setup each pane; added a different pane at program start that lets users load/create a rack.
+	- closing a rack brings user back to rack selection.
+	- trimmed popup messages and limited alarms to 10 per rack to as to all fit on screen.
+	- changed the controls for moving between rack, textbox, and time. Tab cycles clockwise, shift-tab cycles counter-clockwise.
+	- triggered alarms are now highlighted red in the rack. Deleting/silencing/deactivating all triggered alarms ends the alarm tone.
 
 

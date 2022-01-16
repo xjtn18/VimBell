@@ -184,10 +184,8 @@ bool TextField::handler(sf::Event& event, Program& p){
 
 		case sf::Keyboard::Tab: // switch modes
 			if (!p.rack_view->editing) {
-				if (LSHIFT_IS_DOWN){
-					if (p.rack->size() != 0) p.engage_with(p.rack_view);
-				}
-				else p.engage_with(p.main_digitime);
+				if (LSHIFT_IS_DOWN || p.rack->size() == 0) p.engage_with(p.main_digitime);
+				else if (p.rack->size() != 0) p.engage_with(p.rack_view);
 				return true;
 			}
 			return false;

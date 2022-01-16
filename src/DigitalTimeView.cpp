@@ -233,7 +233,11 @@ bool DigitalTimeView::handler(sf::Event& event, Program& p){
 			return true;
 
 		case sf::Keyboard::L:
-			move_selector(1);
+			{
+				int last_index = index;
+				move_selector(1);
+				if (index == last_index && index == 1) p.engage_with(p.main_tbox);
+			}
 			return true;
 
 		case sf::Keyboard::H:
@@ -249,9 +253,7 @@ bool DigitalTimeView::handler(sf::Event& event, Program& p){
 			return true;
 
 		case sf::Keyboard::Tab:
-			if (LSHIFT_IS_DOWN){
-				if (p.rack->size() != 0) p.engage_with(p.rack_view);
-			}
+			if (LSHIFT_IS_DOWN && p.rack->size() != 0) p.engage_with(p.rack_view);
 			else p.engage_with(p.main_tbox);
 			return true;
 		}
