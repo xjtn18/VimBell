@@ -34,7 +34,7 @@ Menu::Menu(jb::Transform _tf, int _padding, std::shared_ptr<Rack> _rack_state, b
 
 
 void Menu::engage(bool value){
-	entities[rack_state->select_index]->engage(value);
+	if (rack_state->size() != 0) entities[rack_state->select_index]->engage(value);
 	engaged = value;
 }
 
@@ -197,13 +197,13 @@ bool Menu::handler(sf::Event& event, Program& p){
 
 		case sf::Keyboard::E: // edit alarm
 			p.main_tbox->fill(p.rack->get_selection_message());
+			p.main_tbox->insertmode = true;
 			p.engage_with(p.main_tbox);
 			editing = true;
 			return true;
 
-		case sf::Keyboard::Tab: // switch modes
-			if (LSHIFT_IS_DOWN) p.engage_with(p.main_tbox);
-			else p.engage_with(p.main_digitime);
+		case sf::Keyboard::Tab: // engage with other entity
+			p.engage_with(p.main_tbox);
 			return true;
 		}
 	}

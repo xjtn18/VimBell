@@ -21,6 +21,7 @@ struct TextField : public Entity {
 	sf::RectangleShape box; // the text box itself
 	TextCursor cursor;
 	Line line;
+	bool insertmode = false;
 
 
 	TextField(){};

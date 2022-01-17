@@ -14,6 +14,7 @@ TextPrompt::TextPrompt(jb::Transform _tf, const char* init_content, bool _engage
 	// dimmer
 	dimmer = sf::RectangleShape({(float) WINW, (float) WINH});
 	dimmer.setFillColor(sf::Color(30,30,30,200));
+	insertmode = true;
 }
 
 void TextPrompt::draw(sf::RenderTarget& target, sf::RenderStates states) const {

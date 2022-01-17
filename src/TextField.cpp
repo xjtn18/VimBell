@@ -84,7 +84,7 @@ void TextField::shift_cursor(jb::Direc direction){
 		}
 		break;
 
-   default: // remaining directions
+   default: // other directions
 	   line.index += direction;
 		if (!jb::clamp(line.index, 0, line.line.size()+1)){
 			cursor.move(direction);
@@ -130,7 +130,7 @@ std::string TextField::get_buffer() const {
 void TextField::update(float dt){
 	if (engaged){
 		float inc = 0.05 * dt;
-		lerp += inc;
+		if (insertmode) lerp += inc; // only render blink in insert mode
 		if (lerp > 360) lerp = 0;
 
 		cursor.lerp = lerp;
@@ -172,49 +172,62 @@ void TextField::center_yaxis(){
 
 bool TextField::handler(sf::Event& event, Program& p){
 	// for text events
-	if (event.type == sf::Event::TextEntered){
+	if (insertmode == true && event.type == sf::Event::TextEntered){
 		if (event.text.unicode >= 32 && event.text.unicode <= 126){
 			write(event.text.unicode);
 			return true;
 		}
 
-		// for special key events
+		// for command events
 	} else if (event.type == sf::Event::KeyPressed){
 		switch (event.key.code){
 
-		case sf::Keyboard::Tab: // switch modes
+		case sf::Keyboard::I:
+			if (insertmode) return false;
+			insertmode = true;
+			return true;
+
+		case sf::Keyboard::Tab: // engage other entity
 			if (!p.rack_view->editing) {
-				if (LSHIFT_IS_DOWN || p.rack->size() == 0) p.engage_with(p.main_digitime);
-				else if (p.rack->size() != 0) p.engage_with(p.rack_view);
+				if (p.rack->size() != 0){
+					insertmode = false;
+					p.engage_with(p.rack_view);
+				}
 				return true;
 			}
 			return false;
 
 
 		case sf::Keyboard::Backspace: // remove char
-			if (LSHIFT_IS_DOWN){
-				clear_back(true);
-			} else {
-				delete_char();
+			if (insertmode){
+				if (LSHIFT_IS_DOWN){
+					clear_back(true);
+				} else {
+					delete_char();
+				}
 			}
 			return true;
 
 
 		case sf::Keyboard::Return: // submit text to new/edited alarm
+			insertmode = false;
 			p.rack_view->add(p);
 			return true;
 
 
-		case sf::Keyboard::Left: // move cursor back
-			if (LSHIFT_IS_DOWN){
+		case sf::Keyboard::H: // move cursor back
+			if (insertmode) return false;
+			if (line.index == 0){
+				p.engage_with(p.main_digitime);
+			} else if (LSHIFT_IS_DOWN){
 				shift_cursor(jb::TOP);
 			} else {
 				shift_cursor(jb::UP);
 			}
 			return true;
 
-
-		case sf::Keyboard::Right: // move cursor forward
+		case sf::Keyboard::L: // move cursor forward
+			if (insertmode) return false;
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)){
 				shift_cursor(jb::BOTTOM);
 			} else {
@@ -222,12 +235,24 @@ bool TextField::handler(sf::Event& event, Program& p){
 			}
 			return true;
 
+		case sf::Keyboard::J: // move cursor forward
+			if (insertmode) return false;
+			if (!p.rack_view->editing && p.rack->size() > 0) p.engage_with(p.rack_view);
+			return true;
 
 		case sf::Keyboard::Escape: // cancel edit
-			if (p.rack_view->editing){
+			cursor.lerp = 0;
+			line.lerp = 0;
+			cursor.update(0.0);
+			line.update(0.0);
+			this->reset();
+			if (p.rack_view->editing && !insertmode){
 				p.rack_view->editing = false;
 				clear_all();
 				p.engage_with(p.rack_view);
+				return true;
+			} else if (insertmode){
+				insertmode = false;
 				return true;
 			}
 		}

@@ -253,8 +253,7 @@ bool DigitalTimeView::handler(sf::Event& event, Program& p){
 			return true;
 
 		case sf::Keyboard::Tab:
-			if (LSHIFT_IS_DOWN && p.rack->size() != 0) p.engage_with(p.rack_view);
-			else p.engage_with(p.main_tbox);
+			if (!p.rack_view->editing) p.engage_with(p.rack_view);
 			return true;
 		}
 	}
