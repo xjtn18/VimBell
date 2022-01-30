@@ -2,7 +2,7 @@
 #include <algorithm>
 
 
-VStack::VStack(jb::Transform _tf, int _padding, std::initializer_list<Entity*> l)
+VStack::VStack(vb::Transform _tf, int _padding, std::initializer_list<Entity*> l)
 	: Entity(_tf),
 	  padding(_padding),
 	  entities(l)
@@ -63,7 +63,7 @@ void VStack::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
 
 
-HStack::HStack(jb::Transform _tf, int _padding, std::initializer_list<Entity*> l)
+HStack::HStack(vb::Transform _tf, int _padding, std::initializer_list<Entity*> l)
 	: Entity(_tf),
 	  padding(_padding),
 	  entities(l)

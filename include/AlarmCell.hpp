@@ -9,7 +9,7 @@ class AlarmCell: public Entity {
 
 public:
 	// UI
-	AlarmCell(jb::Transform _tf, const std::string _text, int _stacc, int _interval);
+	AlarmCell(vb::Transform _tf, const std::string _text, int _stacc, int _interval);
 
 	static void cleanup();
 	void set_pos();

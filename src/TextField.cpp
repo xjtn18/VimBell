@@ -20,7 +20,7 @@ void TextField::cleanup(){
 }
 
 
-TextField::TextField(jb::Transform _tf, const char* init_content, bool _engaged)
+TextField::TextField(vb::Transform _tf, const char* init_content, bool _engaged)
 	: Entity(_tf, _engaged),
 	  box(sf::RectangleShape(sf::Vector2f(tf.w, tf.h))),
 	  cursor(TextCursor({tf.x + 24, tf.y, 19, tf.h-10})),
@@ -70,14 +70,14 @@ void TextField::delete_char(){
 }
 
 
-void TextField::shift_cursor(jb::Direc direction){
+void TextField::shift_cursor(vb::Direc direction){
 	switch(direction){
-	case jb::TOP:
+	case vb::TOP:
 		cursor.set_pos(0, CURSOR_HOME);
 		line.index = 0;
 		break;
 
-	case jb::BOTTOM:
+	case vb::BOTTOM:
 		if (line.line.size() > 0){
 			cursor.set_pos(line.line.size(), CURSOR_HOME);
 			line.index = line.line.size();
@@ -86,7 +86,7 @@ void TextField::shift_cursor(jb::Direc direction){
 
    default: // other directions
 	   line.index += direction;
-		if (!jb::clamp(line.index, 0, line.line.size()+1)){
+		if (!vb::clamp(line.index, 0, line.line.size()+1)){
 			cursor.move(direction);
 		}
 	}
@@ -123,7 +123,7 @@ void TextField::clear_all(){
 
 
 std::string TextField::get_buffer() const {
-	return jb::trim(line.get_string());
+	return vb::trim(line.get_string());
 }
 
 
@@ -220,18 +220,18 @@ bool TextField::handler(sf::Event& event, Program& p){
 			if (line.index == 0){
 				p.engage_with(p.main_digitime);
 			} else if (LSHIFT_IS_DOWN){
-				shift_cursor(jb::TOP);
+				shift_cursor(vb::TOP);
 			} else {
-				shift_cursor(jb::UP);
+				shift_cursor(vb::UP);
 			}
 			return true;
 
 		case sf::Keyboard::L: // move cursor forward
 			if (insertmode) return false;
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)){
-				shift_cursor(jb::BOTTOM);
+				shift_cursor(vb::BOTTOM);
 			} else {
-				shift_cursor(jb::DOWN);
+				shift_cursor(vb::DOWN);
 			}
 			return true;
 

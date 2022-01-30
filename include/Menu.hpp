@@ -14,9 +14,9 @@ struct Menu : public VStack {
 	bool editing = false;
 
 	Menu(){}
-	Menu(jb::Transform _tf, int _padding, std::shared_ptr<Rack> _rack_state, bool _engaged = false);
+	Menu(vb::Transform _tf, int _padding, std::shared_ptr<Rack> _rack_state, bool _engaged = false);
 	void engage(bool value);
-	void move_selector(jb::Direc dir);
+	void move_selector(vb::Direc dir);
 	void set_selector(int index);
 	void add(Program &p);
 	void trigger(std::vector<int> triggered);

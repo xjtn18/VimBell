@@ -33,14 +33,14 @@ struct DigitalTimeView : public Entity {
 
 
 	DigitalTimeView(){}
-	DigitalTimeView(jb::Transform _tf);
+	DigitalTimeView(vb::Transform _tf);
 	DigitalTimeView(const DigitalTimeView& other) = default;
 	DigitalTimeView& operator =(const DigitalTimeView& from) = default;
 
 	void move_selector(int direction);
 	void alter_digit(int direction);
 	void switch_meridiem();
-	jb::Time get_time();
+	vb::Time get_time();
 
 	void engage(bool value);
 	void update(float dt);

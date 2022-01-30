@@ -50,7 +50,7 @@ int Rack::size(){
 }
 
 
-void Rack::add_alarm(jb::Time target, std::string message){
+void Rack::add_alarm(vb::Time target, std::string message){
 	insert_alarm(Alarm(target, message, 1, 1, true));
 }
 
@@ -73,7 +73,7 @@ void Rack::insert_alarm(Alarm new_alarm, bool audible){
 
 
 
-std::vector<int> Rack::query_alarms(const jb::Time t){
+std::vector<int> Rack::query_alarms(const vb::Time t){
 	std::vector<int> triggered;
 	for (int i = 0; i < alarms.size(); ++i){
 		if (alarms[i].query(t)){ // alarm was triggered
@@ -85,14 +85,14 @@ std::vector<int> Rack::query_alarms(const jb::Time t){
 
 
 
-void Rack::select_move(jb::Direc direction){
+void Rack::select_move(vb::Direc direction){
 	select_index += direction;
-	bool clamped = jb::clamp(select_index, 0, alarms.size());
+	bool clamped = vb::clamp(select_index, 0, alarms.size());
 }
 
 void Rack::set_select(const int new_index){
 	select_index = new_index;
-	jb::clamp(select_index, 0, alarms.size());
+	vb::clamp(select_index, 0, alarms.size());
 }
 
 
@@ -111,7 +111,7 @@ void Rack::remove_alarm(){
 		if (select_index == alarms.size()){ 			// transition selector correctly
 			// if the selector index is out of bounds, decrement it.
 			select_index--;
-			jb::clamp(select_index, 0, alarms.size());
+			vb::clamp(select_index, 0, alarms.size());
 		}
 	}
 }

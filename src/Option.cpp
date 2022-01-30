@@ -9,7 +9,7 @@ sf::Color Option::hoverColor = sf::Color(132, 231, 47, 150);
 
 
 
-Option::Option(jb::Transform _tf, const std::string _text)
+Option::Option(vb::Transform _tf, const std::string _text)
 	: Entity(_tf),
 	  text(_text),
 	  lerp(0)
@@ -18,7 +18,7 @@ Option::Option(jb::Transform _tf, const std::string _text)
 	box.setFillColor(idleColor);
 
 	bText = sf::Text(text, FONT_LIBMONO, (unsigned int) (tf.h/1.85));
-	bText.setFillColor(JB_WHITE); // set font color
+	bText.setFillColor(VB_WHITE); // set font color
 	sf::FloatRect bounds = bText.getLocalBounds();
 	bText.setOrigin((int)(bounds.width/2 + bounds.left), tf.h/2-5);
 

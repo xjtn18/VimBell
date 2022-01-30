@@ -9,7 +9,7 @@ class Option: public Entity {
 
 public:
 	// UI
-	Option(jb::Transform _tf, const std::string _text);
+	Option(vb::Transform _tf, const std::string _text);
 
 	static void cleanup();
 	void set_pos();

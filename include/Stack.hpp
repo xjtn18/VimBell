@@ -9,7 +9,7 @@ struct VStack : public Entity {
 
 
 	VStack(){};
-	VStack(jb::Transform _tf, int _padding, std::initializer_list<Entity*> l);
+	VStack(vb::Transform _tf, int _padding, std::initializer_list<Entity*> l);
 	~VStack();
 
 	void clear();
@@ -28,7 +28,7 @@ struct HStack : public Entity {
 	std::vector<Entity*> entities;
 
 	HStack(){};
-	HStack(jb::Transform _tf, int _padding, std::initializer_list<Entity*> l);
+	HStack(vb::Transform _tf, int _padding, std::initializer_list<Entity*> l);
 	~HStack();
 
 	void clear();

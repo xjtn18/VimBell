@@ -1,7 +1,7 @@
 #include <Image.hpp>
 
 
-Image::Image(jb::Transform _tf, const char* filename)
+Image::Image(vb::Transform _tf, const char* filename)
 	: Entity(_tf)
 {
 	image.loadFromFile(filename);

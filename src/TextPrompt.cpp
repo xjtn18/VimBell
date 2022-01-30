@@ -8,7 +8,7 @@
 #include <Chooser.hpp>
 
 
-TextPrompt::TextPrompt(jb::Transform _tf, const char* init_content, bool _engaged)
+TextPrompt::TextPrompt(vb::Transform _tf, const char* init_content, bool _engaged)
 	: TextField(_tf, init_content, _engaged)
 {
 	// dimmer
@@ -57,18 +57,18 @@ bool TextPrompt::handler(sf::Event& event, Program& p) {
 
 		case sf::Keyboard::Left: // move cursor back
 			if (LSHIFT_IS_DOWN){
-				shift_cursor(jb::TOP);
+				shift_cursor(vb::TOP);
 			} else {
-				shift_cursor(jb::UP);
+				shift_cursor(vb::UP);
 			}
 			return true;
 
 
 		case sf::Keyboard::Right: // move cursor forward
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)){
-				shift_cursor(jb::BOTTOM);
+				shift_cursor(vb::BOTTOM);
 			} else {
-				shift_cursor(jb::DOWN);
+				shift_cursor(vb::DOWN);
 			}
 			return true;
 

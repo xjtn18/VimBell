@@ -11,7 +11,7 @@ void Alarm::cleanup(){
 
 
 
-Alarm::Alarm(jb::Time initTarget, std::string initMsg, int initStacc, int initStaccInterval, bool initActive)
+Alarm::Alarm(vb::Time initTarget, std::string initMsg, int initStacc, int initStaccInterval, bool initActive)
 	: target(initTarget),
 	msg(initMsg),
 	active(initActive),
@@ -34,23 +34,23 @@ bool Alarm::operator<(const Alarm& other) const {
 
 
 void Alarm::add_to_stack(){
-	jb::clamp(++stacc, 1, 11);
+	vb::clamp(++stacc, 1, 11);
 }
 
 
 void Alarm::alter_stacc_interval(int i){
 	stacc_interval += 5 * i;
 	stacc_interval -= stacc_interval % 5;
-	jb::clamp(stacc_interval, 1, 121);
+	vb::clamp(stacc_interval, 1, 121);
 }
 
 
 bool Alarm::remove_from_stack(){
-	return jb::clamp(--stacc, 1, 11);
+	return vb::clamp(--stacc, 1, 11);
 }
 
 
-bool Alarm::query(jb::Time t){
+bool Alarm::query(vb::Time t){
 	if (!active) return false;
 	for (int i = 0; i < stacc; ++i){
 		if (target + stacc_interval * i == t){

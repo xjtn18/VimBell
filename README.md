@@ -1,16 +1,16 @@
 <b><font size="+5">VimBell</font></b> <font size="+3">&nbsp;&nbsp;: an alarm clock app with Vim-like controls. </font>
 
 ## How it works
-The program opens with the Rack Select screen.  
-This is where you can create a new rack or load an existing one.  
-A rack is just a list of alarms.  
-Unlike most alarm clock apps where there is just a single rack, here you can store seperate racks for different schedules you might have.  
-Each rack can hold 10 alarms, and each alarm can hold 10 follow-ups.  
-When creating a new rack, a text prompt will appear asking you to name the rack. (Note: the name must not contain any spaces between words).  
-After you've created or loaded a rack, the program will switch to the Rack View screen.  
-Here, you can add new alarms and edit existing ones, all by just using the keyboard.  
-There are 3 main interactive sections in the Rack Screen; the ***clock***, the ***text field***, and the ***rack***.  
-You can maneuver between each section using the HJKL keys, similar to Vim.  
+- The program opens with the Rack Select screen.  
+- This is where you can create a new rack or load an existing one.  
+- A rack is just a list of alarms.  
+- Unlike most alarm clock apps where there is just a single rack, here you can store seperate racks for different schedules you might have.  
+- Each rack can hold 10 alarms, and each alarm can hold 10 follow-ups.  
+- When creating a new rack, a text prompt will appear asking you to name the rack. (Note: the name must not contain any spaces between words).  
+- After you've created or loaded a rack, the program will switch to the Rack View screen.  
+- Here, you can add new alarms and edit existing ones, all by just using the keyboard.  
+- There are 3 main interactive sections in the Rack Screen; the ***clock***, the ***text field***, and the ***rack***.  
+- You can maneuver between each section using the HJKL keys, just like in Vim.  
 
 ## Controls
 > ### Global
@@ -34,9 +34,10 @@ You can maneuver between each section using the HJKL keys, similar to Vim.
 >>> ***L*** : Move the cursor right  
 >>> ***Shift + H*** : Jump to front of the line  
 >>> ***Shift + L*** : Jump to the end of the line  
+>> ***Enter*** : Submit this alarm/edit to the rack  
 >> #### Insert mode
->>> ***Any character*** : Write that character to the field  
 >>> ***Escape*** : Switch to 'Normal' mode  
+>>> ***Any character*** : Write that character to the field  
 >>> ***Backspace*** : Delete the character behind the cursor  
 >>> ***Shift + Backspace*** : Delete all characters behind the cursor  
 >

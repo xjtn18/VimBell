@@ -12,7 +12,7 @@ struct Line : public Entity {
 
 
 	Line(){}
-	Line(jb::Transform _tf, const char* initial, int _fontsize, int _margin, int _spacing, sf::Color _fontcolor);
+	Line(vb::Transform _tf, const char* initial, int _fontsize, int _margin, int _spacing, sf::Color _fontcolor);
 	Line(const Line& line) = default;
 
 	void insert_char(char c);

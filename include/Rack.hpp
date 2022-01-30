@@ -1,5 +1,5 @@
 #pragma once
-#include <jb.hpp>
+#include <vb.hpp>
 
 
 // FD
@@ -19,9 +19,9 @@ struct Rack {
 	Rack& operator=(const Rack& other);
 	~Rack();
 
-	void add_alarm(jb::Time target, std::string message);
-	std::vector<int> query_alarms(const jb::Time t);
-	void select_move(jb::Direc direction);
+	void add_alarm(vb::Time target, std::string message);
+	std::vector<int> query_alarms(const vb::Time t);
+	void select_move(vb::Direc direction);
 	Alarm& get_selection();
 	void toggle_selection();
 	void remove_alarm();

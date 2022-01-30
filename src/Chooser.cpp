@@ -10,7 +10,7 @@
 #include <iomanip>
 
 
-Chooser::Chooser(jb::Transform _tf, int _padding, bool _engaged)
+Chooser::Chooser(vb::Transform _tf, int _padding, bool _engaged)
 	: VStack(_tf, _padding, {})
 {
 	engaged = _engaged;
@@ -29,10 +29,10 @@ void Chooser::engage(bool value){
 }
 
 
-void Chooser::move_selector(jb::Direc dir){
+void Chooser::move_selector(vb::Direc dir){
 	entities[select_index]->engage(false);
 	select_index += dir;
-	bool clamped = jb::clamp(select_index, 0, entities.size());
+	bool clamped = vb::clamp(select_index, 0, entities.size());
 	entities[select_index]->engage(true);
 }
 

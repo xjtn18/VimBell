@@ -11,14 +11,14 @@ struct TextCursor : public Entity {
 
 
 	TextCursor(){}
-	TextCursor(jb::Transform _tf);
+	TextCursor(vb::Transform _tf);
 	~TextCursor();
 
 	void update(float dt);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	void translate(const int new_x, const int new_y);
 	void move(int dir);
-	void set_pos(int index, jb::Transform plane_ref);
+	void set_pos(int index, vb::Transform plane_ref);
 
 	int get_width() const {
 		return tf.w;

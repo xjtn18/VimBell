@@ -19,7 +19,7 @@
 #include <filesystem>
 
 namespace fs = std::filesystem;
-using namespace jb;
+using namespace vb;
 
 
 
@@ -35,7 +35,7 @@ Program::Program()
 
 	// Set the Icon
 	sf::Image icon;
-	icon.loadFromFile(jb::get_image("clock-ico.png"));
+	icon.loadFromFile(vb::get_image("clock-ico.png"));
 	window_ptr->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 	window_ptr->setFramerateLimit(60);
 
@@ -59,7 +59,7 @@ Program::Program()
 	fps = sf::Text("0", FONT_LIBMONO, 30);
 	bounds = fps.getLocalBounds();
 	fps.setPosition(20, WINH - bounds.height - bounds.top - 5);
-	fps.setFillColor(JB_GREEN);
+	fps.setFillColor(VB_GREEN);
 	*/
 
 	// grid lines
@@ -124,9 +124,9 @@ void Program::set_pane_main(){
 	rack_view = new Menu({0, 0, WINW, 0}, 1, rack);
 	auto rack_name = new Text({CENTER_WIN_X, 0, 0, 0}, rack->name, FONT_LIBMONO, 20);
 	rack_name->center_xaxis();
-	rack_name->set_color(JB_WHITE);
+	rack_name->set_color(VB_WHITE);
 
-	section_stack = new VStack(jb::Transform::Zero, 10, {
+	section_stack = new VStack(vb::Transform::Zero, 10, {
 			sector_top,
 			rack_name,
 			rack_view
@@ -229,7 +229,7 @@ void Program::mainloop(){
 	sf::Clock clock;
 
 	while (running && window.isOpen()) {
-		window.clear(JBC_BG); // clear last frame and set bg color
+		window.clear(VBC_BG); // clear last frame and set bg color
 
 		bool event_processed = false;
 		sf::Event event;

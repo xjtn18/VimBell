@@ -33,10 +33,10 @@ const float CENTER_WIN_X = WINW/2;
 const float CENTER_WIN_Y = WINH/2;
 
 // Colors
-extern const sf::Color JB_GREEN;
-extern const sf::Color JB_RED;
-extern const sf::Color JB_WHITE;
-extern const sf::Color JBC_BG;
+extern const sf::Color VB_GREEN;
+extern const sf::Color VB_RED;
+extern const sf::Color VB_WHITE;
+extern const sf::Color VBC_BG;
 
 //////////////////////////////////////////////////////////////////////
 ///////////////////////
@@ -44,7 +44,7 @@ extern const sf::Color JBC_BG;
 
 
 
-namespace jb {
+namespace vb {
 
 	struct Transform {
 		static const Transform Zero;

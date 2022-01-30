@@ -1,5 +1,5 @@
 #pragma once
-#include <jb.hpp>
+#include <vb.hpp>
 #include <cmath>
 
 
@@ -7,15 +7,15 @@ struct Program; // FD
 
 
 struct Entity : public sf::Drawable {
-	jb::Transform tf;
+	vb::Transform tf;
 	bool engaged;
 
 	Entity(){}
-	Entity(jb::Transform _tf)
+	Entity(vb::Transform _tf)
 		: tf(_tf), engaged(false)
 	{ }
 
-	Entity(jb::Transform _tf, bool _engaged)
+	Entity(vb::Transform _tf, bool _engaged)
 		: tf(_tf), engaged(_engaged)
 	{ }
 

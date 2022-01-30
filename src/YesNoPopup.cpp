@@ -3,7 +3,7 @@
 #include <Text.hpp>
 
 
-YesNoPopup::YesNoPopup(jb::Transform _tf, const std::string& _question)
+YesNoPopup::YesNoPopup(vb::Transform _tf, const std::string& _question)
 	: Entity(_tf)
 {
 	float padding = 100;
@@ -16,7 +16,7 @@ YesNoPopup::YesNoPopup(jb::Transform _tf, const std::string& _question)
 
 	// question text
 	question = sf::Text(_question, FONT_LIBMONO_B, 30);
-	question.setFillColor(JB_WHITE);
+	question.setFillColor(VB_WHITE);
 	bounds = question.getGlobalBounds();
 	question.setOrigin((int)(bounds.width/2), (int)(30 * .75 - 2));
 	question.setPosition((int)tf.x, (int)tf.y - (bounds.height));
@@ -32,10 +32,10 @@ YesNoPopup::YesNoPopup(jb::Transform _tf, const std::string& _question)
 
 	// yes + no
 	option_yes = new Text({0,0,0,0}, "yes (y)", FONT_LIBMONO, 25);
-	option_yes->set_color(JB_GREEN);
+	option_yes->set_color(VB_GREEN);
 
 	option_no = new Text({0,0,0,0}, "no (n)", FONT_LIBMONO, 25);
-	option_no->set_color(JB_RED);
+	option_no->set_color(VB_RED);
 
 	int answer_padding = 50;
 	answers = HStack ({tf.x - option_yes->tf.w - answer_padding/2, tf.y, 0, 0}, answer_padding, {option_yes, option_no});

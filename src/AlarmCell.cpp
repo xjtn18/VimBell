@@ -9,7 +9,7 @@ sf::Color AlarmCell::hoverTriggered = sf::Color(230, 130, 112);
 
 
 
-AlarmCell::AlarmCell(jb::Transform _tf, const std::string _text, int _stacc, int _interval)
+AlarmCell::AlarmCell(vb::Transform _tf, const std::string _text, int _stacc, int _interval)
 	: Entity(_tf),
 	  text(_text)
 {
@@ -17,14 +17,14 @@ AlarmCell::AlarmCell(jb::Transform _tf, const std::string _text, int _stacc, int
 	box.setFillColor(idleColor);
 
 	bText = sf::Text(text, FONT_LIBMONO, (unsigned int) (tf.h/1.85));
-	bText.setFillColor(JB_WHITE); // set font color
+	bText.setFillColor(VB_WHITE); // set font color
 	sf::FloatRect textBounds = bText.getLocalBounds();
 	bText.setOrigin(0, (int)(tf.h/2 - 3));
 
-	stacc_indicator = new Text(jb::Transform::Zero, "x" + std::to_string(_stacc), FONT_LIBMONO, tf.h/1.85);
+	stacc_indicator = new Text(vb::Transform::Zero, "x" + std::to_string(_stacc), FONT_LIBMONO, tf.h/1.85);
 	stacc_indicator->center_yaxis();
 
-	stacc_interval_indicator = new Text(jb::Transform::Zero, std::to_string(_interval), FONT_LIBMONO, tf.h/1.85);
+	stacc_interval_indicator = new Text(vb::Transform::Zero, std::to_string(_interval), FONT_LIBMONO, tf.h/1.85);
 	stacc_interval_indicator->center_yaxis();
 
 	set_pos();
@@ -59,41 +59,41 @@ void AlarmCell::engage(bool value){
 		else box.setFillColor(hoverTriggered);
 	} else {
 		if (!is_triggered) box.setFillColor(idleColor);
-		else box.setFillColor(JB_RED);
+		else box.setFillColor(VB_RED);
 	}
 }
 
 
 void AlarmCell::idle(){
 	box.setFillColor(idleColor);
-	bText.setFillColor(JB_WHITE);
-	stacc_indicator->set_color(JB_WHITE);
-	stacc_interval_indicator->set_color(JB_WHITE);
+	bText.setFillColor(VB_WHITE);
+	stacc_indicator->set_color(VB_WHITE);
+	stacc_interval_indicator->set_color(VB_WHITE);
 	is_triggered = false;
 }
 
 void AlarmCell::idle_select(){
 	box.setFillColor(hoverColor);
-	bText.setFillColor(JB_WHITE);
-	stacc_indicator->set_color(JB_WHITE);
-	stacc_interval_indicator->set_color(JB_WHITE);
+	bText.setFillColor(VB_WHITE);
+	stacc_indicator->set_color(VB_WHITE);
+	stacc_interval_indicator->set_color(VB_WHITE);
 	is_triggered = false;
 }
 
 
 void AlarmCell::trigger(){
-	box.setFillColor(JB_RED);
-	bText.setFillColor(JBC_BG);
-	stacc_indicator->set_color(JBC_BG);
-	stacc_interval_indicator->set_color(JBC_BG);
+	box.setFillColor(VB_RED);
+	bText.setFillColor(VBC_BG);
+	stacc_indicator->set_color(VBC_BG);
+	stacc_interval_indicator->set_color(VBC_BG);
 	is_triggered = true;
 }
 
 void AlarmCell::trigger_select(){
 	box.setFillColor(hoverTriggered);
-	bText.setFillColor(JBC_BG);
-	stacc_indicator->set_color(JBC_BG);
-	stacc_interval_indicator->set_color(JBC_BG);
+	bText.setFillColor(VBC_BG);
+	stacc_indicator->set_color(VBC_BG);
+	stacc_interval_indicator->set_color(VBC_BG);
 	is_triggered = true;
 }
 

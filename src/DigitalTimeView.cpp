@@ -9,7 +9,7 @@
 #include <iomanip>
 
 
-using namespace jb;
+using namespace vb;
 
 
 Speaker *DigitalTimeView::clock_speaker = new Speaker(100.0f, false);
@@ -30,9 +30,9 @@ void set_origin_center(sf::CircleShape& circle){
 
 
 
-DigitalTimeView::DigitalTimeView(jb::Transform _tf)
+DigitalTimeView::DigitalTimeView(vb::Transform _tf)
 	: Entity(_tf),
-	  line(Line(_tf, "12:00", 50, 0, 30, JB_WHITE)),
+	  line(Line(_tf, "12:00", 50, 0, 30, VB_WHITE)),
 	  top_arrow(8, 3),
 	  bottom_arrow(8, 3),
 	  index(0),
@@ -43,11 +43,11 @@ DigitalTimeView::DigitalTimeView(jb::Transform _tf)
 	// position the selector arrows
 	float x_pos = (line.line[index + (2*index)].getPosition().x + line.line[index + (2*index) + 1].getPosition().x) / 2;
 	top_arrow.setPosition(x_pos, tf.y - 35);
-	top_arrow.setFillColor(JB_GREEN);
+	top_arrow.setFillColor(VB_GREEN);
 	set_origin_center(top_arrow);
 
 	bottom_arrow.setPosition(x_pos, tf.y + 31);
-	bottom_arrow.setFillColor(JB_GREEN);
+	bottom_arrow.setFillColor(VB_GREEN);
 	bottom_arrow.setRotation(180);
 	set_origin_center(bottom_arrow);
 
@@ -59,7 +59,7 @@ DigitalTimeView::DigitalTimeView(jb::Transform _tf)
 	selector = sf::RectangleShape(optsize);
 	selector.setOrigin(optsize.x/2, optsize.y/2);
 	selector.setPosition(WINW-(optsize.x+optsize.x/2+20), WINH-75);
-	selector.setFillColor(JB_GREEN);
+	selector.setFillColor(VB_GREEN);
 
 	sf::Vector2f lt = selector.getPosition();
 	sf::Vector2f rt = selector.getPosition() + sf::Vector2f(100,0);
@@ -112,7 +112,7 @@ void DigitalTimeView::alter_digit(int direction){
 		int new_hour = std::stoi(time_strs.substr(0, 2)) + direction;
 		std::string new_hour_str = (new_hour >= 10) ? 
 			std::to_string(new_hour) : "0" + std::to_string(new_hour);
-		if (!jb::clamp(new_hour, 1, 13)){
+		if (!vb::clamp(new_hour, 1, 13)){
 			line.line[index].setString(new_hour_str[0]);
 			line.line[index+1].setString(new_hour_str[1]);
 		} else {
@@ -129,7 +129,7 @@ void DigitalTimeView::alter_digit(int direction){
 		int new_minute = std::stoi(time_strs.substr(3, 2)) + direction;
 		std::string new_minute_str = (new_minute >= 10) ? 
 			std::to_string(new_minute) : "0" + std::to_string(new_minute);
-		if (!jb::clamp(new_minute, 0, 60)){
+		if (!vb::clamp(new_minute, 0, 60)){
 			// + 2 and + 3 to properly map index 1 to values in the line
 			line.line[index+2].setString(new_minute_str[0]);
 			line.line[index+3].setString(new_minute_str[1]);
@@ -148,7 +148,7 @@ void DigitalTimeView::alter_digit(int direction){
 
 void DigitalTimeView::move_selector(int direction){
 	index += direction;
-	if (!jb::clamp(index, 0, 2)){
+	if (!vb::clamp(index, 0, 2)){
 		// move selection arrows
 		float x_pos = (line.line[index + (2*index)].getPosition().x + line.line[index + (2*index) + 1].getPosition().x) / 2;
 		top_arrow.setPosition(x_pos, top_arrow.getPosition().y);
@@ -165,9 +165,9 @@ void DigitalTimeView::switch_meridiem(){
 }
 
 
-jb::Time DigitalTimeView::get_time(){
+vb::Time DigitalTimeView::get_time(){
 	// returns military time
-	jb::Time time(line.get_string());
+	vb::Time time(line.get_string());
 	if (meridiem == POST){
 		time = (time.hour != 12) ? time + 12 * 60 : time; // add 12 hours for PM, unless it is 12 PM
 	} else { // meridiem is ANTE

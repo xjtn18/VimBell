@@ -18,11 +18,11 @@ void ThreadClock::stop(){
 
 
 void ThreadClock::callback(Program &p){
-	jb::Time localTime;
+	vb::Time localTime;
 	int minuteLoopRef = -1;
 
 	while (! stopped){
-		localTime = jb::current_time();
+		localTime = vb::current_time();
 		if (localTime.minute != minuteLoopRef){
 			std::vector<int> triggered = rack->query_alarms(localTime);
 			if (triggered.size() != 0) p.rack_view->trigger(triggered);

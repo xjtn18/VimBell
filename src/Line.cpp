@@ -3,7 +3,7 @@
 
 
 
-Line::Line(jb::Transform _tf, const char* initial, int _fontsize, int _margin, int _spacing, sf::Color _fontcolor)
+Line::Line(vb::Transform _tf, const char* initial, int _fontsize, int _margin, int _spacing, sf::Color _fontcolor)
 	: Entity(_tf),
 		index(0),
 		spacing(_spacing),

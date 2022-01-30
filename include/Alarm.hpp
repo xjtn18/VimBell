@@ -1,5 +1,5 @@
 #pragma once
-#include <jb.hpp>
+#include <vb.hpp>
 
 // FD
 namespace aud {
@@ -11,7 +11,7 @@ struct Alarm {
 	static aud::Speaker *alarm_speaker;
 	static void silence();
 
-	jb::Time 		target;
+	vb::Time 		target;
 	bool 				active;
 	std::string 	msg;
 	std::string 	alarm_name;
@@ -20,7 +20,7 @@ struct Alarm {
 	///////////////////////////
 
 	Alarm(){};
-	Alarm(jb::Time initTarget, std::string initMsg, int initStacc, int initStaccInterval, bool initActive);
+	Alarm(vb::Time initTarget, std::string initMsg, int initStacc, int initStaccInterval, bool initActive);
 	Alarm(const Alarm& other) = default;
 	static void cleanup();
 	~Alarm();
@@ -34,7 +34,7 @@ struct Alarm {
 	void alter_stacc_interval(int i);
 	bool operator<(const Alarm& other) const;
 
-	bool query(jb::Time t);
+	bool query(vb::Time t);
 	void trigger();
 
 

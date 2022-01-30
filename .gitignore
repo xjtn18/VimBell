@@ -3,9 +3,8 @@
 *.stackdump
 *.asd
 .DS_Store
+TAGS
 VimBell
 objs/
 portable/
 racks/
-scratch
-find-and-replace.sh

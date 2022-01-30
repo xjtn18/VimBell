@@ -12,7 +12,7 @@
 #include <iomanip>
 
 
-Menu::Menu(jb::Transform _tf, int _padding, std::shared_ptr<Rack> _rack_state, bool _engaged)
+Menu::Menu(vb::Transform _tf, int _padding, std::shared_ptr<Rack> _rack_state, bool _engaged)
 	: VStack(_tf, _padding, {}),
 	  rack_state(_rack_state)
 {
@@ -59,7 +59,7 @@ void Menu::set_all_idle(){
 	}
 }
 
-void Menu::move_selector(jb::Direc dir){
+void Menu::move_selector(vb::Direc dir){
 	entities[rack_state->select_index]->engage(false);
 	rack_state->select_move(dir);
 	entities[rack_state->select_index]->engage(true);

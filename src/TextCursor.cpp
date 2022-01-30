@@ -1,7 +1,7 @@
 #include <TextCursor.hpp>
 
 
-TextCursor::TextCursor(jb::Transform _tf)
+TextCursor::TextCursor(vb::Transform _tf)
 	:  Entity(_tf), box(sf::RectangleShape(sf::Vector2f(tf.w, tf.h)))
 {
 	blink_target 	= 255.0f;
@@ -39,7 +39,7 @@ void TextCursor::move(int dir){
 }
 
 
-void TextCursor::set_pos(int index, jb::Transform plane_ref){
+void TextCursor::set_pos(int index, vb::Transform plane_ref){
 	tf.x = plane_ref.x + tf.w * index;
 	tf.y = plane_ref.y;
 	box.setPosition(tf.x, tf.y);

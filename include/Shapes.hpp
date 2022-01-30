@@ -1,12 +1,12 @@
 #pragma once
-#include <jb.hpp>
+#include <vb.hpp>
 
 
 struct BorderedRect : public Entity {
 
 	sf::RectangleShape rect;
 
-	BorderedRect(jb::Transform _tf, int bw)
+	BorderedRect(vb::Transform _tf, int bw)
 		: Entity(_tf)
 	{
 		rect.setSize({(float)tf.w - bw * 2, (float)tf.h - bw * 2});
@@ -34,11 +34,11 @@ struct LineShape : public Entity {
 
 	sf::RectangleShape line;
 
-	LineShape(jb::Transform _tf)
+	LineShape(vb::Transform _tf)
 		: Entity(_tf)
 	{
 		line.setOrigin(_tf.w/2, _tf.h/2);
-		line.setFillColor(JB_GREEN);
+		line.setFillColor(VB_GREEN);
 		line.setSize({(float)tf.w, (float)tf.h});
 	}
 

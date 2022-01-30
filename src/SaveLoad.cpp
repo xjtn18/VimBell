@@ -2,7 +2,7 @@
 #include <Program.hpp>
 #include <Rack.hpp>
 #include <Alarm.hpp>
-#include <jb.hpp>
+#include <vb.hpp>
 #include <fstream>
 
 using namespace json;
@@ -37,7 +37,7 @@ void load_rack(Program &p, const std::string &rack_name){
 		int interval = JSON_GET_VAL(objAlarm, "StaccInterval", Number);
 		bool active = JSON_GET_VAL(objAlarm, "Active", Boolean);
 
-		p.rack->insert_alarm(Alarm(jb::Time(hour, minute), msg, stacc, interval, active), false);
+		p.rack->insert_alarm(Alarm(vb::Time(hour, minute), msg, stacc, interval, active), false);
 	}
 
 	p.rack->set_select(0);

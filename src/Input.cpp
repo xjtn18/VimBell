@@ -30,7 +30,7 @@ void handle_global_input(sf::Event& event, Program& p){
 				case RACKOPEN:
 					{
 						auto quit_popup = new YesNoPopup({WINW/2, WINH/2, 0, 0},
-																	"Save current rack ("+jb::trimmable(p.rack->name, 11)+")?");
+																	"Save current rack ("+vb::trimmable(p.rack->name, 11)+")?");
 						quit_popup->yes_routine = [&](){
 							save_rack(p.rack);
 							Alarm::silence();

@@ -1,6 +1,6 @@
 #include <Text.hpp>
 
-Text::Text(jb::Transform _tf, std::string _content, sf::Font& _font, int _fontsize)
+Text::Text(vb::Transform _tf, std::string _content, sf::Font& _font, int _fontsize)
 	: Entity(_tf)
 {
 	txt = sf::Text(_content, _font, _fontsize);
@@ -11,7 +11,7 @@ Text::Text(jb::Transform _tf, std::string _content, sf::Font& _font, int _fontsi
 	tf.w = bounds.width + bounds.left;
 	tf.h = max_bounds.height;
 
-	set_color(JB_WHITE);
+	set_color(VB_WHITE);
 }
 
 
