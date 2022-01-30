@@ -3,8 +3,9 @@
 *.stackdump
 *.asd
 .DS_Store
-jBell
+VimBell
 objs/
 portable/
 racks/
 scratch
+find-and-replace.sh

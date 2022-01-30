@@ -14,7 +14,7 @@ INCDIR	:= include
 # name of dir that stores object files
 OBJDIR 	:= objs
 # name of final executable
-EXEC 		:= jBell
+EXEC 		:= VimBell
 # C compiler
 CC			:= g++
 # compilation flags

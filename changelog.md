@@ -1,4 +1,4 @@
-# jBell Change Log
+# VimBell Change Log
 
 
 ### 5/3/21

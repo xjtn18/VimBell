@@ -31,7 +31,7 @@ Program::Program()
 
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 16;
-	window_ptr = new sf::RenderWindow(sf::VideoMode(WINW, WINH), "jBell", sf::Style::Titlebar | sf::Style::Close, settings);
+	window_ptr = new sf::RenderWindow(sf::VideoMode(WINW, WINH), "VimBell", sf::Style::Titlebar | sf::Style::Close, settings);
 
 	// Set the Icon
 	sf::Image icon;
