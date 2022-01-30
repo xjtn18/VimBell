@@ -1,4 +1,7 @@
-<b><font size="+5">VimBell</font></b> <font size="+3">&nbsp;&nbsp;: an alarm clock app with Vim-like controls. </font>
+# VimBell
+## An alarm clock app with Vim-like controls.
+
+![vimbell_demo](https://media.giphy.com/media/hv1cjlitSbMFhK25wJ/giphy.gif)
 
 ## How it works
 - The program opens with the Rack Select screen.  
@@ -8,8 +11,8 @@
 - Each rack can hold 10 alarms, and each alarm can hold 10 follow-ups.  
 - When creating a new rack, a text prompt will appear asking you to name the rack. (Note: the name must not contain any spaces between words).  
 - After you've created or loaded a rack, the program will switch to the Rack View screen.  
-- Here, you can add new alarms and edit existing ones, all by just using the keyboard.  
-- There are 3 main interactive sections in the Rack Screen; the ***clock***, the ***text field***, and the ***rack***.  
+- Here, you can add new alarms and edit existing ones, all by using just the keyboard.  
+- There are 3 main interactive sections in the Rack Screen; the ***clock***, the ***message box***, and the ***rack***.  
 - You can maneuver between each section using the HJKL keys, just like in Vim.  
 
 ## Controls
@@ -17,7 +20,7 @@
 > ***Escape*** : Exit
 >
 > ### Clock
->> ***Tab*** : Engage with the rack  
+>> ***Tab*** : Switch to the rack  
 >> ***H*** : Move the selector left  
 >> ***L*** : Move the selector right  
 >> ***K*** : Increase the selected value by 1  
@@ -26,8 +29,8 @@
 >> ***Shift + J*** : Decrease the selected value by 5  
 >> ***Enter*** : Submit this alarm/edit to the rack  
 >
-> ### Text Field
->> ***Tab*** : Engage with the rack  
+> ### Message Box
+>> ***Tab*** : Switch to the rack  
 >> #### Normal mode
 >>> ***I*** : Switch to 'Insert' mode  
 >>> ***H*** : Move the cursor left  
@@ -42,7 +45,7 @@
 >>> ***Shift + Backspace*** : Delete all characters behind the cursor  
 >
 > ### Rack
->> ***Tab*** : Engage with the text field  
+>> ***Tab*** : Switch to the message box  
 >> ***K*** : Move the selector up  
 >> ***J*** : Move the selector down  
 >> ***Shift + K*** : Jump to the top of the rack  

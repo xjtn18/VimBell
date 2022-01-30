@@ -5,7 +5,6 @@ TextCursor::TextCursor(vb::Transform _tf)
 	:  Entity(_tf), box(sf::RectangleShape(sf::Vector2f(tf.w, tf.h)))
 {
 	blink_target 	= 255.0f;
-	blink_rate 		= 0.05f;
 	box.setOrigin(tf.w/2, tf.h/2);
 	box.setPosition(tf.x, tf.y);
 	box.setFillColor(sf::Color(50,50,50));

@@ -6,7 +6,7 @@
 struct TextCursor : public Entity {
 
 	sf::RectangleShape box; // the visual of the text cursor
-	float lerp, blink_target, blink_rate;
+	float lerp, blink_target;
 	std::function<float(float)> lerpf;
 
 

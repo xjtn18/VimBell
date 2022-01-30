@@ -129,7 +129,7 @@ std::string TextField::get_buffer() const {
 
 void TextField::update(float dt){
 	if (engaged){
-		float inc = 0.05 * dt;
+		float inc = 0.08 * dt;
 		if (insertmode) lerp += inc; // only render blink in insert mode
 		if (lerp > 360) lerp = 0;
 
