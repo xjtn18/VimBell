@@ -111,4 +111,10 @@
 	- changed the controls for moving between rack, textbox, and time. Tab cycles clockwise, shift-tab cycles counter-clockwise.
 	- triggered alarms are now highlighted red in the rack. Deleting/silencing/deactivating all triggered alarms ends the alarm tone.
 
+### FIXME:
+	- Some alarms seem to trigger randomly, or on alarm will trigger other alarms to follow.
+	- Segfault when reopening a rack on random occasions.
 
+### Additions:
+	- Display the current time in the bottom bezel.
+	- Have the ability to change the time/meridiem of alarms already in the rack.

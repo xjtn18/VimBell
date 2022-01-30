@@ -1,7 +1,7 @@
 # VimBell
 ## An alarm clock app with Vim-like controls.
 
-![vimbell_demo](https://media.giphy.com/media/hv1cjlitSbMFhK25wJ/giphy.gif)
+![vimbell_demo](https://media.giphy.com/media/w3GTYDTXvJkDIyJJBk/giphy.gif)
 
 ## How it works
 - The program opens with the Rack Select screen.  
@@ -17,7 +17,8 @@
 
 ## Controls
 > ### Global
-> ***Escape*** : Exit
+>> ***Escape*** : Exit  
+>> ***Alt + Space*** : Silence all triggered alarms  
 >
 > ### Clock
 >> ***Tab*** : Switch to the rack  
@@ -51,6 +52,7 @@
 >> ***Shift + K*** : Jump to the top of the rack  
 >> ***Shift + J*** : Jump to the bottom of the rack  
 >> ***E*** : Edit the selected alarm's message  
+>> ***T*** : Toggle the active state of the selected alarm  
 >> ***Enter*** : Add a new follow-up to the selected alarm  
 >> ***Shift + Enter*** : Increase the follow-up interval time for the selected alarm by 5  
 >> ***Backspace*** : Remove the latest follow-up from the selected alarm  

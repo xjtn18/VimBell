@@ -42,7 +42,6 @@ struct Program {
 	Menu *rack_view = nullptr;
 	VStack *section_stack = nullptr;
 	Image *bg_clock = nullptr;
-	sf::Text fps;
 	Entity *engaged_entity = nullptr;
 	Entity *last_engaged = nullptr;
 

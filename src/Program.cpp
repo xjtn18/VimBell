@@ -54,21 +54,13 @@ Program::Program()
 
 	sf::FloatRect bounds;
 
-	/*
-	// fps counter
-	fps = sf::Text("0", FONT_LIBMONO, 30);
-	bounds = fps.getLocalBounds();
-	fps.setPosition(20, WINH - bounds.height - bounds.top - 5);
-	fps.setFillColor(VB_GREEN);
-	*/
-
 	// grid lines
 	float grid_line_thickness = 2;
 	auto yaxis = new LineShape({CENTER_WIN_X, CENTER_WIN_Y, grid_line_thickness, WINH});
 	auto xaxis = new LineShape({CENTER_WIN_X, CENTER_WIN_Y, WINW, grid_line_thickness});
 
 	bg_clock = new Image({WINW, WINH+150, 0, 0}, "res/images/roman_clock.png");
-	float scale = 0.85;
+	float scale = 0.75;
 	bg_clock->sprite.setScale(scale, scale);
 	bg_clock->sprite.setColor(sf::Color(0,0,0,50));
 
@@ -156,8 +148,6 @@ void Program::engage_with(Entity *ent){
 
 
 void Program::cleanup(){
-	//std::this_thread::sleep_for(std::chrono::milliseconds(2000)); @NOTE for testing
-
 	// cleanup up audio resources
 	Alarm::cleanup();
 	Rack::cleanup();
@@ -194,17 +184,6 @@ void Program::update_frame(float dt){
 	for (Entity *ent : draw_list){
 	   ent->update(dt);
 	}
-	
-	// framerate
-	/*
-	static int count = 0;
-	char c[6];
-	sprintf(c, "%d", (int)(1/dt));
-	if (count++ == 25){
-		fps.setString(sf::String(std::string(c)));
-		count = 0;
-	}
-	*/
 }
 
 
@@ -212,9 +191,6 @@ void Program::draw_frame(sf::RenderWindow& window){
 	for (sf::Drawable *ent : draw_list){
 		window.draw(*ent);
 	}
-
-	//framerate
-	//window.draw(fps);
 }
 
 

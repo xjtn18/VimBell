@@ -146,7 +146,6 @@ namespace vb {
 	};
 
 
-	extern const char* rootPath;
 	const Time current_time();
 	const char* rtrim(const char* s, size_t len, const char target);
 	const char* get_resource(const char* filename);
