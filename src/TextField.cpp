@@ -12,7 +12,7 @@
 auto blink_func = [] (float x) -> float { return pow(-pow(sin(x - 0.6f), 18) + 1, 80); };
 
 
-auto TextField::field_speaker = new aud::Speaker(100.0f, false);
+aud::Speaker *TextField::field_speaker = new aud::Speaker(100.0f, false);
 
 
 void TextField::cleanup(){
@@ -34,13 +34,11 @@ TextField::TextField(vb::Transform _tf, const char* init_content, bool _engaged)
 	box.setOutlineThickness(1);
 	box.setOutlineColor(sf::Color(50,50,50));
 
+	lerp = 0;
 	cursor.lerpf = blink_func;
 	line.lerpf = blink_func;
 }
 
-
-TextField::~TextField(){
-}
 
 
 void TextField::reset(){

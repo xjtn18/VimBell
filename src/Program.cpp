@@ -35,7 +35,7 @@ Program::Program()
 
 	// Set the Icon
 	sf::Image icon;
-	icon.loadFromFile(vb::get_image("clock-ico.png"));
+	icon.loadFromFile("res/images/clock-ico.png");
 	window_ptr->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 	window_ptr->setFramerateLimit(60);
 
@@ -70,10 +70,11 @@ Program::Program()
 
 void Program::set_pane_rack_chooser(){
 	stage = RACKSELECT;
+
 	rack_chooser = new Chooser({0, 0, WINW/3, 0}, 1);
 	std::string filename;
 	for (const auto& entry : fs::directory_iterator("racks/")){
-		filename = entry.path().filename().stem();
+		filename = entry.path().filename().stem().u8string();
 		rack_chooser->options.push_back([=](){
 			load_rack(*this, filename);
 			set_pane_main();
@@ -195,7 +196,6 @@ void Program::draw_frame(sf::RenderWindow& window){
 
 
 
-
 void Program::mainloop(){
 	//
 	// Main program loop
@@ -222,13 +222,13 @@ void Program::mainloop(){
 				handle_global_input(event, *this);
 
 		}
-		// all inputs polled for this frame
+		// All inputs were polled for this frame.
 
 		update_frame( clock.restart().asSeconds() );
 		draw_frame(window);
 
-
 		window.display(); // display completed frame
+
 	}
 }
 

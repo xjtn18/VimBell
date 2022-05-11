@@ -28,6 +28,7 @@
 >> ***J*** : Decrease the selected value by 1  
 >> ***Shift + K*** : Increase the selected value by 5  
 >> ***Shift + J*** : Decrease the selected value by 5  
+>> ***M*** : Toggle the meridiem (AM/PM)
 >> ***Enter*** : Submit this alarm/edit to the rack  
 >
 > ### Message Box

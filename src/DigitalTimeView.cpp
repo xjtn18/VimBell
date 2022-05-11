@@ -12,7 +12,7 @@
 using namespace vb;
 
 
-Speaker *DigitalTimeView::clock_speaker = new Speaker(100.0f, false);
+aud::Speaker *DigitalTimeView::clock_speaker = new Speaker(100.0f, false);
 
 void DigitalTimeView::cleanup(){
 	delete clock_speaker;
@@ -35,7 +35,7 @@ DigitalTimeView::DigitalTimeView(vb::Transform _tf)
 	  line(Line(_tf, "12:00", 50, 0, 30, VB_WHITE)),
 	  top_arrow(8, 3),
 	  bottom_arrow(8, 3),
-	  index(0),
+	  index(1),
 	  meridiem(ANTE),
 	  lerp(0),
 	  lerp_target(5)
@@ -65,7 +65,7 @@ DigitalTimeView::DigitalTimeView(vb::Transform _tf)
 	sf::Vector2f rt = selector.getPosition() + sf::Vector2f(100,0);
 
 
-	libmono.loadFromFile(get_resource("fonts/FONT_LIBMONO.ttf"));
+	libmono.loadFromFile("res/fonts/FONT_LIBMONO.ttf");
 
 	txt_AM = sf::Text("AM", libmono, 40);
 	txt_AM.setFillColor(sf::Color(255,255,255,255));

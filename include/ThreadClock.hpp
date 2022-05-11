@@ -1,5 +1,7 @@
 #pragma once
 #include <thread>
+#include <memory>
+#include <atomic>
 
 struct Rack;
 struct Program;

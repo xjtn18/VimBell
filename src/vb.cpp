@@ -105,16 +105,16 @@ void vb::round_origin(sf::Transformable *thing){
 
 const char* vb::get_resource(const char* filename){
 	char* pth = new char[100];
-	std::strcat(pth, "res/");
-	std::strcat(pth, filename);
+	strcat(pth, "res/");
+	strcat(pth, filename);
 	return pth;
 }
 
 
 const char* vb::get_image(const char* filename){
 	char* pth = new char[100];
-	std::strcat(pth, "res/images/");
-	std::strcat(pth, filename);
+	strcat(pth, "res/images/");
+	strcat(pth, filename);
 	return pth;
 }
 

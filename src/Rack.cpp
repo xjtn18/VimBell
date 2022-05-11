@@ -6,7 +6,7 @@
 #include <Program.hpp>
 
 
-auto *Rack::rack_speaker = new aud::Speaker(100.0f, false);
+aud::Speaker *Rack::rack_speaker = new aud::Speaker(100.0f, false);
 
 void Rack::cleanup(){
 	delete rack_speaker;

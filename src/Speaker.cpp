@@ -20,7 +20,7 @@ void aud::load_all(){
 	std::string filename;
 
 	for (const auto& entry : fs::directory_iterator("res/sounds/")){
-		filename = entry.path().filename();
+		filename = entry.path().filename().u8string();
 		sbuf.loadFromFile("res/sounds/" + filename);
 		sound_map[filename] = sbuf;
 	}

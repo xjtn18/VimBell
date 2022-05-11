@@ -26,7 +26,6 @@ struct TextField : public Entity {
 
 	TextField(){};
 	TextField(vb::Transform _tf, const char* init_content, bool _engaged = false);
-	~TextField();
 
 	void center_xaxis();
 	void center_yaxis();

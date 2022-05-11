@@ -17,6 +17,7 @@ TextPrompt::TextPrompt(vb::Transform _tf, const char* init_content, bool _engage
 	insertmode = true;
 }
 
+
 void TextPrompt::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	target.draw(dimmer);
 	TextField::draw(target, states);
@@ -74,9 +75,9 @@ bool TextPrompt::handler(sf::Event& event, Program& p) {
 
 
 		case sf::Keyboard::Escape: // close prompt pop-up
-			delete p.draw_list.back();
-			p.draw_list.pop_back();
 			p.engage_with(p.rack_chooser);
+			p.draw_list.pop_back();
+			delete this; // destroy self, free the memory
 			return true;
 		}
 	}

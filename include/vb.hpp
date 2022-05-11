@@ -3,6 +3,7 @@
 #include <SFML/Window.hpp>
 #include <ctime>
 #include <string>
+#include <memory>
 
 #include <Debug.hpp>
 

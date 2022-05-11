@@ -108,7 +108,7 @@ struct PositionAnimation : public Animation {
 	sf::Transformable *polygon;
 	sf::Vector2f pos_A, pos_B; // two positions that the animation transitions between
 	sf::Vector2f home, target; // specifies which of the 2 locations is home and which is target.
-	bool forw; // animation is travelling A -> B
+	bool forw = false; // animation is travelling A -> B
 	///////////////////
 
 	PositionAnimation() : polygon(nullptr) { }

@@ -3,7 +3,7 @@
 
 
 /// statics
-auto *Alarm::alarm_speaker = new aud::Speaker(100.0f, true);
+aud::Speaker *Alarm::alarm_speaker = new aud::Speaker(100.0f, true);
 
 void Alarm::cleanup(){
 	delete alarm_speaker;
