@@ -58,14 +58,10 @@ void Rack::add_alarm(vb::Time target, std::string message){
 void Rack::insert_alarm(Alarm new_alarm, bool audible){
 	if (audible) rack_speaker->play("create.wav");
 
-	if (alarms.size() > 0 && alarms.size() < 10){
+	if (alarms.size() < 17){
 		auto lower = std::lower_bound(alarms.begin(), alarms.end(), new_alarm);
 		select_index = std::distance(alarms.begin(), lower); // std::distance helps us convert iterator to integer index; set the index to the newly added alarm
 		alarms.insert(lower, new_alarm);
-
-	} else if (alarms.size() != 10){
-		alarms.push_back(new_alarm);
-
 	} else { // rack is full
 		rack_speaker->play("error.wav");
 	}

@@ -14,7 +14,7 @@ INCDIR	:= include
 # name of dir that stores object files
 OBJDIR 	:= objs
 # name of final executable
-EXEC 	:= bin\VimBell.exe
+EXEC 	:= bin/VimBell.exe
 # C compiler
 CC		:= g++
 # compilation flags
@@ -54,6 +54,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(HEADERS) | $(OBJDIR)
 
 run:
 	@ make -s build
+	@ mkdir -p racks
 	@ $(EXEC)
 
 runonly:
@@ -67,8 +68,7 @@ release: $(OBJS)
 
 portable: release
 	@ mkdir -p $@
-	@ cp $(EXEC) $@
-	@ cp -R res $@
+	@ cp -r bin/* res $@
 
 clean:
 	@ rm -rf $(EXEC) $(OBJDIR)

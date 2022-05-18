@@ -118,6 +118,8 @@
 
 
 ### FIXME:
+	- Switch to the rack and clear the text buffer when submitting an alarm from the digital clock.
+	- Ensure that alarms are repositioned in the rack when an alarms time is edited (to maintain the chronilogical ordering).
 	- Some alarms seem to trigger randomly, or on alarm will trigger other alarms to follow.
 	- Segfault when reopening a rack on random occasions.
 

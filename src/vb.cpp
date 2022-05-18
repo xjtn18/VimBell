@@ -8,7 +8,7 @@ const std::string WHITESPACE = " \n\r\t\f\v";
 
 // Window params
 const float WINW = 750;
-const float WINH = 750;
+const float WINH = 1100;
 
 // Fonts
 sf::Font FONT_LIBMONO;

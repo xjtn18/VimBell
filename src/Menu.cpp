@@ -77,7 +77,7 @@ void Menu::add(Program &p){
 	std::ostringstream ss;
 	std::string message = p.main_tbox->get_buffer();
 	if (!editing){
-		if (rack_state->size() == 10) return;
+		if (rack_state->size() == 17) return;
 		rack_state->add_alarm(p.main_digitime->get_time(), message);
 		ss << std::right << std::setw(8) << (std::string) p.main_digitime->get_time()
 			<< "    " << message;
@@ -92,8 +92,6 @@ void Menu::add(Program &p){
 		acell->bText.setString(ss.str());
 		editing = false;
 	}
-	p.main_tbox->clear_all();
-	p.engage_with(this);
 }
 
 

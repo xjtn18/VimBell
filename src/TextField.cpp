@@ -208,8 +208,12 @@ bool TextField::handler(sf::Event& event, Program& p){
 
 
 		case sf::Keyboard::Return: // submit text to new/edited alarm
-			insertmode = false;
-			p.rack_view->add(p);
+			if (p.rack->size() < 17 || p.rack_view->editing){
+				insertmode = false;
+				p.rack_view->add(p);
+				p.main_tbox->clear_all();
+				p.engage_with(p.rack_view);
+			}
 			return true;
 
 
@@ -235,7 +239,10 @@ bool TextField::handler(sf::Event& event, Program& p){
 
 		case sf::Keyboard::J: // move cursor forward
 			if (insertmode) return false;
-			if (!p.rack_view->editing && p.rack->size() > 0) p.engage_with(p.rack_view);
+			if (!p.rack_view->editing && p.rack->size() > 0){
+				p.rack->select_index = 0;
+				p.engage_with(p.rack_view);
+			}
 			return true;
 
 		case sf::Keyboard::Escape: // cancel edit
