@@ -62,7 +62,7 @@ runonly:
 
 release: $(OBJS)
 	@ echo Linking release build ...
-	@ $(CC) $^ $(LFLAGS-RLS) -o $(EXEC)
+	@ $(CC) $^ $(LFLAGS-RLS) res/icons/app-icon.res -o $(EXEC)
 	@ echo Done.
 	@ printf "\n"
 

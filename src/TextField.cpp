@@ -208,7 +208,7 @@ bool TextField::handler(sf::Event& event, Program& p){
 
 
 		case sf::Keyboard::Return: // submit text to new/edited alarm
-			if (p.rack->size() < 17 || p.rack_view->editing){
+			if (!p.rack->is_full() || p.rack_view->editing){
 				insertmode = false;
 				p.rack_view->add(p);
 				p.main_tbox->clear_all();
@@ -220,6 +220,7 @@ bool TextField::handler(sf::Event& event, Program& p){
 		case sf::Keyboard::H: // move cursor back
 			if (insertmode) return false;
 			if (line.index == 0){
+				p.main_digitime->move_selector(1);
 				p.engage_with(p.main_digitime);
 			} else if (LSHIFT_IS_DOWN){
 				shift_cursor(vb::TOP);

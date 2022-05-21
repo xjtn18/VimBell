@@ -2,6 +2,7 @@
 #include <Entity.hpp>
 #include <Line.hpp>
 #include <Animation.hpp>
+#include <Flag.hpp>
 
 // FD
 namespace aud {

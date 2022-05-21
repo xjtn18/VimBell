@@ -49,6 +49,10 @@ int Rack::size(){
 	return alarms.size();
 }
 
+bool Rack::is_full(){
+	return this->size() == Rack::max_capacity;
+}
+
 
 void Rack::add_alarm(vb::Time target, std::string message){
 	insert_alarm(Alarm(target, message, 1, 1, true));
@@ -58,7 +62,7 @@ void Rack::add_alarm(vb::Time target, std::string message){
 void Rack::insert_alarm(Alarm new_alarm, bool audible){
 	if (audible) rack_speaker->play("create.wav");
 
-	if (alarms.size() < 17){
+	if (!this->is_full()){
 		auto lower = std::lower_bound(alarms.begin(), alarms.end(), new_alarm);
 		select_index = std::distance(alarms.begin(), lower); // std::distance helps us convert iterator to integer index; set the index to the newly added alarm
 		alarms.insert(lower, new_alarm);
@@ -118,8 +122,9 @@ std::string Rack::get_selection_message(){
 	return alarms[select_index].msg;
 }
 
-void Rack::edit_selection(std::string new_message){
+void Rack::edit_selection(vb::Time new_target, std::string new_message){
 	alarms[select_index].msg = new_message;
+	alarms[select_index].target = new_target;
 }
 
 

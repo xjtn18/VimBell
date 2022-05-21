@@ -35,9 +35,9 @@ Program::Program()
 
 	// Set the Icon
 	sf::Image icon;
-	icon.loadFromFile("res/images/clock-ico.png");
+	icon.loadFromFile("res/images/clock-logo.png");
 	window_ptr->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
-	window_ptr->setFramerateLimit(60);
+	window_ptr->setFramerateLimit(30);
 
 	// Load all UI entities at program start that can be created now,
 	// regardless of whether or not they appear in the initial pane (draw_list).

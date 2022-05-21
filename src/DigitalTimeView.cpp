@@ -236,7 +236,7 @@ bool DigitalTimeView::handler(sf::Event& event, Program& p){
 			{
 				int last_index = index;
 				move_selector(1);
-				if (index == last_index && index == 1) p.engage_with(p.main_tbox);
+				if (index == last_index) p.engage_with(p.main_tbox);
 			}
 			return true;
 
@@ -249,11 +249,15 @@ bool DigitalTimeView::handler(sf::Event& event, Program& p){
 			return true;
 
 		case sf::Keyboard::Return: // submit text to new/edited alarm
-			p.rack_view->add(p);
+			if (!p.rack->is_full() || p.rack_view->editing){
+				p.rack_view->add(p);
+				p.main_tbox->clear_all();
+				p.engage_with(p.rack_view);
+			}
 			return true;
 
 		case sf::Keyboard::Tab:
-			if (!p.rack_view->editing) p.engage_with(p.rack_view);
+			if (!p.rack_view->editing && p.rack->size() > 0) p.engage_with(p.rack_view);
 			return true;
 		}
 	}

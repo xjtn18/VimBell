@@ -11,12 +11,12 @@ struct Alarm {
 	static aud::Speaker *alarm_speaker;
 	static void silence();
 
-	vb::Time 		target;
-	bool 				active;
-	std::string 	msg;
-	std::string 	alarm_name;
-	int 				stacc;
-	int				stacc_interval;
+	vb::Time        target;
+	bool            active;
+	std::string     msg;
+	std::string     alarm_name;
+	int             stacc;
+	int             stacc_interval;
 	///////////////////////////
 
 	Alarm(){};

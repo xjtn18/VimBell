@@ -1,5 +1,33 @@
 # VimBell Change Log
 
+### FIXME:
+	- Ensure that alarms are repositioned in the rack when an alarms time is edited (to maintain the chronilogical ordering).
+		- Otherwise, the binary search on our edited rack will not at all be correct if order isn't maintained.
+	- Some alarms seem to trigger randomly (last seen on Mac).
+	- Segfault when reopening a rack on random occasions. (May already be fixed).
+
+### Additions:
+	- Display the current time in the bottom bezel.
+	- Have the ability to change the time/meridiem of alarms already in the rack.
+	- Consider making a Flag struct that is simply a wrapper for a boolean.
+		- The bool operator can simply return the boolean attribute, but set it to false before returning.
+		- We can use this to allow for UI elements to position themselves automatically based on index state,
+			but to avoid having to recompute the pixel locations every frame. We only recompute if we detect
+			a raised flag (flag that is true), which would be raised any time an index state variable is changed.
+
+
+
+### 5/12/22:
+	- Defined a Flag boolean wrapper struct; decided it wasnt really neccessary for the problem at hand. Leaving in the project if needed in the future.
+	- Fixed the digital time not selecting the 'minute' when moving left from the text field.
+	- Fixed issue where rack_state was not updating the time on edits even though the rack_view was.
+	- Copied submission logic from the text field to the digital time clock.
+
+
+### 5/11/22:
+	- Fixed program crashing when no 'racks' folder is found. Saving a rack now creates the folder if it doesn't exist.
+	- Added 'icons' folder in resources and added a windows batch script to generate the icon resource binary. Now linking with
+		the icon resource when executing the 'portable' recipe.
 
 ### 5/11/22:
 	- tested program on Windows; added new Makefile to allow for compilation and execution on Windows.
@@ -116,13 +144,3 @@
 	- Made sure to explicitly call delete on the global Rack to properly delete any audio devices open in the alarms. Globals do not fall out of scope and so are never being destructed, automatically atleast.
 	- Changed name of 'MainApp/App' to 'Program'.
 
-
-### FIXME:
-	- Switch to the rack and clear the text buffer when submitting an alarm from the digital clock.
-	- Ensure that alarms are repositioned in the rack when an alarms time is edited (to maintain the chronilogical ordering).
-	- Some alarms seem to trigger randomly, or on alarm will trigger other alarms to follow.
-	- Segfault when reopening a rack on random occasions.
-
-### Additions:
-	- Display the current time in the bottom bezel.
-	- Have the ability to change the time/meridiem of alarms already in the rack.

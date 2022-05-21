@@ -76,18 +76,21 @@ void Menu::set_selector(int index){
 void Menu::add(Program &p){
 	std::ostringstream ss;
 	std::string message = p.main_tbox->get_buffer();
+	vb::Time target = p.main_digitime->get_time();
+
+
 	if (!editing){
-		if (rack_state->size() == 17) return;
-		rack_state->add_alarm(p.main_digitime->get_time(), message);
-		ss << std::right << std::setw(8) << (std::string) p.main_digitime->get_time()
+		if (rack_state->is_full()) return;
+		rack_state->add_alarm(target, message);
+		ss << std::right << std::setw(8) << (std::string) target
 			<< "    " << message;
 		auto* new_cell = new AlarmCell({0, 0, WINW, 45}, ss.str(), 1, 1);
 		insert(rack_state->select_index, new_cell); // Stack::insert
 
 	} else {
-		ss << std::right << std::setw(8) << (std::string) p.main_digitime->get_time()
+		ss << std::right << std::setw(8) << (std::string) target
 			<< "    " << message;
-		rack_state->edit_selection(message);
+		rack_state->edit_selection(target, message);
 		AlarmCell *acell = (AlarmCell*)entities[rack_state->select_index];
 		acell->bText.setString(ss.str());
 		editing = false;

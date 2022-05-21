@@ -13,23 +13,25 @@ struct Program;
 
 struct Rack {
 	static void cleanup();
+	static const int max_capacity = 17;
 
-	Rack(std::string _name, Program &p);
+	Rack(std::string, Program&);
 	Rack(const Rack&) = default;
 	Rack& operator=(const Rack& other);
 	~Rack();
 
-	void add_alarm(vb::Time target, std::string message);
-	std::vector<int> query_alarms(const vb::Time t);
-	void select_move(vb::Direc direction);
+	void add_alarm(vb::Time, std::string);
+	std::vector<int> query_alarms(const vb::Time);
+	void select_move(vb::Direc);
 	Alarm& get_selection();
 	void toggle_selection();
 	void remove_alarm();
-	void insert_alarm(Alarm new_alarm, bool audible = true);
+	void insert_alarm(Alarm, bool = true);
 	std::string get_selection_message();
-	void edit_selection(std::string);
-	void set_select(const int new_index);
+	void edit_selection(vb::Time, std::string);
+	void set_select(const int);
 	int size();
+	bool is_full();
 
 
 	static aud::Speaker *rack_speaker;

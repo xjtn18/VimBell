@@ -1,0 +1,1 @@
+windres app-icon.rc -O coff -o app-icon.res
