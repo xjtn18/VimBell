@@ -1,6 +1,7 @@
 #pragma once
 #include <Entity.hpp>
 #include <Stack.hpp>
+#include <functional>
 
 // FD
 struct Rack;

@@ -5,7 +5,8 @@
 .DS_Store
 TAGS
 VimBell
-objs/
-portable/
+debug/objs/*
+release/objs/*
 racks/
-extra_resources/
+portable/
+portable.zip

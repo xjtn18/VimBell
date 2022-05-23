@@ -3,26 +3,24 @@
 ### FIXME:
 	- Ensure that alarms are repositioned in the rack when an alarms time is edited (to maintain the chronilogical ordering).
 		- Otherwise, the binary search on our edited rack will not at all be correct if order isn't maintained.
-	- Some alarms seem to trigger randomly (last seen on Mac).
-	- Segfault when reopening a rack on random occasions. (May already be fixed).
 
 ### Additions:
 	- Display the current time in the bottom bezel.
-	- Have the ability to change the time/meridiem of alarms already in the rack.
-	- Consider making a Flag struct that is simply a wrapper for a boolean.
-		- The bool operator can simply return the boolean attribute, but set it to false before returning.
-		- We can use this to allow for UI elements to position themselves automatically based on index state,
-			but to avoid having to recompute the pixel locations every frame. We only recompute if we detect
-			a raised flag (flag that is true), which would be raised any time an index state variable is changed.
+	- OpenAL has pretty significant audio latency. Consider using a different audio library like PortAudio or JUCE perhaps?
+		- Otherwise, we could remove all sound effects (aside from triggered alarm tones) which might be a better design choice anyways.
 
 
 
-### 5/12/22:
+### 5/22/22:
+	- Implemented a release build option in the Makefile that statically links the final executable with the MinGW compiler and SFML.
+		- (Note: openAL32.dll MUST be linked dynamically due to its license, so it's included explicitly in the release bin)
+	- Made other changes to the Makefile to seperate a debug and release build.
+
+### 5/20/22:
 	- Defined a Flag boolean wrapper struct; decided it wasnt really neccessary for the problem at hand. Leaving in the project if needed in the future.
 	- Fixed the digital time not selecting the 'minute' when moving left from the text field.
 	- Fixed issue where rack_state was not updating the time on edits even though the rack_view was.
 	- Copied submission logic from the text field to the digital time clock.
-
 
 ### 5/11/22:
 	- Fixed program crashing when no 'racks' folder is found. Saving a rack now creates the folder if it doesn't exist.

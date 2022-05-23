@@ -16,9 +16,9 @@
 #include <Option.hpp>
 #include <Chooser.hpp>
 #include <TextPrompt.hpp>
-#include <filesystem>
+#include <experimental/filesystem>
 
-namespace fs = std::filesystem;
+namespace fs = std::experimental::filesystem;
 using namespace vb;
 
 
@@ -37,7 +37,7 @@ Program::Program()
 	sf::Image icon;
 	icon.loadFromFile("res/images/clock-logo.png");
 	window_ptr->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
-	window_ptr->setFramerateLimit(30);
+	window_ptr->setFramerateLimit(60);
 
 	// Load all UI entities at program start that can be created now,
 	// regardless of whether or not they appear in the initial pane (draw_list).
@@ -85,7 +85,7 @@ void Program::set_pane_rack_chooser(){
 			// unless we pass the filename by value to the lambda object.
 			rack_chooser->insert(-1, new Option({0,0,WINW,50},filename));
 		}
-	} catch (std::filesystem::filesystem_error &ignored){ } // racks folder not found
+	} catch (fs::filesystem_error &ignored){ } // racks folder not found
 
 	rack_chooser->options.push_back([&](){
 			auto tp = new TextPrompt({CENTER_WIN_X-275, CENTER_WIN_Y-25, 550, 50}, "", true);
