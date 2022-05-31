@@ -3,6 +3,12 @@
 
 ![vimbell_demo](https://media.giphy.com/media/w3GTYDTXvJkDIyJJBk/giphy.gif)
 
+---
+
+[Download VimBell](https://drive.google.com/file/d/1lSMxTH23yknD6xpgMX7JYP--mMFQpcZQ/view?usp=sharing)
+
+---
+
 ## How it works
 - The program opens with the Rack Select screen.  
 - This is where you can create a new rack or load an existing one.  
